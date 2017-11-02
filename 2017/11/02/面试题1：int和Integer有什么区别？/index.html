@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="尴尬的年纪">
 <meta property="og:description" content="Java是一个近乎纯洁的面向对象编程语言，但是为了编程的方便还是引入了基本数据类型，但是为了能够将这些基本数据类型当成对象操作，Java为每一个基本数据类型都引入了对应的包装类型（wrapper class），int的包装类就是Integer，从Java 5开始引入了自动装箱/拆箱机制，使得二者可以相互转换。  Java 为每个原始类型提供了包装类型：  原始类型: boolean，char，b">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-11-02T11:26:49.795Z">
+<meta property="og:updated_time" content="2017-11-02T11:41:35.566Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="面试题1：int和Integer有什么区别？">
 <meta name="twitter:description" content="Java是一个近乎纯洁的面向对象编程语言，但是为了编程的方便还是引入了基本数据类型，但是为了能够将这些基本数据类型当成对象操作，Java为每一个基本数据类型都引入了对应的包装类型（wrapper class），int的包装类就是Integer，从Java 5开始引入了自动装箱/拆箱机制，使得二者可以相互转换。  Java 为每个原始类型提供了包装类型：  原始类型: boolean，char，b">
@@ -337,6 +337,28 @@
           </span>
 
           
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/面试/" itemprop="url" rel="index">
+                    <span itemprop="name">面试</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
 
           
             
@@ -373,7 +395,7 @@
 <li>包装类型：<code>Boolean</code>，<code>Character</code>，<code>Byte</code>，<code>Short</code>，<code>Integer</code>，<code>Long</code>，<code>Float</code>，<code>Double</code></li>
 </ul>
 <hr>
-<h3 id="两个常见的面试例子"><a href="#两个常见的面试例子" class="headerlink" title="两个常见的面试例子"></a>两个常见的面试例子</h3><p>先看两个常见的例子，后面会针对例子加以分析<br><strong><span id="jump_eg1">例1</span></strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        Integer a = <span class="keyword">new</span> Integer(<span class="number">8</span>);</div><div class="line">        Integer b = <span class="number">8</span>;                  </div><div class="line">        <span class="keyword">int</span> c = <span class="number">8</span>;</div><div class="line">        System.out.println(a == b);     </div><div class="line">        System.out.println(a == c);     </div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<h3 id="两个常见的面试例子"><a href="#两个常见的面试例子" class="headerlink" title="两个常见的面试例子"></a>两个常见的面试例子</h3><p>先看两个常见的例子，后面会针对例子加以分析。<br><strong><span id="jump_eg1">例1</span></strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        Integer a = <span class="keyword">new</span> Integer(<span class="number">8</span>);</div><div class="line">        Integer b = <span class="number">8</span>;                  </div><div class="line">        <span class="keyword">int</span> c = <span class="number">8</span>;</div><div class="line">        System.out.println(a == b);     </div><div class="line">        System.out.println(a == c);     </div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">执行结果： false, true</div></pre></td></tr></table></figure>
 <p><strong><span id="jump_eg2">例2</span></strong></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">      Integer f1 = <span class="number">100</span>, f2 = <span class="number">100</span>, f3 = <span class="number">250</span>, f4 = <span class="number">250</span>;</div><div class="line">      System.out.println(f1 == f2);</div><div class="line">      System.out.println(f3 == f4);</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
@@ -397,7 +419,7 @@
 <p><span id="jump_1"></span>第<code>36</code>行,调用了Integer方法<code>.intValue()</code><strong>自动拆箱</strong>：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">System.out.println(a == c);</div></pre></td></tr></table></figure></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">System.out.println(a.intValue() == c);</div></pre></td></tr></table></figure>
 <p>所以：<code>a == c</code>的结果为<code>true</code></p>
-<p><a href="#jump_eg1">例1</a><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Integer a = <span class="keyword">new</span> Integer(<span class="number">8</span>);</div><div class="line">Integer b = <span class="number">8</span>;</div><div class="line">System.out.println(a == b);</div></pre></td></tr></table></figure></p>
+<p><a href="#jump_eg1">例1</a>中<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Integer a = <span class="keyword">new</span> Integer(<span class="number">8</span>);</div><div class="line">Integer b = <span class="number">8</span>;</div><div class="line">System.out.println(a == b);</div></pre></td></tr></table></figure></p>
 <p>结果为何为<code>false</code>？</p>
 <p>刚讲到了<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Integer b = <span class="number">8</span>;</div></pre></td></tr></table></figure></p>
 <p>调用了Integer方法<code>.valueOf(int)</code>自动装箱，我们来看下<code>.valueOf(int)</code>源码实现：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Integer <span class="title">valueOf</span><span class="params">(<span class="keyword">int</span> i)</span> </span>&#123;</div><div class="line">        <span class="keyword">assert</span> IntegerCache.high &gt;= <span class="number">127</span>;</div><div class="line">        <span class="keyword">if</span> (i &gt;= IntegerCache.low &amp;&amp; i &lt;= IntegerCache.high)</div><div class="line">            <span class="keyword">return</span> IntegerCache.cache[i + (-IntegerCache.low)];</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Integer(i);</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
@@ -457,22 +479,6 @@
       
       
 
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2017/11/01/第一篇博客/" rel="next" title="第一篇博客">
-                <i class="fa fa-chevron-left"></i> 第一篇博客
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-          </div>
-        </div>
       
 
       
@@ -550,22 +556,31 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">1</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
             
 
             
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
 
             
               
               
               <div class="site-state-item site-state-tags">
-                
+                <a href="/tags/index.html">
                   <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">标签</span>
-                
+                </a>
               </div>
             
 
