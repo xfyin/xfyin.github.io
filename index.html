@@ -12,7 +12,30 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 <meta name="theme-color" content="#222">
 
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #1E92FB; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #1E92FB;    /*上边框颜色*/
+        border-left-color: #1E92FB;    /*左边框颜色*/
+    }
+</style>
 
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-fill-left.min.css?v=1.0.2" rel="stylesheet">
 
 
 
@@ -53,44 +76,40 @@
 <link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
 
 
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.3">
 
 
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
-
-
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
-
-
-  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
-
-
-
-
-
-  <meta name="keywords" content="Hexo, NexT" />
-
-
-
-
-
-  <link rel="alternate" href="/atom.xml" title="尴尬的年纪" type="application/atom+xml" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=5.1.3">
 
 
 
 
 
 
-<meta name="description" content="梦想总是有的，只不过藏在脑子里">
+  <meta name="keywords" content="Hexo, World" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="码农的春天还没来" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="梦想总是有的，只不过时机未到，只能藏在脑子里！">
 <meta property="og:type" content="website">
-<meta property="og:title" content="尴尬的年纪">
+<meta property="og:title" content="码农的春天还没来">
 <meta property="og:url" content="http://yoursite.com/index.html">
-<meta property="og:site_name" content="尴尬的年纪">
-<meta property="og:description" content="梦想总是有的，只不过藏在脑子里">
+<meta property="og:site_name" content="码农的春天还没来">
+<meta property="og:description" content="梦想总是有的，只不过时机未到，只能藏在脑子里！">
 <meta property="og:locale" content="zh-Hans">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="尴尬的年纪">
-<meta name="twitter:description" content="梦想总是有的，只不过藏在脑子里">
+<meta name="twitter:title" content="码农的春天还没来">
+<meta name="twitter:description" content="梦想总是有的，只不过时机未到，只能藏在脑子里！">
 
 
 
@@ -126,7 +145,7 @@
 
 
 
-  <title>尴尬的年纪</title>
+  <title>码农的春天还没来</title>
   
 
 
@@ -157,7 +176,7 @@
     <div class="custom-logo-site-title">
       <a href="/"  class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
-        <span class="site-title">尴尬的年纪</span>
+        <span class="site-title">码农的春天还没来</span>
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
@@ -301,13 +320,13 @@
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/02/重载（Overload）和重写（Override）的区别。重载的方法能否根据返回类型进行区分？/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="xfyin">
+      <meta itemprop="name" content="殷学飞">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/images/my_image.jpg">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="尴尬的年纪">
+      <meta itemprop="name" content="码农的春天还没来">
     </span>
 
     
@@ -372,6 +391,39 @@
 
           
 
+          
+            <div class="post-wordcount">
+              
+                
+                  <span class="post-meta-divider">|</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,452
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  6
+                </span>
+              
+            </div>
           
 
           
@@ -457,13 +509,13 @@
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/02/面试题1：int和Integer有什么区别？/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="xfyin">
+      <meta itemprop="name" content="殷学飞">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/images/my_image.jpg">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="尴尬的年纪">
+      <meta itemprop="name" content="码农的春天还没来">
     </span>
 
     
@@ -528,6 +580,39 @@
 
           
 
+          
+            <div class="post-wordcount">
+              
+                
+                  <span class="post-meta-divider">|</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,490
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  7
+                </span>
+              
+            </div>
           
 
           
@@ -633,10 +718,10 @@ Java是一个近乎纯洁的面向对象编程语言，但是为了编程的方�
             
               <img class="site-author-image" itemprop="image"
                 src="/images/my_image.jpg"
-                alt="xfyin" />
+                alt="殷学飞" />
             
-              <p class="site-author-name" itemprop="name">xfyin</p>
-              <p class="site-description motion-element" itemprop="description">梦想总是有的，只不过藏在脑子里</p>
+              <p class="site-author-name" itemprop="name">殷学飞</p>
+              <p class="site-description motion-element" itemprop="description">梦想总是有的，只不过时机未到，只能藏在脑子里！</p>
           </div>
 
           <nav class="site-state motion-element">
@@ -714,6 +799,20 @@ Java是一个近乎纯洁的面向对象编程语言，但是为了编程的方�
 
           
           
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                推荐阅读
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://guolin.tech" title="郭霖Android专栏" target="_blank">郭霖Android专栏</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
 
           
 
@@ -739,7 +838,7 @@ Java是一个近乎纯洁的面向对象编程语言，但是为了编程的方�
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">xfyin</span>
+  <span class="author" itemprop="copyrightHolder">殷学飞</span>
 
   
 </div>
@@ -768,6 +867,10 @@ Java是一个近乎纯洁的面向对象编程语言，但是为了编程的方�
 
 
 
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共2.9k字</span>
+</div>
         
 
 
@@ -1254,6 +1357,37 @@ Java是一个近乎纯洁的面向对象编程语言，但是为了编程的方�
   
 
   
+
+
+  
+	<div id="hexo-helper-live2d">
+      <canvas id="live2dcanvas" width="150" height="300" class="live2d"></canvas>
+	</div>
+    <style>
+      #live2dcanvas {
+        position: fixed;
+        right: 0px;
+        z-index: 999;
+        pointer-events: none;
+        bottom: -20px;
+      }
+    </style>
+    <script src="/live2d/device.min.js"></script>
+    <script type="text/javascript">
+    (function(){
+    if(device.mobile()){
+      
+      document.getElementById("live2dcanvas").width = 75;
+      document.getElementById("live2dcanvas").height = 150;
+      document.write('<script type="text/javascript" src="/live2d/script.js"><\/script>');
+      document.write('<script>loadlive2d("live2dcanvas", "/live2d/assets/wanko.model.json", 0.5)<\/script>');
+      
+    }else{
+      document.write('<script type="text/javascript" src="/live2d/script.js"><\/script>');
+      document.write('<script>loadlive2d("live2dcanvas", "/live2d/assets/wanko.model.json", 0.5)<\/script>');
+    }
+    })();
+    </script>
 
 </body>
 

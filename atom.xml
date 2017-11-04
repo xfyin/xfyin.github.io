@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>尴尬的年纪</title>
+  <title>码农的春天还没来</title>
   
   <subtitle>等待 突破</subtitle>
   <link href="/atom.xml" rel="self"/>
@@ -10,7 +10,7 @@
   <id>http://yoursite.com/</id>
   
   <author>
-    <name>xfyin</name>
+    <name>殷学飞</name>
     
   </author>
   
