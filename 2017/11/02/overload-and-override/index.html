@@ -87,7 +87,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, World" />
+  <meta name="keywords" content="重载,重写,多态,编译时多态,运行时多态," />
 
 
 
@@ -100,16 +100,20 @@
 
 
 
-<meta name="description" content="梦想总是有的，只不过时机未到，只能藏在脑子里！">
-<meta property="og:type" content="website">
-<meta property="og:title" content="码农的春天还没来">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta name="description" content="方法的重载和重写都是实现多态的方式，区别在于前者实现的是编译时的多态性，而后者实现的是运行时的多态性。重载发生在一个类中，同名的方法如果有不同的参数列表（参数类型不同、参数个数不同或者二者都不同）则视为重载；重写发生在子类与父类之间，重写要求子类被重写方法与父类被重写方法有相同的返回类型，比父类被重写方法更好访问，不能比父类被重写方法声明更多的异常（里氏代换原则）。重载对返回类型没有特殊的要求">
+<meta name="keywords" content="重载,重写,多态,编译时多态,运行时多态">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面试题：重载（Overload）和重写（Override）解析">
+<meta property="og:url" content="http://yoursite.com/2017/11/02/overload-and-override/index.html">
 <meta property="og:site_name" content="码农的春天还没来">
-<meta property="og:description" content="梦想总是有的，只不过时机未到，只能藏在脑子里！">
+<meta property="og:description" content="方法的重载和重写都是实现多态的方式，区别在于前者实现的是编译时的多态性，而后者实现的是运行时的多态性。重载发生在一个类中，同名的方法如果有不同的参数列表（参数类型不同、参数个数不同或者二者都不同）则视为重载；重写发生在子类与父类之间，重写要求子类被重写方法与父类被重写方法有相同的返回类型，比父类被重写方法更好访问，不能比父类被重写方法声明更多的异常（里氏代换原则）。重载对返回类型没有特殊的要求">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2017/11/02/overload-and-override/查找匹配执行方法流程.png">
+<meta property="og:updated_time" content="2017-11-05T10:59:02.688Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="码农的春天还没来">
-<meta name="twitter:description" content="梦想总是有的，只不过时机未到，只能藏在脑子里！">
+<meta name="twitter:title" content="面试题：重载（Overload）和重写（Override）解析">
+<meta name="twitter:description" content="方法的重载和重写都是实现多态的方式，区别在于前者实现的是编译时的多态性，而后者实现的是运行时的多态性。重载发生在一个类中，同名的方法如果有不同的参数列表（参数类型不同、参数个数不同或者二者都不同）则视为重载；重写发生在子类与父类之间，重写要求子类被重写方法与父类被重写方法有相同的返回类型，比父类被重写方法更好访问，不能比父类被重写方法声明更多的异常（里氏代换原则）。重载对返回类型没有特殊的要求">
+<meta name="twitter:image" content="http://yoursite.com/2017/11/02/overload-and-override/查找匹配执行方法流程.png">
 
 
 
@@ -139,13 +143,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/11/02/overload-and-override/"/>
 
 
 
 
 
-  <title>码农的春天还没来</title>
+  <title>面试题：重载（Overload）和重写（Override）解析 | 码农的春天还没来</title>
   
 
 
@@ -164,8 +168,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -302,368 +305,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/05/abstract-and-interface/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="殷学飞">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/my_image.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="码农的春天还没来">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/11/05/abstract-and-interface/" itemprop="url">abstract_and_interface</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-05T19:03:12+08:00">
-                2017-11-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                  <span class="post-meta-divider">|</span>
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  757
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  3
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          1. 概念抽象类：包含抽象方法的类就称为 抽象类；接口： 抽象方法的集合，方法没有具体实现即不包含方法体。
-
-2. 两者异同2.1 相同点
-都不能被实例化；
-接口的实现类或抽象类的子类都必须实现接口或抽象类中的方法后才能被实例化
-
-2.2 不同点
-接口中的方法是高度抽象的，只有定义，没有具体的实现；
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/11/05/abstract-and-interface/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    <div>
-      
-    </div>
-
-
-    
-
-    
-
-    
-
- 
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/05/JDK8-static-and-default/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="殷学飞">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/my_image.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="码农的春天还没来">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/11/05/JDK8-static-and-default/" itemprop="url">JDK8新特性之接口的静态方法和默认方法</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-05T18:50:10+08:00">
-                2017-11-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java/" itemprop="url" rel="index">
-                    <span itemprop="name">java</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                  <span class="post-meta-divider">|</span>
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  483
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  2
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          JDK8之前我们在接口中定义成员变量只能是public static final的，定义的成员方法只能是public abstract的，默认省略。JDK8前后这一概念等价。定义接口BeforeJDK8Interface如下：name和name1表述等价，getName()和getName1()表述
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/11/05/JDK8-static-and-default/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    <div>
-      
-    </div>
-
-
-    
-
-    
-
-    
-
- 
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
 
   
 
@@ -693,9 +337,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/11/02/overload-and-override/" itemprop="url">面试题：重载（Overload）和重写（Override）解析</a></h1>
+          <h1 class="post-title" itemprop="name headline">面试题：重载（Overload）和重写（Override）解析</h1>
         
 
         <div class="post-meta">
@@ -811,20 +453,59 @@
       
 
       
-        
-          
-          
+        <hr>
+<blockquote>
+<p>方法的重载和重写都是实现多态的方式，区别在于前者实现的是编译时的多态性，而后者实现的是运行时的多态性。重载发生在一个类中，同名的方法如果有不同的参数列表（参数类型不同、参数个数不同或者二者都不同）则视为重载；重写发生在子类与父类之间，重写要求子类被重写方法与父类被重写方法有相同的返回类型，比父类被重写方法更好访问，不能比父类被重写方法声明更多的异常（里氏代换原则）。重载对返回类型没有特殊的要求。</p>
+</blockquote>
+<h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><h3 id="重载Overload"><a href="#重载Overload" class="headerlink" title="重载Overload"></a>重载Overload</h3><p>   重载发生在<code>一个类</code>中，<code>同名的方法</code>如果有<code>不同的参数列表</code>（<code>参数类型不同</code>、<code>参数个数不同</code>或者<code>二者都不同</code>）。</p>
+<ul>
+<li>访问修饰符：重载与访问修饰符<code>无关</code> </li>
+<li>返回类型： 重载与返回值<code>无关</code></li>
+<li>方法名： 重载方法名需<code>完全一致</code> </li>
+<li>参数列表： 重载参数列表需<code>完全不同</code></li>
+</ul>
+<h3 id="重写Override"><a href="#重写Override" class="headerlink" title="重写Override"></a>重写Override</h3><p>   发生在<code>子类与父类</code>之间，重写要求子类被重写方法与父类被重写方法有<code>相同的返回类型</code>，比父类被重写方法<code>更好访问</code>，<code>不能</code>比父类被重写方法声明<code>更多的异常</code>（里氏代换原则）。</p>
+<ul>
+<li>访问修饰符：子类的访问修饰符权限 <code>&gt;=</code> 父类的访问修饰符权限 </li>
+<li>返回类型： 子类的返回类型 <code>&lt;=</code> 父类的返回类型 </li>
+<li>方法名： 方法名应<code>完全一致</code> </li>
+<li>参数列表： 参数列表应<code>完全一致</code></li>
+</ul>
+<hr>
+<h2 id="举例String类"><a href="#举例String类" class="headerlink" title="举例String类"></a>举例String类</h2><h3 id="重载例子"><a href="#重载例子" class="headerlink" title="重载例子"></a>重载例子<span id="overload"></span></h3><p><code>String</code>类的<code>构造器</code>重载：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">String</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">this</span>.value = <span class="keyword">new</span> <span class="keyword">char</span>[<span class="number">0</span>];</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">String</span><span class="params">(<span class="keyword">char</span> value[])</span> </span>&#123;</div><div class="line">    <span class="keyword">this</span>.value = Arrays.copyOf(value, value.length);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><code>String</code>类的<code>valueOf()方法</code>的重载：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">valueOf</span><span class="params">(<span class="keyword">char</span> data[])</span> </span>&#123;</div><div class="line">      <span class="keyword">return</span> <span class="keyword">new</span> String(data);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">valueOf</span><span class="params">(<span class="keyword">char</span> data[], <span class="keyword">int</span> offset, <span class="keyword">int</span> count)</span> </span>&#123;</div><div class="line">      <span class="keyword">return</span> <span class="keyword">new</span> String(data, offset, count);</div><div class="line">  &#125;</div></pre></td></tr></table></figure></p>
+<hr>
+<h3 id="重写例子"><a href="#重写例子" class="headerlink" title="重写例子"></a>重写例子<span id="override"></span></h3><p><code>ArrayList</code>继承了<code>AbstractList</code>类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ArrayList</span>&lt;<span class="title">E</span>&gt; <span class="keyword">extends</span> <span class="title">AbstractList</span>&lt;<span class="title">E</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<p><code>AbstractList</code>类中有方法<code>add()</code>：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span> </span>&#123;</div><div class="line">    add(size(), e);</div><div class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><code>ArrayList</code>类中有重写了<code>add()</code>方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span> </span>&#123;</div><div class="line">    ensureCapacityInternal(size + <span class="number">1</span>);  <span class="comment">// Increments modCount!!</span></div><div class="line">    elementData[size++] = e;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="多态"><a href="#多态" class="headerlink" title="多态"></a>多态</h2><p>面向对象编程有三大特性：<code>封装</code>、<code>继承</code>、<code>多态</code>。</p>
+<h3 id="概念-1"><a href="#概念-1" class="headerlink" title="概念"></a>概念</h3><blockquote>
+<p>指允许不同类的对象对同一消息做出响应。即同一消息可以根据发送对象的不同而采用多种不同的行为方式。（发送消息就是函数调用）</p>
+</blockquote>
+<p>实现多态的技术称为：<code>动态绑定（dynamic binding）</code><br>多态存在的三个必要条件</p>
+<pre><code>1. 要有继承；
+2. 要有重写；
+3. 父类引用指向子类对象。
+</code></pre><p>根据<code>何时确定</code>执行多态方法中的哪一个，多态分为两种情况：<code>编译时多态</code>和<code>运行时多态</code>。顾名思义，如果在编译时能够确定执行多态方法中的哪一个，称为编译时多态，否则称为运行时多态。</p>
+<h3 id="编译时多态"><a href="#编译时多态" class="headerlink" title="编译时多态"></a>编译时多态</h3><p><a href="#overload">重载</a>都是<code>编译时多态</code>，从上面的分析可以看到，只要确定了方法参数的<code>数据类型</code>,<code>个数</code>,<code>次序</code>就能确定调用哪一个方法。</p>
+<h3 id="运行时多态"><a href="#运行时多态" class="headerlink" title="运行时多态"></a>运行时多态</h3><p><a href="#override">重写</a>有两种多态性，当对象引用<code>本类</code>实例，此时为<code>编译时多态</code>，能在编译期确定调用哪个方法；否则为<code>运行时多态</code>。</p>
+<h3 id="举例分析"><a href="#举例分析" class="headerlink" title="举例分析"></a>举例分析</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> test;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</div><div class="line">	</div><div class="line">&#125;</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Animal</span></span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="string">"Animal"</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Dog</span> <span class="keyword">extends</span> <span class="title">Animal</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="string">"Dog"</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>1.执行下面的main方法<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">	Animal animal = <span class="keyword">new</span> Animal();</div><div class="line">	Dog dog = <span class="keyword">new</span> Dog();</div><div class="line">	System.out.println(animal.getName());</div><div class="line">	System.out.println(dog.getName());</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>输出结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Animal</div><div class="line">Dog</div></pre></td></tr></table></figure></p>
+<p><code>Animal</code>和<code>Dog</code>引用的都是<code>本类的实例</code><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Animal animal = <span class="keyword">new</span> Animal();</div><div class="line">Dog dog = <span class="keyword">new</span> Dog();</div></pre></td></tr></table></figure></p>
+<p>2.若是这样呢？输入结果是多少<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">	Animal animal = <span class="keyword">new</span> Dog();</div><div class="line">	System.out.println(animal.getName());</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>此时输出：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Dog</div></pre></td></tr></table></figure></p>
+<p>程序在运行时，会从实例<code>所属的类</code>开始寻找匹配的方法来执行，若是找不到匹配的方法，会按照<code>继承关系</code>逐层向上查找，直到超级父类<code>Object类</code>。<br>该例子<code>animal.getName()</code>执行过程是：<br><img src="/2017/11/02/overload-and-override/查找匹配执行方法流程.png" alt="logo"></p>
+<p>3.修改<code>Animal</code>类, 空类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Animal</span></span>&#123;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>此时执行方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">	Animal animal = <span class="keyword">new</span> Dog();</div><div class="line">	System.out.println(((Dog) animal).getName());</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>需要显示地转换下<code>((Dog) animal).getName()</code>,因为<code>Animal</code>类中没有定义<code>getName()</code>方法。</p>
+<p>4.修改<code>Animal</code>,<code>Dog</code>类的<code>getName()</code>方法为<code>静态方法</code>,并增加一<code>成员变量name</code><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Animal</span> </span>&#123;</div><div class="line">  <span class="keyword">public</span> String name = <span class="string">"a"</span>;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="string">"Animal"</span>;</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Dog</span> <span class="keyword">extends</span> <span class="title">Animal</span> </span>&#123;</div><div class="line">  <span class="keyword">public</span> String name = <span class="string">"d"</span>;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="string">"Dog"</span>;</div><div class="line">  &#125;</div></pre></td></tr></table></figure></p>
+<p>执行main方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">  Animal animal = <span class="keyword">new</span> Dog();</div><div class="line">  System.out.println(animal.getName());</div><div class="line">  System.out.println(animal.name);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>输出结果为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Animal</div><div class="line">a</div></pre></td></tr></table></figure></p>
+<p>结果解释：<br>1.<a href="#override">重写</a>只使用于<code>实例方法</code>，不能用于<code>静态方法</code>，对于<code>static方法</code>，只能<code>隐藏</code>,<a href="#overload">重载</a>,<code>继承</code>；<br>2.在利用引用<code>animal</code>访问对象的属性<code>name</code>或静态方法<code>getName()</code>时，是引用类型决定了实际上访问的是哪个对象（<code>Animal</code>）的成员，而不是当前引用代表的那个类（<code>new Dog()</code>）;<br>由此可知，子类静态方法并<code>不能</code><a href="#override">重写</a>（<code>覆盖</code>）父类的静态方法;故而输出的结果都是父类的成员结果。</p>
+<h2 id="为什么不能根据返回类型来区分重载"><a href="#为什么不能根据返回类型来区分重载" class="headerlink" title="为什么不能根据返回类型来区分重载"></a>为什么不能根据返回类型来区分重载</h2><p>假设下面的重载方法<code>update</code>能编译通过<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">update</span><span class="params">()</span> </span>&#123;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">update</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>当调用new Test().update()时，不需要返回值， 这样就不能区分具体是调用哪个方法了。<br>方法的<code>返回值</code>,只能作为方法运行之后得一个<code>状态</code>，它是保持方法的调用者与被调用者进行通信的关键，并不能作为某个方法的<code>标示</code>。</p>
 
-方法的重载和重写都是实现多态的方式，区别在于前者实现的是编译时的多态性，而后者实现的是运行时的多态性。重载发生在一个类中，同名的方法如果有不同的参数列表（参数类型不同、参数个数不同或者二者都不同）则视为重载；重写发生在子类与父类之间，重写要求子类被重写方法与父类被重写方法有相同的返回类型，比父类
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/11/02/overload-and-override/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
       
     </div>
     
@@ -833,11 +514,46 @@
 
     <div>
       
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>欢迎留言-------------</div>
+    
+</div>
+      
     </div>
 
 
     
 
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechat.png" alt="殷学飞 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/aipay.jpg" alt="殷学飞 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
     
 
     
@@ -845,213 +561,63 @@
  
     <footer class="post-footer">
       
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/02/int-and-Integer/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="殷学飞">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/my_image.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="码农的春天还没来">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/11/02/int-and-Integer/" itemprop="url">面试题：int和Integer解析</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-02T18:40:58+08:00">
-                2017-11-02
-              </time>
-            
-
-            
-
-            
-          </span>
-
+        <div class="post-tags">
           
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/面试题分析/" itemprop="url" rel="index">
-                    <span itemprop="name">面试题分析</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/面试题分析/java/" itemprop="url" rel="index">
-                    <span itemprop="name">java</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
+            <a href="/tags/重载/" rel="tag"><i class="fa fa-tag"></i> 重载</a>
           
-
+            <a href="/tags/重写/" rel="tag"><i class="fa fa-tag"></i> 重写</a>
           
-            
+            <a href="/tags/多态/" rel="tag"><i class="fa fa-tag"></i> 多态</a>
           
-
+            <a href="/tags/编译时多态/" rel="tag"><i class="fa fa-tag"></i> 编译时多态</a>
           
+            <a href="/tags/运行时多态/" rel="tag"><i class="fa fa-tag"></i> 运行时多态</a>
           
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                  <span class="post-meta-divider">|</span>
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  1,490
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  7
-                </span>
-              
-            </div>
-          
-
-          
-
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
+      
+        <div class="post-widgets">
+        
+
+        
+
         
           
-          
-Java是一个近乎纯洁的面向对象编程语言，但是为了编程的方便还是引入了基本数据类型，但是为了能够将这些基本数据类型当成对象操作，Java为每一个基本数据类型都引入了对应的包装类型（wrapper class），int的包装类就是Integer，从Java 5开始引入了自动装箱/拆箱机制，使得二者可
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/11/02/int-and-Integer/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
+          <div id="needsharebutton-postbottom">
+            <span class="btn">
+              <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </span>
           </div>
-          <!--/noindex-->
         
+        </div>
       
-    </div>
-    
-    
-    
-
-    <div>
-      
-    </div>
-
-
-    
-
-    
-
-    
-
- 
-    <footer class="post-footer">
       
 
       
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/11/02/int-and-Integer/" rel="next" title="面试题：int和Integer解析">
+                <i class="fa fa-chevron-left"></i> 面试题：int和Integer解析
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/11/05/JDK8-static-and-default/" rel="prev" title="JDK8新特性之接口的静态方法和默认方法">
+                JDK8新特性之接口的静态方法和默认方法 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
 
       
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -1061,10 +627,36 @@ Java是一个近乎纯洁的面向对象编程语言，但是为了编程的方�
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+	<a class="jiathis_button_qzone"></a>
+	<a class="jiathis_button_tsina"></a>
+	<a class="jiathis_button_tqq"></a>
+	<a class="jiathis_button_weixin"></a>
+	<a class="jiathis_button_renren"></a>
+	<a class="jiathis_button_xiaoyou"></a>
+	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
 
 
           </div>
@@ -1072,6 +664,15 @@ Java是一个近乎纯洁的面向对象编程语言，但是为了编程的方�
 
 
           
+
+  
+    <div class="comments" id="comments">
+      <div id="uyan_frame"></div>
+    </div>
+
+  
+
+
 
         </div>
         
@@ -1092,8 +693,17 @@ Java是一个近乎纯洁的面向对象编程语言，但是为了编程的方�
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -1200,6 +810,22 @@ Java是一个近乎纯洁的面向对象编程语言，但是为了编程的方�
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#概念"><span class="nav-number">1.</span> <span class="nav-text">概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#重载Overload"><span class="nav-number">1.1.</span> <span class="nav-text">重载Overload</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重写Override"><span class="nav-number">1.2.</span> <span class="nav-text">重写Override</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#举例String类"><span class="nav-number">2.</span> <span class="nav-text">举例String类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#重载例子"><span class="nav-number">2.1.</span> <span class="nav-text">重载例子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重写例子"><span class="nav-number">2.2.</span> <span class="nav-text">重写例子</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多态"><span class="nav-number">3.</span> <span class="nav-text">多态</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#概念-1"><span class="nav-number">3.1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编译时多态"><span class="nav-number">3.2.</span> <span class="nav-text">编译时多态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#运行时多态"><span class="nav-number">3.3.</span> <span class="nav-text">运行时多态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#举例分析"><span class="nav-number">3.4.</span> <span class="nav-text">举例分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么不能根据返回类型来区分重载"><span class="nav-number">4.</span> <span class="nav-text">为什么不能根据返回类型来区分重载</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -1364,6 +990,10 @@ Java是一个近乎纯洁的面向对象编程语言，但是为了编程的方�
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
 
   
 
@@ -1389,6 +1019,10 @@ Java是一个近乎纯洁的面向对象编程语言，但是为了编程的方�
   
     
 
+    
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid=2148100"></script>
+      <!-- UY END -->
     
   
 

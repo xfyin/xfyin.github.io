@@ -87,7 +87,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, World" />
+  <meta name="keywords" content="抽象类,接口,反射,jdk8新特性," />
 
 
 
@@ -100,17 +100,18 @@
 
 
 
-<meta name="description" content="个人简介简单介绍下自己，我叫殷学飞，程序猿一只。在北京科技大学学的国际贸易专业，“机缘巧合”走进了IT行业，现在从事Java开发。目前在自学Android。 一直以来想写点什么，鉴于知识水平有限，写不出啥好东西，方向感也不是很强。工作稳定后，有段时间没有关注Java基础。网上搜搜Java面试宝典，以前看不懂的或者一知半解的，突然发现分析分析后就能明白了。我觉得这个过程应该记录下来，或许分析得还不全">
-<meta property="og:type" content="website">
-<meta property="og:title" content="关于我的一些事">
-<meta property="og:url" content="http://yoursite.com/about/index.html">
+<meta name="description" content="1. 概念抽象类：包含抽象方法的类就称为 抽象类；接口： 抽象方法的集合，方法没有具体实现即不包含方法体。  2. 两者异同2.1 相同点 都不能被实例化； 接口的实现类或抽象类的子类都必须实现接口或抽象类中的方法后才能被实例化  2.2 不同点 接口中的方法是高度抽象的，只有定义，没有具体的实现；抽象类中可以有定义也可以有实现； 接口中的方法默认为public abstract， 可以直接写pu">
+<meta name="keywords" content="抽象类,接口,反射,jdk8新特性">
+<meta property="og:type" content="article">
+<meta property="og:title" content="abstract_and_interface">
+<meta property="og:url" content="http://yoursite.com/2017/11/05/abstract-and-interface/index.html">
 <meta property="og:site_name" content="码农的春天还没来">
-<meta property="og:description" content="个人简介简单介绍下自己，我叫殷学飞，程序猿一只。在北京科技大学学的国际贸易专业，“机缘巧合”走进了IT行业，现在从事Java开发。目前在自学Android。 一直以来想写点什么，鉴于知识水平有限，写不出啥好东西，方向感也不是很强。工作稳定后，有段时间没有关注Java基础。网上搜搜Java面试宝典，以前看不懂的或者一知半解的，突然发现分析分析后就能明白了。我觉得这个过程应该记录下来，或许分析得还不全">
+<meta property="og:description" content="1. 概念抽象类：包含抽象方法的类就称为 抽象类；接口： 抽象方法的集合，方法没有具体实现即不包含方法体。  2. 两者异同2.1 相同点 都不能被实例化； 接口的实现类或抽象类的子类都必须实现接口或抽象类中的方法后才能被实例化  2.2 不同点 接口中的方法是高度抽象的，只有定义，没有具体的实现；抽象类中可以有定义也可以有实现； 接口中的方法默认为public abstract， 可以直接写pu">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-11-05T10:13:48.165Z">
+<meta property="og:updated_time" content="2017-11-05T11:05:49.859Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="关于我的一些事">
-<meta name="twitter:description" content="个人简介简单介绍下自己，我叫殷学飞，程序猿一只。在北京科技大学学的国际贸易专业，“机缘巧合”走进了IT行业，现在从事Java开发。目前在自学Android。 一直以来想写点什么，鉴于知识水平有限，写不出啥好东西，方向感也不是很强。工作稳定后，有段时间没有关注Java基础。网上搜搜Java面试宝典，以前看不懂的或者一知半解的，突然发现分析分析后就能明白了。我觉得这个过程应该记录下来，或许分析得还不全">
+<meta name="twitter:title" content="abstract_and_interface">
+<meta name="twitter:description" content="1. 概念抽象类：包含抽象方法的类就称为 抽象类；接口： 抽象方法的集合，方法没有具体实现即不包含方法体。  2. 两者异同2.1 相同点 都不能被实例化； 接口的实现类或抽象类的子类都必须实现接口或抽象类中的方法后才能被实例化  2.2 不同点 接口中的方法是高度抽象的，只有定义，没有具体的实现；抽象类中可以有定义也可以有实现； 接口中的方法默认为public abstract， 可以直接写pu">
 
 
 
@@ -140,13 +141,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/about/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/11/05/abstract-and-interface/"/>
 
 
 
 
 
-  <title>关于我的一些事 | 码农的春天还没来</title>
+  <title>abstract_and_interface | 码农的春天还没来</title>
   
 
 
@@ -305,37 +306,292 @@
 
   <div id="posts" class="posts-expand">
     
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/05/abstract-and-interface/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="殷学飞">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/my_image.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="码农的春天还没来">
+    </span>
+
     
-    
-    <div class="post-block page">
       <header class="post-header">
 
-	<h1 class="post-title" itemprop="name headline">关于我的一些事</h1>
-
-
-
-</header>
-
-      
-      
-      
-      <div class="post-body">
         
         
-          <h2 id="个人简介"><a href="#个人简介" class="headerlink" title="个人简介"></a>个人简介</h2><p>简单介绍下自己，我叫殷学飞，程序猿一只。在北京科技大学学的国际贸易专业，“机缘巧合”走进了IT行业，现在从事Java开发。目前在自学Android。</p>
-<p>一直以来想写点什么，鉴于知识水平有限，写不出啥好东西，方向感也不是很强。工作稳定后，有段时间没有关注Java基础。网上搜搜Java面试宝典，以前看不懂的或者一知半解的，突然发现分析分析后就能明白了。我觉得这个过程应该记录下来，或许分析得还不全，若再过一两年再回头看，感觉和现在肯定又不一样。</p>
-<p>我不甘于平凡，但是走的又是平凡的路，很希望在这条路上，能遇见几个志同道合的人，哪一天不管谁有个好的idea，大家一拍脑子，撸起袖子开干！若你也有好的想法，大家可以一起交流交流。</p>
-<h2 id="联系方式"><a href="#联系方式" class="headerlink" title="联系方式"></a>联系方式</h2><p>微信： xfyin179<br>qq: 807799015<br>邮箱：xfyin179@163.com<br>博客：<a href="http://letus179.com/" target="_blank" rel="external">http://letus179.com/</a></p>
-
+          <h1 class="post-title" itemprop="name headline">abstract_and_interface</h1>
         
-      </div>
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-05T19:03:12+08:00">
+                2017-11-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                  <span class="post-meta-divider">|</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  757
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  3
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
       
       
+
+      
+        <h2 id="1-概念"><a href="#1-概念" class="headerlink" title="1. 概念"></a>1. 概念</h2><p><strong>抽象类</strong>：<em>包含抽象方法的类就称为 抽象类</em>；<br><strong>接口</strong>： <em>抽象方法的集合，方法没有具体实现即不包含方法体</em>。</p>
+<hr>
+<h2 id="2-两者异同"><a href="#2-两者异同" class="headerlink" title="2. 两者异同"></a>2. 两者异同</h2><h3 id="2-1-相同点"><a href="#2-1-相同点" class="headerlink" title="2.1 相同点"></a>2.1 相同点</h3><ol>
+<li>都<code>不能</code>被实例化；</li>
+<li><code>接口的实现类</code>或<code>抽象类的子类</code>都<strong>必须实现</strong><code>接口</code>或<code>抽象类中</code>的方法后才能被实例化</li>
+</ol>
+<h3 id="2-2-不同点"><a href="#2-2-不同点" class="headerlink" title="2.2 不同点"></a>2.2 不同点</h3><ol>
+<li><code>接口</code>中的方法是高度抽象的，<em>只有定义，没有具体的实现</em>；<code>抽象类</code>中<em>可以有定义也可以有实现</em>；</li>
+<li><code>接口</code>中的方法默认为<code>public abstract</code>， 可以直接写<code>public</code>， 可以都省略不写；<code>接口</code>中方法修饰符不能是<code>private</code>， 接口需要实现，所以私有的方法没有意义；<code>抽象类</code>中的具体实现的方法和普通的类一样，而只有定义的方法必须用<code>abstract</code>修饰，不然编译不通过；而且<code>抽象方法</code>的修饰符不能是<code>private</code>，<code>static</code>，<code>synchronized</code>，<code>native</code>，能用<code>默认的</code>，<code>public</code>，<code>protected</code></li>
+<li><code>接口</code>需要<code>实现（implements）</code>， <code>抽象类</code>需要<code>继承（extends）</code>，<em>一个类可以实现多个接口，但是只能继承一个抽象类（单继承多实现）</em>；</li>
+<li><code>接口</code>中定义变量默认为<code>public static final</code>， 并且要赋予<code>初始值</code>，不然编译不通过；<code>抽象类</code>和普通的类一样，可以有自己的成员变量，可以重新赋值；</li>
+</ol>
+<h2 id="3-接口三问"><a href="#3-接口三问" class="headerlink" title="3.接口三问"></a>3.接口三问</h2><h3 id="3-1-接口方法能否用private修饰"><a href="#3-1-接口方法能否用private修饰" class="headerlink" title="3.1 接口方法能否用private修饰"></a>3.1 接口方法能否用<code>private</code>修饰</h3><blockquote>
+<p>不能。因为接口是对外开放的，需要具体的类来实现其中的方法，私有的方法作用范围为本类，在接口中定义私有方法没有任何意义，编译不会通过。</p>
+</blockquote>
+<h3 id="3-2-接口方法能否用synchronized修饰"><a href="#3-2-接口方法能否用synchronized修饰" class="headerlink" title="3.2 接口方法能否用synchronized修饰"></a>3.2 接口方法能否用<code>synchronized</code>修饰</h3><blockquote>
+<p>不能。<code>synchronized</code>是一种<code>同步锁</code>，在修饰方法时，需要具体逻辑，而接口只是定义，因为直接修饰接口中的方法没意义，可以修改接口方法的<code>具体实现</code>。</p>
+</blockquote>
+<h3 id="3-3-接口方法能否用static修饰"><a href="#3-3-接口方法能否用static修饰" class="headerlink" title="3.3 接口方法能否用static修饰"></a>3.3 接口方法能否用<code>static</code>修饰</h3><blockquote>
+<p>这和jdk版本有关。jdk8之前：不能；jdk8新特性： 能。<br>——参见<a href="https://www.zybuluo.com/xfyin/note/939618" target="_blank" rel="external">JDK8新特性之接口的静态方法和默认方法</a></p>
+</blockquote>
+<hr>
+<h2 id="4-举例"><a href="#4-举例" class="headerlink" title="4. 举例"></a>4. 举例</h2><p>下面先给出对应源码，再用<code>jad</code>反编译<code>.class</code>文件。反编译执行命令如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">jad -a -o -s java 类名.class</div></pre></td></tr></table></figure></p>
+<p><code>jad</code>命令参见<a href="http://xxx" target="_blank" rel="external">jad命令描述</a></p>
+<p><code>MyInterface.java</code>接口源码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MyInterface</span> </span>&#123;</div><div class="line"></div><div class="line">  String name = <span class="string">"MyInterface"</span>;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">void</span> <span class="title">add</span><span class="params">()</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><code>MyInterface.class</code>反编译如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MyInterface</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">()</span></span>;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String name = <span class="string">"MyInterface"</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>默认的方法修饰符</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">MyAbstract</span> </span>&#123;</div><div class="line">  </div><div class="line">  <span class="keyword">public</span> String name;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">void</span> <span class="title">get</span><span class="params">()</span> </span>&#123;</div><div class="line">    System.out.println(<span class="string">"MyAbstract get() "</span>);</div><div class="line">  &#125;</div><div class="line">  </div><div class="line">  <span class="comment">// 抽象类中的没有实现的方法必须是“abstract”</span></div><div class="line">  <span class="function"><span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">delete</span><span class="params">()</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyTest</span> <span class="keyword">extends</span> <span class="title">MyAbstract</span> <span class="keyword">implements</span> <span class="title">MyInterface</span> </span>&#123;</div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">    MyTest test = <span class="keyword">new</span> MyTest();</div><div class="line">    Field[] abstractFields = MyAbstract.class.getDeclaredFields();</div><div class="line">    <span class="keyword">for</span> (Field field : abstractFields) &#123;</div><div class="line">      System.out.println(field.getClass());</div><div class="line">      </div><div class="line">      System.out.println(Modifier.toString(field.getModifiers()));</div><div class="line">      System.out.println(field.getName());</div><div class="line">      System.out.println(field.getType());</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    Field[] declaredFields = MyInterface.class.getDeclaredFields();</div><div class="line">    <span class="keyword">for</span> (Field field : declaredFields) &#123;</div><div class="line">      System.out.println(Modifier.toString(field.getModifiers()));</div><div class="line">      System.out.println(field.getName());</div><div class="line">      </div><div class="line">    &#125;</div><div class="line">    </div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="meta">@Override</span></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">()</span> </span>&#123;</div><div class="line"></div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="meta">@Override</span></div><div class="line">  <span class="function"><span class="keyword">void</span> <span class="title">delete</span><span class="params">()</span> </span>&#123;</div><div class="line"></div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
       
     </div>
     
     
     
+
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>欢迎留言-------------</div>
+    
+</div>
+      
+    </div>
+
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechat.png" alt="殷学飞 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/aipay.jpg" alt="殷学飞 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+ 
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/抽象类/" rel="tag"><i class="fa fa-tag"></i> 抽象类</a>
+          
+            <a href="/tags/接口/" rel="tag"><i class="fa fa-tag"></i> 接口</a>
+          
+            <a href="/tags/反射/" rel="tag"><i class="fa fa-tag"></i> 反射</a>
+          
+            <a href="/tags/jdk8新特性/" rel="tag"><i class="fa fa-tag"></i> jdk8新特性</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
+        
+
+        
+
+        
+          
+          <div id="needsharebutton-postbottom">
+            <span class="btn">
+              <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </span>
+          </div>
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/11/05/JDK8-static-and-default/" rel="next" title="JDK8新特性之接口的静态方法和默认方法">
+                <i class="fa fa-chevron-left"></i> JDK8新特性之接口的静态方法和默认方法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+	<a class="jiathis_button_qzone"></a>
+	<a class="jiathis_button_tsina"></a>
+	<a class="jiathis_button_tqq"></a>
+	<a class="jiathis_button_weixin"></a>
+	<a class="jiathis_button_renren"></a>
+	<a class="jiathis_button_xiaoyou"></a>
+	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
   </div>
 
 
@@ -500,7 +756,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#个人简介"><span class="nav-number">1.</span> <span class="nav-text">个人简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#联系方式"><span class="nav-number">2.</span> <span class="nav-text">联系方式</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-概念"><span class="nav-number">1.</span> <span class="nav-text">1. 概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-两者异同"><span class="nav-number">2.</span> <span class="nav-text">2. 两者异同</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-相同点"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 相同点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-不同点"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 不同点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-接口三问"><span class="nav-number">3.</span> <span class="nav-text">3.接口三问</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-接口方法能否用private修饰"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 接口方法能否用private修饰</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-接口方法能否用synchronized修饰"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 接口方法能否用synchronized修饰</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-接口方法能否用static修饰"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 接口方法能否用static修饰</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-举例"><span class="nav-number">4.</span> <span class="nav-text">4. 举例</span></a></li></ol></div>
             
 
           </div>

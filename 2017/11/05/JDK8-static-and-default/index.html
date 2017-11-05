@@ -87,7 +87,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, World" />
+  <meta name="keywords" content="JDK8新特,静态方法,默认方法," />
 
 
 
@@ -100,17 +100,18 @@
 
 
 
-<meta name="description" content="个人简介简单介绍下自己，我叫殷学飞，程序猿一只。在北京科技大学学的国际贸易专业，“机缘巧合”走进了IT行业，现在从事Java开发。目前在自学Android。 一直以来想写点什么，鉴于知识水平有限，写不出啥好东西，方向感也不是很强。工作稳定后，有段时间没有关注Java基础。网上搜搜Java面试宝典，以前看不懂的或者一知半解的，突然发现分析分析后就能明白了。我觉得这个过程应该记录下来，或许分析得还不全">
-<meta property="og:type" content="website">
-<meta property="og:title" content="关于我的一些事">
-<meta property="og:url" content="http://yoursite.com/about/index.html">
+<meta name="description" content="JDK8之前我们在接口中定义成员变量只能是public static final的，定义的成员方法只能是public abstract的，默认省略。JDK8前后这一概念等价。定义接口BeforeJDK8Interface如下：name和name1表述等价，getName()和getName1()表述等价。12345678910111213public interface BeforeJDK8Int">
+<meta name="keywords" content="JDK8新特,静态方法,默认方法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JDK8新特性之接口的静态方法和默认方法">
+<meta property="og:url" content="http://yoursite.com/2017/11/05/JDK8-static-and-default/index.html">
 <meta property="og:site_name" content="码农的春天还没来">
-<meta property="og:description" content="个人简介简单介绍下自己，我叫殷学飞，程序猿一只。在北京科技大学学的国际贸易专业，“机缘巧合”走进了IT行业，现在从事Java开发。目前在自学Android。 一直以来想写点什么，鉴于知识水平有限，写不出啥好东西，方向感也不是很强。工作稳定后，有段时间没有关注Java基础。网上搜搜Java面试宝典，以前看不懂的或者一知半解的，突然发现分析分析后就能明白了。我觉得这个过程应该记录下来，或许分析得还不全">
+<meta property="og:description" content="JDK8之前我们在接口中定义成员变量只能是public static final的，定义的成员方法只能是public abstract的，默认省略。JDK8前后这一概念等价。定义接口BeforeJDK8Interface如下：name和name1表述等价，getName()和getName1()表述等价。12345678910111213public interface BeforeJDK8Int">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-11-05T10:13:48.165Z">
+<meta property="og:updated_time" content="2017-11-05T10:53:57.278Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="关于我的一些事">
-<meta name="twitter:description" content="个人简介简单介绍下自己，我叫殷学飞，程序猿一只。在北京科技大学学的国际贸易专业，“机缘巧合”走进了IT行业，现在从事Java开发。目前在自学Android。 一直以来想写点什么，鉴于知识水平有限，写不出啥好东西，方向感也不是很强。工作稳定后，有段时间没有关注Java基础。网上搜搜Java面试宝典，以前看不懂的或者一知半解的，突然发现分析分析后就能明白了。我觉得这个过程应该记录下来，或许分析得还不全">
+<meta name="twitter:title" content="JDK8新特性之接口的静态方法和默认方法">
+<meta name="twitter:description" content="JDK8之前我们在接口中定义成员变量只能是public static final的，定义的成员方法只能是public abstract的，默认省略。JDK8前后这一概念等价。定义接口BeforeJDK8Interface如下：name和name1表述等价，getName()和getName1()表述等价。12345678910111213public interface BeforeJDK8Int">
 
 
 
@@ -140,13 +141,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/about/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/11/05/JDK8-static-and-default/"/>
 
 
 
 
 
-  <title>关于我的一些事 | 码农的春天还没来</title>
+  <title>JDK8新特性之接口的静态方法和默认方法 | 码农的春天还没来</title>
   
 
 
@@ -305,37 +306,297 @@
 
   <div id="posts" class="posts-expand">
     
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/05/JDK8-static-and-default/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="殷学飞">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/my_image.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="码农的春天还没来">
+    </span>
+
     
-    
-    <div class="post-block page">
       <header class="post-header">
 
-	<h1 class="post-title" itemprop="name headline">关于我的一些事</h1>
-
-
-
-</header>
-
-      
-      
-      
-      <div class="post-body">
         
         
-          <h2 id="个人简介"><a href="#个人简介" class="headerlink" title="个人简介"></a>个人简介</h2><p>简单介绍下自己，我叫殷学飞，程序猿一只。在北京科技大学学的国际贸易专业，“机缘巧合”走进了IT行业，现在从事Java开发。目前在自学Android。</p>
-<p>一直以来想写点什么，鉴于知识水平有限，写不出啥好东西，方向感也不是很强。工作稳定后，有段时间没有关注Java基础。网上搜搜Java面试宝典，以前看不懂的或者一知半解的，突然发现分析分析后就能明白了。我觉得这个过程应该记录下来，或许分析得还不全，若再过一两年再回头看，感觉和现在肯定又不一样。</p>
-<p>我不甘于平凡，但是走的又是平凡的路，很希望在这条路上，能遇见几个志同道合的人，哪一天不管谁有个好的idea，大家一拍脑子，撸起袖子开干！若你也有好的想法，大家可以一起交流交流。</p>
-<h2 id="联系方式"><a href="#联系方式" class="headerlink" title="联系方式"></a>联系方式</h2><p>微信： xfyin179<br>qq: 807799015<br>邮箱：xfyin179@163.com<br>博客：<a href="http://letus179.com/" target="_blank" rel="external">http://letus179.com/</a></p>
-
+          <h1 class="post-title" itemprop="name headline">JDK8新特性之接口的静态方法和默认方法</h1>
         
-      </div>
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-05T18:50:10+08:00">
+                2017-11-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                  <span class="post-meta-divider">|</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  483
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  2
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
       
       
+
+      
+        <p><strong>JDK8之前</strong>我们在接口中定义<code>成员变量</code>只能是<code>public static final</code>的，定义的<code>成员方法</code>只能是<code>public abstract</code>的，默认省略。JDK8前后这一概念等价。定义接口<code>BeforeJDK8Interface</code>如下：<br><code>name</code>和<code>name1</code>表述等价，<code>getName()</code>和<code>getName1()</code>表述等价。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">BeforeJDK8Interface</span> </span>&#123;</div><div class="line"></div><div class="line">    String name = <span class="string">"BeforeJDK8Interface"</span>;</div><div class="line">    </div><div class="line">    <span class="comment">//public、 static、 final 可以单独使用，也可以组合使用</span></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String name1 = <span class="string">"BeforeJDK8Interface"</span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">getName</span><span class="params">()</span></span>;</div><div class="line">    </div><div class="line">    <span class="comment">//public、 abstract 可以单独使用，也可以组合使用</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">getName1</span><span class="params">()</span></span>;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>JDK8新增特性</strong>，允许我们在接口中定义<strong>default默认方法</strong>和<strong>static静态方法</strong>。定义接口<code>JDK8Interface</code>如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">JDK8Interface</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">default</span> <span class="keyword">void</span> <span class="title">myDefaultMethod</span><span class="params">()</span> </span>&#123;</div><div class="line">        System.out.println(<span class="string">"JDK8新特性:接口中的默认方法"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">myStaticMethod</span><span class="params">()</span> </span>&#123;</div><div class="line">        System.out.println(<span class="string">"JDK8新特性：接口中的静态方法"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>实现接口时，这里static方法由于<code>static</code>的原因，属于接口类，只能通过 <em>接口类名直接调用</em>；<br>而default方法，需要 <em>接口实现类实例化后调用</em>。定义接口实现类<code>JDK8InterfaceImpl</code>如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JDK8InterfaceImpl</span> <span class="keyword">implements</span> <span class="title">JDK8Interface</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        JDK8Interface.myStaticMethod();</div><div class="line"></div><div class="line">        JDK8InterfaceImpl jdk8Interface = <span class="keyword">new</span> JDK8InterfaceImpl();</div><div class="line">        jdk8Interface.myDefaultMethod();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>由于<code>static</code>的原因，静态方法不能重写；但是default方法却可以，重写<code>myDefaultMethod</code>代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JDK8InterfaceImpl</span> <span class="keyword">implements</span> <span class="title">JDK8Interface</span> </span>&#123;</div><div class="line"></div><div class="line">   ...</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">myDefaultMethod</span><span class="params">()</span> </span>&#123;</div><div class="line">        System.out.println(<span class="string">"接口中的default方法不满足需求，需要重写"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这里稍注意下，<code>JDK8Interface</code>接口中<code>default</code>方法用了修饰符<code>&quot;default&quot;</code>，这里重写后修饰符是<code>&quot;public&quot;</code></p>
+<p>由于java实行的是<strong>单继承</strong><code>extends</code><strong>多实现</strong><code>implements</code>，那<code>JDK8</code>新增特性中的两个方法有啥要求不？</p>
+<ul>
+<li>首先看看<code>static</code>方法，由于调用static方法时，用的是接口类名，不能的接口类名肯定不同，所以<strong>没影响</strong>；</li>
+<li>对于<code>default</code>方法， 有于是实现类实例化后调用，若该类有<code>多个接口</code>且接口中有<code>相同名称</code>的default方法，这时候编译器就没办法区分了，<strong>会报错，必须重写default方法</strong>。</li>
+</ul>
+
       
     </div>
     
     
     
+
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>欢迎留言-------------</div>
+    
+</div>
+      
+    </div>
+
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechat.png" alt="殷学飞 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/aipay.jpg" alt="殷学飞 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+ 
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JDK8新特/" rel="tag"><i class="fa fa-tag"></i> JDK8新特</a>
+          
+            <a href="/tags/静态方法/" rel="tag"><i class="fa fa-tag"></i> 静态方法</a>
+          
+            <a href="/tags/默认方法/" rel="tag"><i class="fa fa-tag"></i> 默认方法</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
+        
+
+        
+
+        
+          
+          <div id="needsharebutton-postbottom">
+            <span class="btn">
+              <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </span>
+          </div>
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/11/02/overload-and-override/" rel="next" title="面试题：重载（Overload）和重写（Override）解析">
+                <i class="fa fa-chevron-left"></i> 面试题：重载（Overload）和重写（Override）解析
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/11/05/abstract-and-interface/" rel="prev" title="abstract_and_interface">
+                abstract_and_interface <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+	<a class="jiathis_button_qzone"></a>
+	<a class="jiathis_button_tsina"></a>
+	<a class="jiathis_button_tqq"></a>
+	<a class="jiathis_button_weixin"></a>
+	<a class="jiathis_button_renren"></a>
+	<a class="jiathis_button_xiaoyou"></a>
+	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
   </div>
 
 
@@ -373,17 +634,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview-wrap sidebar-panel">
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -490,22 +742,6 @@
         </div>
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#个人简介"><span class="nav-number">1.</span> <span class="nav-text">个人简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#联系方式"><span class="nav-number">2.</span> <span class="nav-text">联系方式</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       
