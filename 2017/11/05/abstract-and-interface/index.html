@@ -100,18 +100,18 @@
 
 
 
-<meta name="description" content="1. 概念抽象类：包含抽象方法的类就称为 抽象类；接口： 抽象方法的集合，方法没有具体实现即不包含方法体。  2. 两者异同2.1 相同点 都不能被实例化； 接口的实现类或抽象类的子类都必须实现接口或抽象类中的方法后才能被实例化  2.2 不同点 接口中的方法是高度抽象的，只有定义，没有具体的实现；抽象类中可以有定义也可以有实现； 接口中的方法默认为public abstract， 可以直接写pu">
+<meta name="description" content="概念抽象类：包含抽象方法的类就称为 抽象类；接口： 抽象方法的集合，方法没有具体实现即不包含方法体。  两者异同相同点 都不能被实例化； 接口的实现类或抽象类的子类都必须实现接口或抽象类中的方法后才能被实例化  不同点 接口中的方法是高度抽象的，只有定义，没有具体的实现；抽象类中可以有定义也可以有实现； 接口中的方法默认为public abstract， 可以直接写public， 可以都省略不写；">
 <meta name="keywords" content="抽象类,接口,反射,jdk8新特性">
 <meta property="og:type" content="article">
-<meta property="og:title" content="abstract_and_interface">
+<meta property="og:title" content="面试题： 抽象类（abstract class）和接口（interface）解析">
 <meta property="og:url" content="http://yoursite.com/2017/11/05/abstract-and-interface/index.html">
 <meta property="og:site_name" content="码农的春天还没来">
-<meta property="og:description" content="1. 概念抽象类：包含抽象方法的类就称为 抽象类；接口： 抽象方法的集合，方法没有具体实现即不包含方法体。  2. 两者异同2.1 相同点 都不能被实例化； 接口的实现类或抽象类的子类都必须实现接口或抽象类中的方法后才能被实例化  2.2 不同点 接口中的方法是高度抽象的，只有定义，没有具体的实现；抽象类中可以有定义也可以有实现； 接口中的方法默认为public abstract， 可以直接写pu">
+<meta property="og:description" content="概念抽象类：包含抽象方法的类就称为 抽象类；接口： 抽象方法的集合，方法没有具体实现即不包含方法体。  两者异同相同点 都不能被实例化； 接口的实现类或抽象类的子类都必须实现接口或抽象类中的方法后才能被实例化  不同点 接口中的方法是高度抽象的，只有定义，没有具体的实现；抽象类中可以有定义也可以有实现； 接口中的方法默认为public abstract， 可以直接写public， 可以都省略不写；">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-11-05T11:05:49.859Z">
+<meta property="og:updated_time" content="2017-11-05T11:08:56.151Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="abstract_and_interface">
-<meta name="twitter:description" content="1. 概念抽象类：包含抽象方法的类就称为 抽象类；接口： 抽象方法的集合，方法没有具体实现即不包含方法体。  2. 两者异同2.1 相同点 都不能被实例化； 接口的实现类或抽象类的子类都必须实现接口或抽象类中的方法后才能被实例化  2.2 不同点 接口中的方法是高度抽象的，只有定义，没有具体的实现；抽象类中可以有定义也可以有实现； 接口中的方法默认为public abstract， 可以直接写pu">
+<meta name="twitter:title" content="面试题： 抽象类（abstract class）和接口（interface）解析">
+<meta name="twitter:description" content="概念抽象类：包含抽象方法的类就称为 抽象类；接口： 抽象方法的集合，方法没有具体实现即不包含方法体。  两者异同相同点 都不能被实例化； 接口的实现类或抽象类的子类都必须实现接口或抽象类中的方法后才能被实例化  不同点 接口中的方法是高度抽象的，只有定义，没有具体的实现；抽象类中可以有定义也可以有实现； 接口中的方法默认为public abstract， 可以直接写public， 可以都省略不写；">
 
 
 
@@ -147,7 +147,7 @@
 
 
 
-  <title>abstract_and_interface | 码农的春天还没来</title>
+  <title>面试题： 抽象类（abstract class）和接口（interface）解析 | 码农的春天还没来</title>
   
 
 
@@ -335,7 +335,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">abstract_and_interface</h1>
+          <h1 class="post-title" itemprop="name headline">面试题： 抽象类（abstract class）和接口（interface）解析</h1>
         
 
         <div class="post-meta">
@@ -357,6 +357,39 @@
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/面试题分析/" itemprop="url" rel="index">
+                    <span itemprop="name">面试题分析</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/面试题分析/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -381,7 +414,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  757
+                  743
                 </span>
               
 
@@ -418,29 +451,29 @@
       
 
       
-        <h2 id="1-概念"><a href="#1-概念" class="headerlink" title="1. 概念"></a>1. 概念</h2><p><strong>抽象类</strong>：<em>包含抽象方法的类就称为 抽象类</em>；<br><strong>接口</strong>： <em>抽象方法的集合，方法没有具体实现即不包含方法体</em>。</p>
+        <h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p><strong>抽象类</strong>：<em>包含抽象方法的类就称为 抽象类</em>；<br><strong>接口</strong>： <em>抽象方法的集合，方法没有具体实现即不包含方法体</em>。</p>
 <hr>
-<h2 id="2-两者异同"><a href="#2-两者异同" class="headerlink" title="2. 两者异同"></a>2. 两者异同</h2><h3 id="2-1-相同点"><a href="#2-1-相同点" class="headerlink" title="2.1 相同点"></a>2.1 相同点</h3><ol>
+<h2 id="两者异同"><a href="#两者异同" class="headerlink" title="两者异同"></a>两者异同</h2><h3 id="相同点"><a href="#相同点" class="headerlink" title="相同点"></a>相同点</h3><ol>
 <li>都<code>不能</code>被实例化；</li>
 <li><code>接口的实现类</code>或<code>抽象类的子类</code>都<strong>必须实现</strong><code>接口</code>或<code>抽象类中</code>的方法后才能被实例化</li>
 </ol>
-<h3 id="2-2-不同点"><a href="#2-2-不同点" class="headerlink" title="2.2 不同点"></a>2.2 不同点</h3><ol>
+<h3 id="不同点"><a href="#不同点" class="headerlink" title="不同点"></a>不同点</h3><ol>
 <li><code>接口</code>中的方法是高度抽象的，<em>只有定义，没有具体的实现</em>；<code>抽象类</code>中<em>可以有定义也可以有实现</em>；</li>
 <li><code>接口</code>中的方法默认为<code>public abstract</code>， 可以直接写<code>public</code>， 可以都省略不写；<code>接口</code>中方法修饰符不能是<code>private</code>， 接口需要实现，所以私有的方法没有意义；<code>抽象类</code>中的具体实现的方法和普通的类一样，而只有定义的方法必须用<code>abstract</code>修饰，不然编译不通过；而且<code>抽象方法</code>的修饰符不能是<code>private</code>，<code>static</code>，<code>synchronized</code>，<code>native</code>，能用<code>默认的</code>，<code>public</code>，<code>protected</code></li>
 <li><code>接口</code>需要<code>实现（implements）</code>， <code>抽象类</code>需要<code>继承（extends）</code>，<em>一个类可以实现多个接口，但是只能继承一个抽象类（单继承多实现）</em>；</li>
 <li><code>接口</code>中定义变量默认为<code>public static final</code>， 并且要赋予<code>初始值</code>，不然编译不通过；<code>抽象类</code>和普通的类一样，可以有自己的成员变量，可以重新赋值；</li>
 </ol>
-<h2 id="3-接口三问"><a href="#3-接口三问" class="headerlink" title="3.接口三问"></a>3.接口三问</h2><h3 id="3-1-接口方法能否用private修饰"><a href="#3-1-接口方法能否用private修饰" class="headerlink" title="3.1 接口方法能否用private修饰"></a>3.1 接口方法能否用<code>private</code>修饰</h3><blockquote>
+<h2 id="接口三问"><a href="#接口三问" class="headerlink" title="接口三问"></a>接口三问</h2><h3 id="接口方法能否用private修饰"><a href="#接口方法能否用private修饰" class="headerlink" title="接口方法能否用private修饰"></a>接口方法能否用<code>private</code>修饰</h3><blockquote>
 <p>不能。因为接口是对外开放的，需要具体的类来实现其中的方法，私有的方法作用范围为本类，在接口中定义私有方法没有任何意义，编译不会通过。</p>
 </blockquote>
-<h3 id="3-2-接口方法能否用synchronized修饰"><a href="#3-2-接口方法能否用synchronized修饰" class="headerlink" title="3.2 接口方法能否用synchronized修饰"></a>3.2 接口方法能否用<code>synchronized</code>修饰</h3><blockquote>
+<h3 id="接口方法能否用synchronized修饰"><a href="#接口方法能否用synchronized修饰" class="headerlink" title="接口方法能否用synchronized修饰"></a>接口方法能否用<code>synchronized</code>修饰</h3><blockquote>
 <p>不能。<code>synchronized</code>是一种<code>同步锁</code>，在修饰方法时，需要具体逻辑，而接口只是定义，因为直接修饰接口中的方法没意义，可以修改接口方法的<code>具体实现</code>。</p>
 </blockquote>
-<h3 id="3-3-接口方法能否用static修饰"><a href="#3-3-接口方法能否用static修饰" class="headerlink" title="3.3 接口方法能否用static修饰"></a>3.3 接口方法能否用<code>static</code>修饰</h3><blockquote>
-<p>这和jdk版本有关。jdk8之前：不能；jdk8新特性： 能。<br>——参见<a href="https://www.zybuluo.com/xfyin/note/939618" target="_blank" rel="external">JDK8新特性之接口的静态方法和默认方法</a></p>
+<h3 id="接口方法能否用static修饰"><a href="#接口方法能否用static修饰" class="headerlink" title="接口方法能否用static修饰"></a>接口方法能否用<code>static</code>修饰</h3><blockquote>
+<p>这和jdk版本有关。jdk8之前：不能；jdk8新特性： 能。<br>——参见<a href="http://letus179.com/2017/11/05/JDK8-static-and-default/" target="_blank" rel="external">JDK8新特性之接口的静态方法和默认方法</a></p>
 </blockquote>
 <hr>
-<h2 id="4-举例"><a href="#4-举例" class="headerlink" title="4. 举例"></a>4. 举例</h2><p>下面先给出对应源码，再用<code>jad</code>反编译<code>.class</code>文件。反编译执行命令如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">jad -a -o -s java 类名.class</div></pre></td></tr></table></figure></p>
+<h2 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h2><p>下面先给出对应源码，再用<code>jad</code>反编译<code>.class</code>文件。反编译执行命令如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">jad -a -o -s java 类名.class</div></pre></td></tr></table></figure></p>
 <p><code>jad</code>命令参见<a href="http://xxx" target="_blank" rel="external">jad命令描述</a></p>
 <p><code>MyInterface.java</code>接口源码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MyInterface</span> </span>&#123;</div><div class="line"></div><div class="line">  String name = <span class="string">"MyInterface"</span>;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">void</span> <span class="title">add</span><span class="params">()</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p><code>MyInterface.class</code>反编译如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MyInterface</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">()</span></span>;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String name = <span class="string">"MyInterface"</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
@@ -756,7 +789,7 @@ var jiathis_config={
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-概念"><span class="nav-number">1.</span> <span class="nav-text">1. 概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-两者异同"><span class="nav-number">2.</span> <span class="nav-text">2. 两者异同</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-相同点"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 相同点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-不同点"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 不同点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-接口三问"><span class="nav-number">3.</span> <span class="nav-text">3.接口三问</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-接口方法能否用private修饰"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 接口方法能否用private修饰</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-接口方法能否用synchronized修饰"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 接口方法能否用synchronized修饰</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-接口方法能否用static修饰"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 接口方法能否用static修饰</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-举例"><span class="nav-number">4.</span> <span class="nav-text">4. 举例</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#概念"><span class="nav-number">1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#两者异同"><span class="nav-number">2.</span> <span class="nav-text">两者异同</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#相同点"><span class="nav-number">2.1.</span> <span class="nav-text">相同点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#不同点"><span class="nav-number">2.2.</span> <span class="nav-text">不同点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#接口三问"><span class="nav-number">3.</span> <span class="nav-text">接口三问</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#接口方法能否用private修饰"><span class="nav-number">3.1.</span> <span class="nav-text">接口方法能否用private修饰</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#接口方法能否用synchronized修饰"><span class="nav-number">3.2.</span> <span class="nav-text">接口方法能否用synchronized修饰</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#接口方法能否用static修饰"><span class="nav-number">3.3.</span> <span class="nav-text">接口方法能否用static修饰</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#举例"><span class="nav-number">4.</span> <span class="nav-text">举例</span></a></li></ol></div>
             
 
           </div>
