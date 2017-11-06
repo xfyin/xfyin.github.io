@@ -87,7 +87,7 @@
 
 
 
-  <meta name="keywords" content="JDK8新特,静态方法,默认方法," />
+  <meta name="keywords" content="静态,非静态,内部类," />
 
 
 
@@ -100,18 +100,18 @@
 
 
 
-<meta name="description" content="JDK8之前我们在接口中定义成员变量只能是public static final的，定义的成员方法只能是public abstract的，默认省略。JDK8前后这一概念等价。定义接口BeforeJDK8Interface如下：name和name1表述等价，getName()和getName1()表述等价。12345678910111213public interface BeforeJDK8Int">
-<meta name="keywords" content="JDK8新特,静态方法,默认方法">
+<meta name="description" content="static方法就是没有this的方法。在static方法内部不能调用非静态方法，反过来是可以的。而且可以在没有创建任何对象的前提下，仅仅通过类本身来调用static方法。这实际上正是static方法的主要用途。 —— Java编程思想  一句话描述下：方便在对象没有创建的时候调用方法或变量。很显然，static依赖于类，只要类加载了，就可以使用，而不需要等对象实例化后再调用。 下面具体分析下。">
+<meta name="keywords" content="静态,非静态,内部类">
 <meta property="og:type" content="article">
-<meta property="og:title" content="JDK8新特性之接口的静态方法和默认方法">
-<meta property="og:url" content="http://yoursite.com/2017/11/05/JDK8-static-and-default/index.html">
+<meta property="og:title" content="静态static与非静态non-static(变量、方法、内部类)解析">
+<meta property="og:url" content="http://yoursite.com/2017/11/06/static-and-non-static/index.html">
 <meta property="og:site_name" content="码农的春天还没来">
-<meta property="og:description" content="JDK8之前我们在接口中定义成员变量只能是public static final的，定义的成员方法只能是public abstract的，默认省略。JDK8前后这一概念等价。定义接口BeforeJDK8Interface如下：name和name1表述等价，getName()和getName1()表述等价。12345678910111213public interface BeforeJDK8Int">
+<meta property="og:description" content="static方法就是没有this的方法。在static方法内部不能调用非静态方法，反过来是可以的。而且可以在没有创建任何对象的前提下，仅仅通过类本身来调用static方法。这实际上正是static方法的主要用途。 —— Java编程思想  一句话描述下：方便在对象没有创建的时候调用方法或变量。很显然，static依赖于类，只要类加载了，就可以使用，而不需要等对象实例化后再调用。 下面具体分析下。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-11-05T10:53:57.278Z">
+<meta property="og:updated_time" content="2017-11-06T14:56:25.090Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="JDK8新特性之接口的静态方法和默认方法">
-<meta name="twitter:description" content="JDK8之前我们在接口中定义成员变量只能是public static final的，定义的成员方法只能是public abstract的，默认省略。JDK8前后这一概念等价。定义接口BeforeJDK8Interface如下：name和name1表述等价，getName()和getName1()表述等价。12345678910111213public interface BeforeJDK8Int">
+<meta name="twitter:title" content="静态static与非静态non-static(变量、方法、内部类)解析">
+<meta name="twitter:description" content="static方法就是没有this的方法。在static方法内部不能调用非静态方法，反过来是可以的。而且可以在没有创建任何对象的前提下，仅仅通过类本身来调用static方法。这实际上正是static方法的主要用途。 —— Java编程思想  一句话描述下：方便在对象没有创建的时候调用方法或变量。很显然，static依赖于类，只要类加载了，就可以使用，而不需要等对象实例化后再调用。 下面具体分析下。">
 
 
 
@@ -141,13 +141,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/11/05/JDK8-static-and-default/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/11/06/static-and-non-static/"/>
 
 
 
 
 
-  <title>JDK8新特性之接口的静态方法和默认方法 | 码农的春天还没来</title>
+  <title>静态static与非静态non-static(变量、方法、内部类)解析 | 码农的春天还没来</title>
   
 
 
@@ -318,7 +318,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/05/JDK8-static-and-default/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/06/static-and-non-static/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="殷学飞">
@@ -335,7 +335,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">JDK8新特性之接口的静态方法和默认方法</h1>
+          <h1 class="post-title" itemprop="name headline">静态static与非静态non-static(变量、方法、内部类)解析</h1>
         
 
         <div class="post-meta">
@@ -347,8 +347,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-05T18:50:10+08:00">
-                2017-11-05
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-06T22:54:16+08:00">
+                2017-11-06
               </time>
             
 
@@ -357,28 +357,6 @@
             
           </span>
 
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java/" itemprop="url" rel="index">
-                    <span itemprop="name">java</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
           
 
           
@@ -403,7 +381,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  483
+                  1,540
                 </span>
               
 
@@ -419,7 +397,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  2
+                  6
                 </span>
               
             </div>
@@ -440,17 +418,69 @@
       
 
       
-        <p><strong>JDK8之前</strong>我们在接口中定义<code>成员变量</code>只能是<code>public static final</code>的，定义的<code>成员方法</code>只能是<code>public abstract</code>的，默认省略。JDK8前后这一概念等价。定义接口<code>BeforeJDK8Interface</code>如下：<br><code>name</code>和<code>name1</code>表述等价，<code>getName()</code>和<code>getName1()</code>表述等价。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">BeforeJDK8Interface</span> </span>&#123;</div><div class="line"></div><div class="line">    String name = <span class="string">"BeforeJDK8Interface"</span>;</div><div class="line">    </div><div class="line">    <span class="comment">//public、 static、 final 可以单独使用，也可以组合使用</span></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String name1 = <span class="string">"BeforeJDK8Interface"</span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">getName</span><span class="params">()</span></span>;</div><div class="line">    </div><div class="line">    <span class="comment">//public、 abstract 可以单独使用，也可以组合使用</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">getName1</span><span class="params">()</span></span>;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p><strong>JDK8新增特性</strong>，允许我们在接口中定义<strong>default默认方法</strong>和<strong>static静态方法</strong>。定义接口<code>JDK8Interface</code>如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">JDK8Interface</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">default</span> <span class="keyword">void</span> <span class="title">myDefaultMethod</span><span class="params">()</span> </span>&#123;</div><div class="line">        System.out.println(<span class="string">"JDK8新特性:接口中的默认方法"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">myStaticMethod</span><span class="params">()</span> </span>&#123;</div><div class="line">        System.out.println(<span class="string">"JDK8新特性：接口中的静态方法"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>实现接口时，这里static方法由于<code>static</code>的原因，属于接口类，只能通过 <em>接口类名直接调用</em>；<br>而default方法，需要 <em>接口实现类实例化后调用</em>。定义接口实现类<code>JDK8InterfaceImpl</code>如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JDK8InterfaceImpl</span> <span class="keyword">implements</span> <span class="title">JDK8Interface</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        JDK8Interface.myStaticMethod();</div><div class="line"></div><div class="line">        JDK8InterfaceImpl jdk8Interface = <span class="keyword">new</span> JDK8InterfaceImpl();</div><div class="line">        jdk8Interface.myDefaultMethod();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>由于<code>static</code>的原因，静态方法不能重写；但是default方法却可以，重写<code>myDefaultMethod</code>代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JDK8InterfaceImpl</span> <span class="keyword">implements</span> <span class="title">JDK8Interface</span> </span>&#123;</div><div class="line"></div><div class="line">   ...</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">myDefaultMethod</span><span class="params">()</span> </span>&#123;</div><div class="line">        System.out.println(<span class="string">"接口中的default方法不满足需求，需要重写"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>这里稍注意下，<code>JDK8Interface</code>接口中<code>default</code>方法用了修饰符<code>&quot;default&quot;</code>，这里重写后修饰符是<code>&quot;public&quot;</code></p>
-<p>由于java实行的是<strong>单继承</strong><code>extends</code><strong>多实现</strong><code>implements</code>，那<code>JDK8</code>新增特性中的两个方法有啥要求不？</p>
-<ul>
-<li>首先看看<code>static</code>方法，由于调用static方法时，用的是接口类名，不能的接口类名肯定不同，所以<strong>没影响</strong>；</li>
-<li>对于<code>default</code>方法， 有于是实现类实例化后调用，若该类有<code>多个接口</code>且接口中有<code>相同名称</code>的default方法，这时候编译器就没办法区分了，<strong>会报错，必须重写default方法</strong>。</li>
+        <blockquote>
+<p>static方法就是没有this的方法。在static方法内部不能调用非静态方法，反过来是可以的。而且可以在没有创建任何对象的前提下，仅仅通过类本身来调用static方法。这实际上正是static方法的主要用途。<br> </p><p align="right">—— <a href="https://baike.baidu.com/item/Java%E7%BC%96%E7%A8%8B%E6%80%9D%E6%83%B3/10078563?fr=aladdin" target="_blank" rel="external">Java编程思想</a></p><p></p>
+</blockquote>
+<p>一句话描述下：<strong>方便在对象没有创建的时候调用方法或变量</strong>。<em>很显然，<code>static</code>依赖于<code>类</code>，只要类加载了，就可以使用，而不需要等对象实例化后再调用。</em></p>
+<p>下面具体分析下。</p>
+<hr>
+<h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><h3 id="静态变量"><a href="#静态变量" class="headerlink" title="静态变量"></a>静态变量</h3><ul>
+<li><code>static</code>修饰的变量，也叫<code>类变量</code>；</li>
+<li>可以直接用<code>类名.变量</code>调用，也可以用<code>对象名.变量</code>调用；</li>
+<li>所有对象的同一个类变量共享同一块内存空间。</li>
 </ul>
-
+<h3 id="实例变量"><a href="#实例变量" class="headerlink" title="实例变量"></a>实例变量</h3><ul>
+<li>没有<code>static</code>修饰，也就<code>对象变量</code>；</li>
+<li>只能通过<code>对象</code>调用；</li>
+<li>所有对象的同一个类变量共享不同内存空间。</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
+<li>静态变量是所有对象<strong>共有的</strong>，当某一个对象将它的值改变，此时其他对象去获取时，将得到改变后的值，因为它依赖于<code>类</code>；</li>
+<li>实例变量是每一个对象<strong>私有的</strong>，当某一个对象将它的值改变，此时其他对象去获取时，得到的还是改变前的值，因为它依赖具体的<code>实例</code>；</li>
+</ul>
+<h3 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h3><p>静态变量和非静态变量举例代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StaticTest</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="keyword">static</span> <span class="keyword">int</span> age = <span class="number">1</span>;</div><div class="line"></div><div class="line">  <span class="keyword">int</span> level = <span class="number">1</span>;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line"></div><div class="line">    System.out.println(<span class="string">"静态变量：直接用‘类名.’调用: age = "</span> + StaticTest.age);</div><div class="line"></div><div class="line">    <span class="comment">// 修改静态变量值</span></div><div class="line">    StaticTest.age = <span class="number">2</span>;</div><div class="line"></div><div class="line">    <span class="comment">// 实例化StaticTest对象</span></div><div class="line">    StaticTest staticTest = <span class="keyword">new</span> StaticTest();</div><div class="line">    System.out.println(<span class="string">"静态变量：通过‘实例化后的对象’调用：age = "</span> + staticTest.age);</div><div class="line">    System.out.println(<span class="string">"实例变量：只能通过‘实例化后的对象’调用：level = "</span> + staticTest.level);</div><div class="line"></div><div class="line">    <span class="comment">// 修改静态变量值</span></div><div class="line">    staticTest.age = <span class="number">3</span>;</div><div class="line"></div><div class="line">    <span class="comment">// 修改实例变量值</span></div><div class="line">    staticTest.level = <span class="number">2</span>;</div><div class="line"></div><div class="line">    <span class="comment">// 再实例化一个StaticTest对象</span></div><div class="line">    StaticTest staticTest1 = <span class="keyword">new</span> StaticTest();</div><div class="line">    System.out.println(<span class="string">"静态变量：前一个对象改变了‘静态变量’的值，该对象获取值为： age = "</span> + staticTest1.age);</div><div class="line">    System.out.println(<span class="string">"实例变量：前一个对象改变了‘实例变量’的值，该对象获取值为： level = "</span> + staticTest1.level);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>执行结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">静态变量：直接用‘类名.’调用: age = 1</div><div class="line">静态变量：通过‘实例化后的对象’调用：age = 2</div><div class="line">实例变量：只能通过‘实例化后的对象’调用：level = 1</div><div class="line">静态变量：前一个对象改变了‘静态变量’的值，该对象获取值为： age = 3</div><div class="line">实例变量：前一个对象改变了‘实例变量’的值，该对象获取值为： level = 1</div></pre></td></tr></table></figure></p>
+<p>结果和前面分析的一致。</p>
+<hr>
+<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><h3 id="静态方法"><a href="#静态方法" class="headerlink" title="静态方法"></a>静态方法</h3><ul>
+<li><code>static</code>修饰的方法，属于<code>类</code>；</li>
+<li>可以直接用<code>类名.方法名</code>调用，也可以用<code>对象名.方法名</code>调用；</li>
+<li>在访问本类成员时，只允许访问<code>静态变量</code>和<code>静态方法</code>，不允许访问<code>实例变量</code>和<code>实例方法</code>；</li>
+<li><code>static</code>块也即静态代码块，只能调用静态方法。</li>
+</ul>
+<h3 id="实例方法"><a href="#实例方法" class="headerlink" title="实例方法"></a>实例方法</h3><ul>
+<li>没有<code>static</code>修饰，属于<code>对象</code>；</li>
+<li>只能通过<code>对象</code>调用；</li>
+<li>实例方法可以访问<code>实例成员</code>，也可访问<code>静态成员</code>；</li>
+<li><code>static</code>块中不能调用实例方法。</li>
+</ul>
+<h3 id="举例-1"><a href="#举例-1" class="headerlink" title="举例"></a>举例</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StaticTest</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="keyword">static</span> <span class="keyword">int</span> age = <span class="number">1</span>;</div><div class="line"></div><div class="line">  <span class="keyword">int</span> level = <span class="number">1</span>;</div><div class="line"></div><div class="line">  <span class="comment">/**</span></div><div class="line"><span class="comment">   * 非静态方法</span></div><div class="line"><span class="comment">   */</span></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">nonStaticMethod</span><span class="params">()</span> </span>&#123;</div><div class="line"></div><div class="line">    System.out.println(<span class="keyword">this</span>.level);</div><div class="line">    </div><div class="line">    System.out.println(age);</div><div class="line">    </div><div class="line">    staticMethod();</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="comment">/**</span></div><div class="line"><span class="comment">   * 静态方法</span></div><div class="line"><span class="comment">   */</span></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">staticMethod</span><span class="params">()</span> </span>&#123;</div><div class="line"></div><div class="line">    System.out.println(age);</div><div class="line"></div><div class="line">    <span class="comment">// 编译不通过</span></div><div class="line">    <span class="comment">//System.out.println(level);</span></div><div class="line"></div><div class="line">    System.out.println(<span class="keyword">new</span> StaticTest().level);</div><div class="line"></div><div class="line">    <span class="comment">// 编译不通过</span></div><div class="line">    <span class="comment">//nonStaticMethod();</span></div><div class="line"></div><div class="line">    <span class="keyword">new</span> StaticTest().nonStaticMethod();</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>总结：</p>
+<p>静态方法在类加载时就创建了，但是非静态方法需要实例化后才能创建，因为<strong>先类加载，再实例化</strong>，所以静态方法中不能直接访问类的成员，只有类实例化后才能访问。</p>
+<hr>
+<h2 id="内部类"><a href="#内部类" class="headerlink" title="内部类"></a>内部类</h2><blockquote>
+<p>将一个类的定义放在另一个类的定义内部，就是内部类。</p>
+</blockquote>
+<p>这里只分析普通内部类和静态内部类的区别，具体关于内部类知识暂时请参见<a href="http://www.cnblogs.com/chenssy/p/3388487.html" target="_blank" rel="external">详解内部类</a></p>
+<h3 id="普通内部类"><a href="#普通内部类" class="headerlink" title="普通内部类"></a>普通内部类</h3><ul>
+<li>不能有静态成员（静态方法，静态变量），否则编译不通过；</li>
+<li>可以访问外部类的所有成员（方法，属性）；</li>
+<li><p>实例化内部类方法：</p>
+<p>  1). 先生成一个外部类的对象实例，如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">OutClass o = <span class="keyword">new</span> OutClass();</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2). 通过外部类的对象实例生成内部类对象，如：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">OutClass.InnerClass no_static_i = o.new InnerClass();</div></pre></td></tr></table></figure></p>
+<h3 id="静态内部类"><a href="#静态内部类" class="headerlink" title="静态内部类"></a>静态内部类</h3><ul>
+<li>可以有静态和非静态成员；</li>
+<li>只能访问外部类的静态成员；</li>
+<li><p>实例化一个静态内部类方法：</p>
+<p>   1). 不依赖外部类的实例，直接实例化内部类对象，如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">OutClass.InnerStaticClass static_i  = <span class="keyword">new</span> OutClass.InnerStaticClass();</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2). 调用静态内部类的方法或变量，通过类名直接调用，如：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">OutClass.InnerStaticClass.static_name;</div><div class="line">OutClass.InnerStaticClass.getName();</div></pre></td></tr></table></figure></p>
+<h3 id="举例-2"><a href="#举例-2" class="headerlink" title="举例"></a>举例</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OutClass</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="keyword">private</span> String outName = <span class="string">"OutClass.outName"</span>;</div><div class="line"></div><div class="line">  <span class="keyword">static</span> String staticOutName = <span class="string">"OutClass.staticOutName"</span>;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getOutName</span><span class="params">()</span> </span>&#123;</div><div class="line">    System.out.println(outName);</div><div class="line">    System.out.println(staticOutName);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">getOutStaticName</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="comment">// 编译不通过，静态方法不能访问非静态成员</span></div><div class="line">    <span class="comment">//System.out.println(outName);</span></div><div class="line"></div><div class="line">    System.out.println(staticOutName);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="comment">// 依赖外部类实例，创建非静态内部类</span></div><div class="line">    OutClass o = <span class="keyword">new</span> OutClass();</div><div class="line">    OutClass.InnerClass no_static_i = o.new InnerClass();</div><div class="line">    no_static_i.getInnerName();</div><div class="line"></div><div class="line">    <span class="comment">// 不依赖外部类实例，直接实例化静态内部类</span></div><div class="line">    OutClass.InnerStaticClass static_i = <span class="keyword">new</span> OutClass.InnerStaticClass();</div><div class="line">    static_i.getInnerName();</div><div class="line"></div><div class="line">    <span class="comment">// 通过静态内部类类名直接调用成员变量或方法</span></div><div class="line">    System.out.println(OutClass.InnerStaticClass.staticInnerName);</div><div class="line">    OutClass.InnerStaticClass.getStaticInnerName();</div><div class="line"></div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="comment">/**</span></div><div class="line"><span class="comment">   * 非静态内部类</span></div><div class="line"><span class="comment">   */</span></div><div class="line">  <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">InnerClass</span> </span>&#123;</div><div class="line">    <span class="comment">// 编译不通过，普通静态内部类中不能有static变量</span></div><div class="line">    <span class="comment">//static String staticInnerName = "InnerClass.staticInnerName";</span></div><div class="line"></div><div class="line">    <span class="comment">// 编译不通过，普通静态内部类中不能有static方法</span></div><div class="line">    <span class="comment">//public static void getStaticInnerName() &#123;</span></div><div class="line">    <span class="comment">//  System.out.println(staticInnerName);</span></div><div class="line">    <span class="comment">//&#125;</span></div><div class="line"></div><div class="line">    String innerName = <span class="string">"InnerClass.innerName"</span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getInnerName</span><span class="params">()</span> </span>&#123;</div><div class="line">      System.out.println(innerName);</div><div class="line"></div><div class="line">      <span class="comment">// 直接访问外部类成员变量</span></div><div class="line">      System.out.println(outName);</div><div class="line"></div><div class="line">      <span class="comment">// 直接访问外部类静态成员变量</span></div><div class="line">      System.out.println(staticOutName);</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="comment">/**</span></div><div class="line"><span class="comment">   * 静态内部类</span></div><div class="line"><span class="comment">   */</span></div><div class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">InnerStaticClass</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">static</span> String staticInnerName = <span class="string">"InnerStaticClass.staticInnerName"</span>;</div><div class="line"></div><div class="line">    String innerName = <span class="string">"InnerStaticClass.innerName"</span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">getStaticInnerName</span><span class="params">()</span> </span>&#123;</div><div class="line">      System.out.println(staticInnerName);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getInnerName</span><span class="params">()</span> </span>&#123;</div><div class="line">      System.out.println(innerName);</div><div class="line"></div><div class="line">      <span class="comment">// 编译不通过，不能直接反问外部类成员变量</span></div><div class="line">      <span class="comment">//System.out.println(outName);</span></div><div class="line"></div><div class="line">      <span class="comment">// 只能访问外部类静态成员</span></div><div class="line">      System.out.println(staticOutName);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
       
     </div>
     
@@ -508,11 +538,11 @@
       
         <div class="post-tags">
           
-            <a href="/tags/JDK8新特/" rel="tag"><i class="fa fa-tag"></i> JDK8新特</a>
+            <a href="/tags/静态/" rel="tag"><i class="fa fa-tag"></i> 静态</a>
           
-            <a href="/tags/静态方法/" rel="tag"><i class="fa fa-tag"></i> 静态方法</a>
+            <a href="/tags/非静态/" rel="tag"><i class="fa fa-tag"></i> 非静态</a>
           
-            <a href="/tags/默认方法/" rel="tag"><i class="fa fa-tag"></i> 默认方法</a>
+            <a href="/tags/内部类/" rel="tag"><i class="fa fa-tag"></i> 内部类</a>
           
         </div>
       
@@ -540,8 +570,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/11/02/overload-and-override/" rel="next" title="面试题：重载（Overload）和重写（Override）解析">
-                <i class="fa fa-chevron-left"></i> 面试题：重载（Overload）和重写（Override）解析
+              <a href="/2017/11/06/jad-cmd-introduce/" rel="next" title="反编译小工具：jad常用命令介绍">
+                <i class="fa fa-chevron-left"></i> 反编译小工具：jad常用命令介绍
               </a>
             
           </div>
@@ -549,10 +579,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/11/05/abstract-and-interface/" rel="prev" title="面试题： 抽象类（abstract class）和接口（interface）解析">
-                面试题： 抽象类（abstract class）和接口（interface）解析 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -634,8 +660,17 @@ var jiathis_config={
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -742,6 +777,22 @@ var jiathis_config={
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#变量"><span class="nav-number">1.</span> <span class="nav-text">变量</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#静态变量"><span class="nav-number">1.1.</span> <span class="nav-text">静态变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实例变量"><span class="nav-number">1.2.</span> <span class="nav-text">实例变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">1.3.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#举例"><span class="nav-number">1.4.</span> <span class="nav-text">举例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方法"><span class="nav-number">2.</span> <span class="nav-text">方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#静态方法"><span class="nav-number">2.1.</span> <span class="nav-text">静态方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实例方法"><span class="nav-number">2.2.</span> <span class="nav-text">实例方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#举例-1"><span class="nav-number">2.3.</span> <span class="nav-text">举例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内部类"><span class="nav-number">3.</span> <span class="nav-text">内部类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#普通内部类"><span class="nav-number">3.1.</span> <span class="nav-text">普通内部类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#静态内部类"><span class="nav-number">3.2.</span> <span class="nav-text">静态内部类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#举例-2"><span class="nav-number">3.3.</span> <span class="nav-text">举例</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
