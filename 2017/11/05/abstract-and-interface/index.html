@@ -103,14 +103,14 @@
 <meta name="description" content="概念抽象类：包含抽象方法的类就称为 抽象类；接口： 抽象方法的集合，方法没有具体实现即不包含方法体。  两者异同相同点 都不能被实例化； 接口的实现类或抽象类的子类都必须实现接口或抽象类中的方法后才能被实例化  不同点 接口中的方法是高度抽象的，只有定义，没有具体的实现；抽象类中可以有定义也可以有实现； 接口中的方法默认为public abstract， 可以直接写public， 可以都省略不写；">
 <meta name="keywords" content="抽象类,接口,反射,jdk8新特性">
 <meta property="og:type" content="article">
-<meta property="og:title" content="面试题： 抽象类（abstract class）和接口（interface）解析">
+<meta property="og:title" content="抽象类（abstract class）和接口（interface）解析">
 <meta property="og:url" content="http://yoursite.com/2017/11/05/abstract-and-interface/index.html">
 <meta property="og:site_name" content="码农的春天还没来">
 <meta property="og:description" content="概念抽象类：包含抽象方法的类就称为 抽象类；接口： 抽象方法的集合，方法没有具体实现即不包含方法体。  两者异同相同点 都不能被实例化； 接口的实现类或抽象类的子类都必须实现接口或抽象类中的方法后才能被实例化  不同点 接口中的方法是高度抽象的，只有定义，没有具体的实现；抽象类中可以有定义也可以有实现； 接口中的方法默认为public abstract， 可以直接写public， 可以都省略不写；">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-11-05T17:10:24.944Z">
+<meta property="og:updated_time" content="2017-11-06T15:04:16.871Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="面试题： 抽象类（abstract class）和接口（interface）解析">
+<meta name="twitter:title" content="抽象类（abstract class）和接口（interface）解析">
 <meta name="twitter:description" content="概念抽象类：包含抽象方法的类就称为 抽象类；接口： 抽象方法的集合，方法没有具体实现即不包含方法体。  两者异同相同点 都不能被实例化； 接口的实现类或抽象类的子类都必须实现接口或抽象类中的方法后才能被实例化  不同点 接口中的方法是高度抽象的，只有定义，没有具体的实现；抽象类中可以有定义也可以有实现； 接口中的方法默认为public abstract， 可以直接写public， 可以都省略不写；">
 
 
@@ -147,7 +147,7 @@
 
 
 
-  <title>面试题： 抽象类（abstract class）和接口（interface）解析 | 码农的春天还没来</title>
+  <title>抽象类（abstract class）和接口（interface）解析 | 码农的春天还没来</title>
   
 
 
@@ -335,7 +335,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">面试题： 抽象类（abstract class）和接口（interface）解析</h1>
+          <h1 class="post-title" itemprop="name headline">抽象类（abstract class）和接口（interface）解析</h1>
         
 
         <div class="post-meta">
@@ -414,7 +414,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,259
+                  1,261
                 </span>
               
 
@@ -475,7 +475,7 @@
 <hr>
 <h2 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h2><p>这里提供两种方式：<code>jad反编译</code>和<code>反射</code>来获取成员变量和方法的相关内容。</p>
 <h3 id="jad反编译"><a href="#jad反编译" class="headerlink" title="jad反编译"></a>jad反编译</h3><p>下面先给出对应源码，再用<code>jad</code>反编译<code>.class</code>文件。反编译执行命令如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">jad -a -o -s java 类名.class</div></pre></td></tr></table></figure></p>
-<p><code>jad</code>命令参见<a href="http://letus179.com/2017/11/06/jad-cmd-introduce/" target="_blank" rel="external">反编译小工具：jad常用命令介绍</a></p>
+<p><code>jad</code>详细命令参见<a href="http://letus179.com/2017/11/06/jad-cmd-introduce/" target="_blank" rel="external">反编译小工具：jad常用命令介绍</a></p>
 <h4 id="接口-java源码"><a href="#接口-java源码" class="headerlink" title="接口.java源码"></a>接口.java源码</h4><p><code>MyInterface.java</code>接口源码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MyInterface</span> </span>&#123;</div><div class="line"></div><div class="line">  String name = <span class="string">"MyInterface"</span>;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">void</span> <span class="title">add</span><span class="params">()</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <h4 id="接口-class反编译"><a href="#接口-class反编译" class="headerlink" title="接口.class反编译"></a>接口.class反编译</h4><p><code>MyInterface.class</code>反编译结果如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MyInterface</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">()</span></span>;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String name = <span class="string">"MyInterface"</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>可以看到，</p>
