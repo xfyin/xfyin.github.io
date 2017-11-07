@@ -48,10 +48,10 @@
         <category>java</category>
       </categories>
       <tags>
+        <tag>jdk8新特性</tag>
         <tag>抽象类</tag>
         <tag>接口</tag>
         <tag>反射</tag>
-        <tag>jdk8新特性</tag>
       </tags>
   </entry>
   <entry>
@@ -62,7 +62,7 @@
         <category>java</category>
       </categories>
       <tags>
-        <tag>JDK8新特</tag>
+        <tag>jdk8新特性</tag>
         <tag>静态方法</tag>
         <tag>默认方法</tag>
       </tags>
