@@ -108,7 +108,7 @@
 <meta property="og:site_name" content="码农的春天还没来">
 <meta property="og:description" content="概念 Reflection enables Java code to discover information about the fields, methods and constructors of loaded classes, and to use reflected fields, methods, and constructors to operate on their underly">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-11-07T15:04:26.835Z">
+<meta property="og:updated_time" content="2017-11-07T15:08:30.550Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="反射机制基础解析">
 <meta name="twitter:description" content="概念 Reflection enables Java code to discover information about the fields, methods and constructors of loaded classes, and to use reflected fields, methods, and constructors to operate on their underly">
@@ -403,7 +403,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  2,229
+                  2,242
                 </span>
               
 
@@ -484,7 +484,7 @@
 <td></td>
 </tr>
 <tr>
-<td><strong>方法关键字</strong></td>
+<td><strong>方法相关</strong></td>
 <td><strong>含义</strong></td>
 </tr>
 <tr>
@@ -508,7 +508,7 @@
 <td></td>
 </tr>
 <tr>
-<td><strong>构造方法</strong></td>
+<td><strong>构造方法相关</strong></td>
 <td><strong>含义</strong></td>
 </tr>
 <tr>
@@ -532,7 +532,7 @@
 <td></td>
 </tr>
 <tr>
-<td><strong>父类、父接口</strong></td>
+<td><strong>父类、父接口相关</strong></td>
 <td><strong>含义</strong></td>
 </tr>
 <tr>
@@ -548,7 +548,7 @@
 <td></td>
 </tr>
 <tr>
-<td><strong>其他重要</strong></td>
+<td><strong>其他重要相关</strong></td>
 <td><strong>含义</strong></td>
 </tr>
 <tr>
@@ -574,7 +574,7 @@
 </tbody>
 </table>
 <hr>
-<h2 id="具体功能实现"><a href="#具体功能实现" class="headerlink" title="具体功能实现"></a>具体功能实现</h2><p>下面通过例子分别讲述<code>获取Class对象的3种方式</code>，<code>如何创建实例</code>，<code>如何获取构造器</code>，<code>如何获取方法</code>， 以及<code>如何获取属性</code>。</p>
+<h2 id="具体功能实现"><a href="#具体功能实现" class="headerlink" title="具体功能实现"></a>具体功能实现</h2><p>下面通过例子分别讲述<code>获取Class对象的3种方式</code>，<code>如何创建实例</code>，<code>如何获取构造器</code>，<code>如何获取方法</code>，<code>如何获取属性</code>以及通过反射<code>调用方法</code>。</p>
 <h3 id="获取Class对象的3种方式"><a href="#获取Class对象的3种方式" class="headerlink" title="获取Class对象的3种方式"></a>获取Class对象的3种方式</h3><p>例如新建一个类<code>MyReflectTest</code>，代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyReflectTest</span> </span>&#123;</div><div class="line">  </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>方式1：使用<code>Class</code>类的中静态<code>forName()</code>方法获得与字符串对应的Class对象<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">      Class&lt;?&gt; clz = Class.forName(<span class="string">"test.MyReflectTest"</span>);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</div><div class="line">      e.printStackTrace();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>在数据库有关开发中，我们经常会用到这个方法，例如：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Class.forName(<span class="string">"com.mysql.jdbc.Driver"</span>)</div></pre></td></tr></table></figure></p>
