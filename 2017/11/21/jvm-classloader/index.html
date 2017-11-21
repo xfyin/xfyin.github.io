@@ -87,7 +87,7 @@
 
 
 
-  <meta name="keywords" content="重载,重写,多态,编译时多态,运行时多态," />
+  <meta name="keywords" content="类加载,JVM," />
 
 
 
@@ -100,20 +100,18 @@
 
 
 
-<meta name="description" content="方法的重载和重写都是实现多态的方式，区别在于前者实现的是编译时的多态性，而后者实现的是运行时的多态性。重载发生在一个类中，同名的方法如果有不同的参数列表（参数类型不同、参数个数不同或者二者都不同）则视为重载；重写发生在子类与父类之间，重写要求子类被重写方法与父类被重写方法有相同的返回类型，比父类被重写方法更好访问，不能比父类被重写方法声明更多的异常（里氏代换原则）。重载对返回类型没有特殊的要求">
-<meta name="keywords" content="重载,重写,多态,编译时多态,运行时多态">
+<meta name="description" content="案例分析A、B类中均包含静态代码块，非静态代码块以及构造器，A类是B类的父类。1234567891011121314public class A &amp;#123;  static &amp;#123;    System.out.print(&quot;A中静态代码块&amp;gt;&amp;gt;&amp;gt;&quot;);  &amp;#125;  &amp;#123;    System.out.print(&quot;A中非静态代码块&amp;gt;&amp;gt;&amp;gt;&quot;);">
+<meta name="keywords" content="类加载,JVM">
 <meta property="og:type" content="article">
-<meta property="og:title" content="重载（Overload）和重写（Override）解析">
-<meta property="og:url" content="http://yoursite.com/2017/11/02/overload-and-override/index.html">
+<meta property="og:title" content="jvm加载class文件的原理机制分析">
+<meta property="og:url" content="http://yoursite.com/2017/11/21/jvm-classloader/index.html">
 <meta property="og:site_name" content="码农的春天还没来">
-<meta property="og:description" content="方法的重载和重写都是实现多态的方式，区别在于前者实现的是编译时的多态性，而后者实现的是运行时的多态性。重载发生在一个类中，同名的方法如果有不同的参数列表（参数类型不同、参数个数不同或者二者都不同）则视为重载；重写发生在子类与父类之间，重写要求子类被重写方法与父类被重写方法有相同的返回类型，比父类被重写方法更好访问，不能比父类被重写方法声明更多的异常（里氏代换原则）。重载对返回类型没有特殊的要求">
+<meta property="og:description" content="案例分析A、B类中均包含静态代码块，非静态代码块以及构造器，A类是B类的父类。1234567891011121314public class A &amp;#123;  static &amp;#123;    System.out.print(&quot;A中静态代码块&amp;gt;&amp;gt;&amp;gt;&quot;);  &amp;#125;  &amp;#123;    System.out.print(&quot;A中非静态代码块&amp;gt;&amp;gt;&amp;gt;&quot;);">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://yoursite.com/2017/11/02/overload-and-override/查找匹配执行方法流程.png">
-<meta property="og:updated_time" content="2017-11-06T15:04:27.536Z">
+<meta property="og:updated_time" content="2017-11-21T15:35:08.599Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="重载（Overload）和重写（Override）解析">
-<meta name="twitter:description" content="方法的重载和重写都是实现多态的方式，区别在于前者实现的是编译时的多态性，而后者实现的是运行时的多态性。重载发生在一个类中，同名的方法如果有不同的参数列表（参数类型不同、参数个数不同或者二者都不同）则视为重载；重写发生在子类与父类之间，重写要求子类被重写方法与父类被重写方法有相同的返回类型，比父类被重写方法更好访问，不能比父类被重写方法声明更多的异常（里氏代换原则）。重载对返回类型没有特殊的要求">
-<meta name="twitter:image" content="http://yoursite.com/2017/11/02/overload-and-override/查找匹配执行方法流程.png">
+<meta name="twitter:title" content="jvm加载class文件的原理机制分析">
+<meta name="twitter:description" content="案例分析A、B类中均包含静态代码块，非静态代码块以及构造器，A类是B类的父类。1234567891011121314public class A &amp;#123;  static &amp;#123;    System.out.print(&quot;A中静态代码块&amp;gt;&amp;gt;&amp;gt;&quot;);  &amp;#125;  &amp;#123;    System.out.print(&quot;A中非静态代码块&amp;gt;&amp;gt;&amp;gt;&quot;);">
 
 
 
@@ -143,13 +141,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/11/02/overload-and-override/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/11/21/jvm-classloader/"/>
 
 
 
 
 
-  <title>重载（Overload）和重写（Override）解析 | 码农的春天还没来</title>
+  <title>jvm加载class文件的原理机制分析 | 码农的春天还没来</title>
   
 
 
@@ -320,7 +318,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/02/overload-and-override/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/21/jvm-classloader/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="殷学飞">
@@ -337,7 +335,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">重载（Overload）和重写（Override）解析</h1>
+          <h1 class="post-title" itemprop="name headline">jvm加载class文件的原理机制分析</h1>
         
 
         <div class="post-meta">
@@ -349,8 +347,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-02T23:23:49+08:00">
-                2017-11-02
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-21T23:25:54+08:00">
+                2017-11-21
               </time>
             
 
@@ -416,7 +414,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,452
+                  2,844
                 </span>
               
 
@@ -432,7 +430,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  6
+                  10
                 </span>
               
             </div>
@@ -454,57 +452,93 @@
 
       
         <hr>
+<h2 id="案例分析"><a href="#案例分析" class="headerlink" title="案例分析"></a>案例分析</h2><p>A、B类中均包含静态代码块，非静态代码块以及构造器，A类是B类的父类。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="keyword">static</span> &#123;</div><div class="line">    System.out.print(<span class="string">"A中静态代码块&gt;&gt;&gt;"</span>);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  &#123;</div><div class="line">    System.out.print(<span class="string">"A中非静态代码块&gt;&gt;&gt;"</span>);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="title">A</span><span class="params">()</span> </span>&#123;</div><div class="line">    System.out.print(<span class="string">"A中构造器&gt;&gt;&gt;"</span>);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">B</span> <span class="keyword">extends</span> <span class="title">A</span></span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">static</span> &#123;</div><div class="line">        System.out.print(<span class="string">"B中静态代码块&gt;&gt;&gt;"</span>);</div><div class="line">    &#125;</div><div class="line">    &#123;</div><div class="line">      System.out.print(<span class="string">"B中非静态代码块&gt;&gt;&gt;"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">B</span><span class="params">()</span> </span>&#123;</div><div class="line">        System.out.print(<span class="string">"B中构造器&gt;&gt;&gt;"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>那么看看下面代码的运行结果。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ABTest</span> </span>&#123;</div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">    A ab = <span class="keyword">new</span> B();</div><div class="line">    System.out.println(<span class="string">"\n==========================\n"</span>);</div><div class="line">    ab = <span class="keyword">new</span> B();</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>执行结果：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">A中静态代码块&gt;&gt;&gt;B中静态代码块&gt;&gt;&gt;A中非静态代码块&gt;&gt;&gt;A中构造器&gt;&gt;&gt;B中非静态代码块&gt;&gt;&gt;B中构造器&gt;&gt;&gt;</div><div class="line">==========================</div><div class="line"></div><div class="line">A中非静态代码块&gt;&gt;&gt;A中构造器&gt;&gt;&gt;B中非静态代码块&gt;&gt;&gt;B中构造器&gt;&gt;&gt;</div></pre></td></tr></table></figure></p>
+<p>总结：</p>
+<ol>
+<li>同一类中：静态代码块 =&gt; 非静态代码块 =&gt; 构造器</li>
+<li>父子类中：父类 =&gt; 子类；</li>
+<li>静态代码块只在第一次实例化（new）执行了，非静态代码块在每次实例化都执行。</li>
+</ol>
+<p>看执行结果，上面的3条总结都没问题，对于第3点，需要注意下：静态代码块其实不是跟着实例走的，而是跟着类走。看如下测试，通过Class.forName()动态加载类：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ClassNotFoundException </span>&#123;</div><div class="line">  Class.forName(<span class="string">"B"</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>执行结果：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">A中静态代码块&gt;&gt;&gt;B中静态代码块&gt;&gt;&gt;</div></pre></td></tr></table></figure></p>
+<p>这里并没有执行实例化过程，但是静态代码块却执行了，这也证明了静态static代码块并不是跟着实例走。下面将简单介绍下类加载相关概念及过程，介绍完后再看看上面的例子，印象会更深刻。首先得了解下几个比较重要的JVM的内存概念。</p>
+<hr>
+<h2 id="jvm的几个重要内存概念"><a href="#jvm的几个重要内存概念" class="headerlink" title="jvm的几个重要内存概念"></a>jvm的几个重要内存概念</h2><p><strong>方法区</strong></p>
 <blockquote>
-<p>方法的重载和重写都是实现多态的方式，区别在于前者实现的是编译时的多态性，而后者实现的是运行时的多态性。重载发生在一个类中，同名的方法如果有不同的参数列表（参数类型不同、参数个数不同或者二者都不同）则视为重载；重写发生在子类与父类之间，重写要求子类被重写方法与父类被重写方法有相同的返回类型，比父类被重写方法更好访问，不能比父类被重写方法声明更多的异常（里氏代换原则）。重载对返回类型没有特殊的要求。</p>
+<p>专门用来存放已经加载的类信息、常量、静态变量以及方法代码的内存区域。</p>
 </blockquote>
-<h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><h3 id="重载Overload"><a href="#重载Overload" class="headerlink" title="重载Overload"></a>重载Overload</h3><p>   重载发生在<code>一个类</code>中，<code>同名的方法</code>如果有<code>不同的参数列表</code>（<code>参数类型不同</code>、<code>参数个数不同</code>或者<code>二者都不同</code>）。</p>
-<ul>
-<li>访问修饰符：重载与访问修饰符<code>无关</code> </li>
-<li>返回类型： 重载与返回值<code>无关</code></li>
-<li>方法名： 重载方法名需<code>完全一致</code> </li>
-<li>参数列表： 重载参数列表需<code>完全不同</code></li>
-</ul>
-<h3 id="重写Override"><a href="#重写Override" class="headerlink" title="重写Override"></a>重写Override</h3><p>   发生在<code>子类与父类</code>之间，重写要求子类被重写方法与父类被重写方法有<code>相同的返回类型</code>，比父类被重写方法<code>更好访问</code>，<code>不能</code>比父类被重写方法声明<code>更多的异常</code>（里氏代换原则）。</p>
-<ul>
-<li>访问修饰符：子类的访问修饰符权限 <code>&gt;=</code> 父类的访问修饰符权限 </li>
-<li>返回类型： 子类的返回类型 <code>&lt;=</code> 父类的返回类型 </li>
-<li>方法名： 方法名应<code>完全一致</code> </li>
-<li>参数列表： 参数列表应<code>完全一致</code></li>
-</ul>
-<hr>
-<h2 id="举例String类"><a href="#举例String类" class="headerlink" title="举例String类"></a>举例String类</h2><h3 id="重载例子"><a href="#重载例子" class="headerlink" title="重载例子"></a>重载例子<span id="overload"></span></h3><p><code>String</code>类的<code>构造器</code>重载：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">String</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">this</span>.value = <span class="keyword">new</span> <span class="keyword">char</span>[<span class="number">0</span>];</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">String</span><span class="params">(<span class="keyword">char</span> value[])</span> </span>&#123;</div><div class="line">    <span class="keyword">this</span>.value = Arrays.copyOf(value, value.length);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p><code>String</code>类的<code>valueOf()方法</code>的重载：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">valueOf</span><span class="params">(<span class="keyword">char</span> data[])</span> </span>&#123;</div><div class="line">      <span class="keyword">return</span> <span class="keyword">new</span> String(data);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">valueOf</span><span class="params">(<span class="keyword">char</span> data[], <span class="keyword">int</span> offset, <span class="keyword">int</span> count)</span> </span>&#123;</div><div class="line">      <span class="keyword">return</span> <span class="keyword">new</span> String(data, offset, count);</div><div class="line">  &#125;</div></pre></td></tr></table></figure></p>
-<hr>
-<h3 id="重写例子"><a href="#重写例子" class="headerlink" title="重写例子"></a>重写例子<span id="override"></span></h3><p><code>ArrayList</code>继承了<code>AbstractList</code>类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ArrayList</span>&lt;<span class="title">E</span>&gt; <span class="keyword">extends</span> <span class="title">AbstractList</span>&lt;<span class="title">E</span>&gt;</span></div></pre></td></tr></table></figure></p>
-<p><code>AbstractList</code>类中有方法<code>add()</code>：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span> </span>&#123;</div><div class="line">    add(size(), e);</div><div class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p><code>ArrayList</code>类中有重写了<code>add()</code>方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span> </span>&#123;</div><div class="line">    ensureCapacityInternal(size + <span class="number">1</span>);  <span class="comment">// Increments modCount!!</span></div><div class="line">    elementData[size++] = e;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="多态"><a href="#多态" class="headerlink" title="多态"></a>多态</h2><p>面向对象编程有三大特性：<code>封装</code>、<code>继承</code>、<code>多态</code>。</p>
-<h3 id="概念-1"><a href="#概念-1" class="headerlink" title="概念"></a>概念</h3><blockquote>
-<p>指允许不同类的对象对同一消息做出响应。即同一消息可以根据发送对象的不同而采用多种不同的行为方式。（发送消息就是函数调用）</p>
+<p><strong>常量池</strong></p>
+<blockquote>
+<p>是方法区的一部分，主要用来存放常量和类中的符号引用等信息。</p>
 </blockquote>
-<p>实现多态的技术称为：<code>动态绑定（dynamic binding）</code><br>多态存在的三个必要条件</p>
-<pre><code>1. 要有继承；
-2. 要有重写；
-3. 父类引用指向子类对象。
-</code></pre><p>根据<code>何时确定</code>执行多态方法中的哪一个，多态分为两种情况：<code>编译时多态</code>和<code>运行时多态</code>。顾名思义，如果在编译时能够确定执行多态方法中的哪一个，称为编译时多态，否则称为运行时多态。</p>
-<h3 id="编译时多态"><a href="#编译时多态" class="headerlink" title="编译时多态"></a>编译时多态</h3><p><a href="#overload">重载</a>都是<code>编译时多态</code>，从上面的分析可以看到，只要确定了方法参数的<code>数据类型</code>,<code>个数</code>,<code>次序</code>就能确定调用哪一个方法。</p>
-<h3 id="运行时多态"><a href="#运行时多态" class="headerlink" title="运行时多态"></a>运行时多态</h3><p><a href="#override">重写</a>有两种多态性，当对象引用<code>本类</code>实例，此时为<code>编译时多态</code>，能在编译期确定调用哪个方法；否则为<code>运行时多态</code>。</p>
-<h3 id="举例分析"><a href="#举例分析" class="headerlink" title="举例分析"></a>举例分析</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> test;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</div><div class="line">	</div><div class="line">&#125;</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Animal</span></span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="string">"Animal"</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Dog</span> <span class="keyword">extends</span> <span class="title">Animal</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="string">"Dog"</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>1.执行下面的main方法<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">	Animal animal = <span class="keyword">new</span> Animal();</div><div class="line">	Dog dog = <span class="keyword">new</span> Dog();</div><div class="line">	System.out.println(animal.getName());</div><div class="line">	System.out.println(dog.getName());</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>输出结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Animal</div><div class="line">Dog</div></pre></td></tr></table></figure></p>
-<p><code>Animal</code>和<code>Dog</code>引用的都是<code>本类的实例</code><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Animal animal = <span class="keyword">new</span> Animal();</div><div class="line">Dog dog = <span class="keyword">new</span> Dog();</div></pre></td></tr></table></figure></p>
-<p>2.若是这样呢？输入结果是多少<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">	Animal animal = <span class="keyword">new</span> Dog();</div><div class="line">	System.out.println(animal.getName());</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>此时输出：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Dog</div></pre></td></tr></table></figure></p>
-<p>程序在运行时，会从实例<code>所属的类</code>开始寻找匹配的方法来执行，若是找不到匹配的方法，会按照<code>继承关系</code>逐层向上查找，直到超级父类<code>Object类</code>。<br>该例子<code>animal.getName()</code>执行过程是：<br><img src="/2017/11/02/overload-and-override/查找匹配执行方法流程.png" alt="logo"></p>
-<p>3.修改<code>Animal</code>类, 空类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Animal</span></span>&#123;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>此时执行方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">	Animal animal = <span class="keyword">new</span> Dog();</div><div class="line">	System.out.println(((Dog) animal).getName());</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>需要显示地转换下<code>((Dog) animal).getName()</code>,因为<code>Animal</code>类中没有定义<code>getName()</code>方法。</p>
-<p>4.修改<code>Animal</code>,<code>Dog</code>类的<code>getName()</code>方法为<code>静态方法</code>,并增加一<code>成员变量name</code><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Animal</span> </span>&#123;</div><div class="line">  <span class="keyword">public</span> String name = <span class="string">"a"</span>;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="string">"Animal"</span>;</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Dog</span> <span class="keyword">extends</span> <span class="title">Animal</span> </span>&#123;</div><div class="line">  <span class="keyword">public</span> String name = <span class="string">"d"</span>;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="string">"Dog"</span>;</div><div class="line">  &#125;</div></pre></td></tr></table></figure></p>
-<p>执行main方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">  Animal animal = <span class="keyword">new</span> Dog();</div><div class="line">  System.out.println(animal.getName());</div><div class="line">  System.out.println(animal.name);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>输出结果为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Animal</div><div class="line">a</div></pre></td></tr></table></figure></p>
-<p>结果解释：<br>1.<a href="#override">重写</a>只使用于<code>实例方法</code>，不能用于<code>静态方法</code>，对于<code>static方法</code>，只能<code>隐藏</code>,<a href="#overload">重载</a>,<code>继承</code>；<br>2.在利用引用<code>animal</code>访问对象的属性<code>name</code>或静态方法<code>getName()</code>时，是引用类型决定了实际上访问的是哪个对象（<code>Animal</code>）的成员，而不是当前引用代表的那个类（<code>new Dog()</code>）;<br>由此可知，子类静态方法并<code>不能</code><a href="#override">重写</a>（<code>覆盖</code>）父类的静态方法;故而输出的结果都是父类的成员结果。</p>
-<h2 id="为什么不能根据返回类型来区分重载"><a href="#为什么不能根据返回类型来区分重载" class="headerlink" title="为什么不能根据返回类型来区分重载"></a>为什么不能根据返回类型来区分重载</h2><p>假设下面的重载方法<code>update</code>能编译通过<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">update</span><span class="params">()</span> </span>&#123;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">update</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>当调用new Test().update()时，不需要返回值， 这样就不能区分具体是调用哪个方法了。<br>方法的<code>返回值</code>,只能作为方法运行之后得一个<code>状态</code>，它是保持方法的调用者与被调用者进行通信的关键，并不能作为某个方法的<code>标示</code>。</p>
+<p><strong>堆区</strong></p>
+<blockquote>
+<p>用于存放类的对象实例，如new、数组对象。</p>
+</blockquote>
+<p><strong>栈区</strong></p>
+<blockquote>
+<p>由一个个栈帧组成的后进先出的结构，主要存放方法运行时产生的局部变量、方法出口等信息。</p>
+</blockquote>
+<h2 id="java类的生命周期"><a href="#java类的生命周期" class="headerlink" title="java类的生命周期"></a>java类的生命周期</h2><p>我们编写完一个<code>.java</code>结尾的源文件后，经过编译后生成对应的一个或多个<code>.class</code>后缀结尾的文件。该文件也称为<code>字节码</code>文件，能在java虚拟机中运行。而类的生命周期正是：从类（.class文件）被加载到虚拟机内存，到从内存中卸载为止。整个周期一共分为7个阶段：</p>
+<blockquote>
+<p>加载，验证，准备，解析，初始化，使用，卸载</p>
+</blockquote>
+<p>其中</p>
+<ul>
+<li>验证，准备，解析统称为<code>连接</code>；</li>
+<li>加载，验证，准备，初始化，卸载，这5个的顺序是确定的。</li>
+</ul>
+<p>值得注意的是，通常我们所说的<code>类加载</code>指的是：加载，验证，准备，解析，初始化，这5个阶段。</p>
+<h3 id="加载"><a href="#加载" class="headerlink" title="加载"></a>加载</h3><p>该阶段虚拟机的任务主要是找到需要加载的类，并把类的信息加载到jvm的<em>方法区</em>中，然后<em>堆</em>中实例化一个<code>java.lang.Class</code>对象，作为方法区中这个类的信息的入口。</p>
+<h3 id="连接"><a href="#连接" class="headerlink" title="连接"></a>连接</h3><p>连接阶段有三个阶段：<strong>验证，准备，解析</strong>。主要任务是加载后的<strong>验证工作</strong>以及一些初始化前的<strong>准备工作</strong>。</p>
+<h4 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h4><p>当一个类被加载后，需要验证下该类是否合法，以保证加载的类能在虚拟机中正常运行。</p>
+<h4 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h4><p>该阶段主要是为类的<strong>静态变量</strong>分配内存并设置为jvm默认的<strong>初始值</strong>；对于非静态变量，则不会为它们分配内存。这里静态变量的初始值，不是由我们指定的，是jvm默认的。</p>
+<ul>
+<li>基本类型（int、long、short、char、byte、boolean、float、double）的默认值为0；</li>
+<li>引用类型默认值是null；</li>
+<li>常量的默认值为我们设定的值。比如我们定义<strong>final</strong> static int a = 1000，则在准备阶段中a的初始值就是1000。</li>
+</ul>
+<h4 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h4><p>这一阶段的任务是把<strong>常量池中的符号引用转换为直接引用</strong>，也就是<strong>具体的内存地址</strong>。在这一阶段，jvm会将所有的类、接口名、字段名、方法名等转换为具体的内存地址。譬如：我们要在内存中找到一个类里面的一个叫call的方法，显然做不到，但是该阶段，由于jvm已经将call这个名字转换为指向方法区中的一块内存地址了，也就是说我们通过call这个方法名会得到具体的内存地址，也就找到了call在内存中的位置了。</p>
+<h3 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h3><p><strong>有且仅有</strong> <code>5种</code>情况必须立即对类进行<code>“初始化”</code>：</p>
+<ol>
+<li>使用<code>new</code>关键字实例化对象、读取或设置一个类的<code>静态字段</code>（被final修饰、已经在编译器把结果放入常量池的静态字段除外），以及调用一个类的<code>静态方法</code>的时候；</li>
+<li>使用<code>java.lang.reflect</code>包的方法进行<code>反射调用</code>时，若类没有进行初始化，需要先触发其初始化；</li>
+<li>当初始化一个类时，若其<code>父类</code>还没有进行初始化，则需要先触发其父类的初始化；</li>
+<li>执行<code>main</code>方法，虚拟机会先初始化其包含的那个<code>主类</code>；</li>
+<li>当使用JDK1.7的动态语言支持时，如果一个java.lang.invoke.MethodHandle实例最后的解析结果REF_getStatic、REF_putStatic、REF_invokeStatic的方法句柄，并且这个方法句柄所对应的类没有进行初始化，则需要先触发其初始化（这一点不是很懂）。</li>
+</ol>
+<p><strong>在类的初始化阶段，只会初始化与类相关的静态赋值语句和静态语句，也就是有static关键字修饰的信息，而没有static修饰的赋值语句和执行语句在实例化对象的时候才会运行。</strong>（这正好解释了案例中第3点结论）</p>
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><p><code>初始化</code>阶段的5种情况用了很强烈的限定词：<strong>有且仅有</strong>，这5种行为称为对一个类进行<code>“主动引用”</code>。其他所有引用类的方法（行为）都不会对类进行初始化，称之为<code>“被动引用”</code>。</p>
+<p>《学习深入Java虚拟机》一书中列举了3个<code>被动引用</code>例子，我验证了下，确实如此，不过还得到了新的启发。这里列出其中的2个例子，如下：</p>
+<p>例子1：<strong>通过子类引用父类的静态字段，不会导致子类初始化</strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> classloading;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SuperClass</span> </span>&#123;</div><div class="line">	<span class="keyword">static</span> &#123;</div><div class="line">		System.out.println(<span class="string">"SuperClass init!"</span>);</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> value = <span class="number">123</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> classloading;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SubClass</span> <span class="keyword">extends</span> <span class="title">SuperClass</span></span>&#123;</div><div class="line"></div><div class="line">	<span class="keyword">static</span> &#123;</div><div class="line">		System.out.println(<span class="string">"SubClass init!"</span>);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> classloading;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NotInitialization</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		System.out.println(SubClass.value);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>执行结果：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">SuperClass init!</div><div class="line"><span class="number">123</span></div></pre></td></tr></table></figure></p>
+<p>结论：<br>通过子类<code>SubClass</code>来引用父类<code>SuperClass</code>的静态字段<code>value</code>，初始化的只是父类，并不会触发子类的初始化。</p>
+<p>例子2：<strong>常量在编译阶段会存入调用类的常量池中，不会触发定义常量的类的初始化</strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> classloading;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConstClass</span> </span>&#123;</div><div class="line">	<span class="keyword">static</span> &#123;</div><div class="line">		System.out.println(<span class="string">"ConstClass init!"</span>);</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String HELLO_WORLD = <span class="string">"hello world"</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> classloading;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NotInitialization</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		System.out.println(ConstClass.HELLO_WORLD);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>执行结果：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hello world</div></pre></td></tr></table></figure></p>
+<p>结论：<br>从打印的结果可以看到，并没有初始化<code>ConstClass</code>类；但是从源码上看是引用了<code>ConstClass</code>类的常量。因为在<code>NotInitialization</code>类的编译期中，通过常量优化，已经将常量 <code>&quot;hello world&quot;</code>存储到了<code>NotInitialization</code>类的常量池中了。也就是说，<code>NotInitialization</code>中引用<code>ConstClass.HELLO_WORLD</code>其实是<strong>对自身常量池中常量引用</strong>。 </p>
+<h3 id="卸载"><a href="#卸载" class="headerlink" title="卸载"></a>卸载</h3><p>在使用完类后，需满足下面，类将被卸载：</p>
+<ol>
+<li>该类所有的实例都已经被回收，也就是java队中不存在该类的任何实例；</li>
+<li>加载该类的ClassLoader已经被回收了；</li>
+<li>该类对应的java.lang.Class对象没有任何地方被引用，无法在任何地方通过反射访问该类的方法。</li>
+</ol>
+<p>当上面三个条件都满足后，jvm就会在方法区垃圾回收的时候对类进行卸载，类的卸载过程本质上就是在方法区中清空类信息，结束整个类的生命周期。</p>
+<h2 id="jvm加载class文件的原理机制"><a href="#jvm加载class文件的原理机制" class="headerlink" title="jvm加载class文件的原理机制"></a>jvm加载class文件的原理机制</h2><p>面试题中经常会问到<strong>JVM加载Class文件的原理机制</strong>，结合上面的分析，引用下面网上的分析，更加容易理解。</p>
+<blockquote>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JVM中类的装载是由类加载器（ClassLoader）和它的子类来实现的，Java中的类加载器是一个重要的Java运行时系统组件，它负责在运行时查找和装入类文件中的类。<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;由于Java的跨平台性，经过编译的Java源程序并不是一个可执行程序，而是一个或多个类文件。当Java程序需要使用某个类时，JVM会确保这个类已经被加载、连接（验证、准备和解析）和初始化。类的加载是指把类的.class文件中的数据读入到内存中，通常是创建一个字节数组读入.class文件，然后产生与所加载类对应的Class对象。加载完成后，Class对象还不完整，所以此时的类还不可用。当类被加载后就进入连接阶段，这一阶段包括验证、准备（为静态变量分配内存并设置默认的初始值）和解析（将符号引用替换为直接引用）三个步骤。最后JVM对类进行初始化，包括：&nbsp;&nbsp;1)&nbsp;&nbsp;如果类存在直接的父类并且这个类还没有被初始化，那么就先初始化父类；&nbsp;&nbsp;2)&nbsp;&nbsp;如果类中存在初始化语句，就依次执行这些初始化语句。<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;类的加载是由类加载器完成的，类加载器包括：根加载器（BootStrap）、扩展加载器（Extension）、系统加载器（System）和用户自定义类加载器（java.lang.ClassLoader的子类）。从Java 2（JDK 1.2）开始，类加载过程采取了父亲委托机制（PDM）。PDM更好的保证了Java平台的安全性，在该机制中，JVM自带的Bootstrap是根加载器，其他的加载器都有且仅有一个父类加载器。类的加载首先请求父类加载器加载，父类加载器无能为力时才由其子类加载器自行加载。JVM不会向Java程序提供对Bootstrap的引用。</p>
+</blockquote>
+<p>下面是关于几个类加载器的说明：</p>
+<ul>
+<li>Bootstrap：一般用本地代码实现，负责加载JVM基础核心类库（rt.jar）；</li>
+<li>Extension：从java.ext.dirs系统属性所指定的目录中加载类库，它的父加载器是Bootstrap；</li>
+<li>System：又叫应用类加载器，其父类是Extension。它是应用最广泛的类加载器。它从环境变量classpath或者系统属性java.class.path所指定的目录中记载类，是用户自定义加载器的默认父加载器。</li>
+</ul>
 
       
     </div>
@@ -563,15 +597,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/重载/" rel="tag"><i class="fa fa-tag"></i> 重载</a>
+            <a href="/tags/类加载/" rel="tag"><i class="fa fa-tag"></i> 类加载</a>
           
-            <a href="/tags/重写/" rel="tag"><i class="fa fa-tag"></i> 重写</a>
-          
-            <a href="/tags/多态/" rel="tag"><i class="fa fa-tag"></i> 多态</a>
-          
-            <a href="/tags/编译时多态/" rel="tag"><i class="fa fa-tag"></i> 编译时多态</a>
-          
-            <a href="/tags/运行时多态/" rel="tag"><i class="fa fa-tag"></i> 运行时多态</a>
+            <a href="/tags/JVM/" rel="tag"><i class="fa fa-tag"></i> JVM</a>
           
         </div>
       
@@ -599,8 +627,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/11/02/int-and-Integer/" rel="next" title="int和Integer解析">
-                <i class="fa fa-chevron-left"></i> int和Integer解析
+              <a href="/2017/11/12/shallow-and-deep-clone/" rel="next" title="浅谈java对象浅度克隆和深度克隆">
+                <i class="fa fa-chevron-left"></i> 浅谈java对象浅度克隆和深度克隆
               </a>
             
           </div>
@@ -608,10 +636,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/11/05/JDK8-static-and-default/" rel="prev" title="JDK8新特性之接口的静态方法和默认方法">
-                JDK8新特性之接口的静态方法和默认方法 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -820,7 +844,7 @@ var jiathis_config={
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#概念"><span class="nav-number">1.</span> <span class="nav-text">概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#重载Overload"><span class="nav-number">1.1.</span> <span class="nav-text">重载Overload</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重写Override"><span class="nav-number">1.2.</span> <span class="nav-text">重写Override</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#举例String类"><span class="nav-number">2.</span> <span class="nav-text">举例String类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#重载例子"><span class="nav-number">2.1.</span> <span class="nav-text">重载例子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重写例子"><span class="nav-number">2.2.</span> <span class="nav-text">重写例子</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多态"><span class="nav-number">3.</span> <span class="nav-text">多态</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#概念-1"><span class="nav-number">3.1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编译时多态"><span class="nav-number">3.2.</span> <span class="nav-text">编译时多态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#运行时多态"><span class="nav-number">3.3.</span> <span class="nav-text">运行时多态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#举例分析"><span class="nav-number">3.4.</span> <span class="nav-text">举例分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么不能根据返回类型来区分重载"><span class="nav-number">4.</span> <span class="nav-text">为什么不能根据返回类型来区分重载</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#案例分析"><span class="nav-number">1.</span> <span class="nav-text">案例分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#jvm的几个重要内存概念"><span class="nav-number">2.</span> <span class="nav-text">jvm的几个重要内存概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#java类的生命周期"><span class="nav-number">3.</span> <span class="nav-text">java类的生命周期</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#加载"><span class="nav-number">3.1.</span> <span class="nav-text">加载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#连接"><span class="nav-number">3.2.</span> <span class="nav-text">连接</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#验证"><span class="nav-number">3.2.1.</span> <span class="nav-text">验证</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#准备"><span class="nav-number">3.2.2.</span> <span class="nav-text">准备</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#解析"><span class="nav-number">3.2.3.</span> <span class="nav-text">解析</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#初始化"><span class="nav-number">3.3.</span> <span class="nav-text">初始化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用"><span class="nav-number">3.4.</span> <span class="nav-text">使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#卸载"><span class="nav-number">3.5.</span> <span class="nav-text">卸载</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#jvm加载class文件的原理机制"><span class="nav-number">4.</span> <span class="nav-text">jvm加载class文件的原理机制</span></a></li></ol></div>
             
 
           </div>
