@@ -87,7 +87,7 @@
 
 
 
-  <meta name="keywords" content="jdk8新特性,静态方法,默认方法," />
+  <meta name="keywords" content="try-catch-finally-return," />
 
 
 
@@ -100,18 +100,18 @@
 
 
 
-<meta name="description" content="JDK8之前我们在接口中定义成员变量只能是public static final的，定义的成员方法只能是public abstract的，默认省略。JDK8前后这一概念等价。定义接口BeforeJDK8Interface如下：name和name1表述等价，getName()和getName1()表述等价。12345678910111213public interface BeforeJDK8Int">
-<meta name="keywords" content="jdk8新特性,静态方法,默认方法">
+<meta name="description" content="结论：  不管有没有异常，finally中的代码一定会执行； try 和 catch 中有 return 时，finally也会执行； finally是在return后面的表达式运算后执行的，因此函数返回值是在finally执行前确定； finally中最好不要包含return，否则程序会提前退出，返回值不是try或catch中保存的返回值，是finally中return返回的值。  说明：对于第">
+<meta name="keywords" content="try-catch-finally-return">
 <meta property="og:type" content="article">
-<meta property="og:title" content="JDK8新特性之接口的静态方法和默认方法">
-<meta property="og:url" content="http://yoursite.com/2017/11/05/JDK8-static-and-default/index.html">
+<meta property="og:title" content="try catch finally return 的执行顺序">
+<meta property="og:url" content="http://yoursite.com/2017/12/03/the order of the try-catch-finally-return/index.html">
 <meta property="og:site_name" content="码农的春天还没来">
-<meta property="og:description" content="JDK8之前我们在接口中定义成员变量只能是public static final的，定义的成员方法只能是public abstract的，默认省略。JDK8前后这一概念等价。定义接口BeforeJDK8Interface如下：name和name1表述等价，getName()和getName1()表述等价。12345678910111213public interface BeforeJDK8Int">
+<meta property="og:description" content="结论：  不管有没有异常，finally中的代码一定会执行； try 和 catch 中有 return 时，finally也会执行； finally是在return后面的表达式运算后执行的，因此函数返回值是在finally执行前确定； finally中最好不要包含return，否则程序会提前退出，返回值不是try或catch中保存的返回值，是finally中return返回的值。  说明：对于第">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-11-07T15:21:25.372Z">
+<meta property="og:updated_time" content="2017-12-03T11:06:39.891Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="JDK8新特性之接口的静态方法和默认方法">
-<meta name="twitter:description" content="JDK8之前我们在接口中定义成员变量只能是public static final的，定义的成员方法只能是public abstract的，默认省略。JDK8前后这一概念等价。定义接口BeforeJDK8Interface如下：name和name1表述等价，getName()和getName1()表述等价。12345678910111213public interface BeforeJDK8Int">
+<meta name="twitter:title" content="try catch finally return 的执行顺序">
+<meta name="twitter:description" content="结论：  不管有没有异常，finally中的代码一定会执行； try 和 catch 中有 return 时，finally也会执行； finally是在return后面的表达式运算后执行的，因此函数返回值是在finally执行前确定； finally中最好不要包含return，否则程序会提前退出，返回值不是try或catch中保存的返回值，是finally中return返回的值。  说明：对于第">
 
 
 
@@ -141,13 +141,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/11/05/JDK8-static-and-default/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/12/03/the order of the try-catch-finally-return/"/>
 
 
 
 
 
-  <title>JDK8新特性之接口的静态方法和默认方法 | 码农的春天还没来</title>
+  <title>try catch finally return 的执行顺序 | 码农的春天还没来</title>
   
 
 
@@ -318,7 +318,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/05/JDK8-static-and-default/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/03/the order of the try-catch-finally-return/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="殷学飞">
@@ -335,7 +335,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">JDK8新特性之接口的静态方法和默认方法</h1>
+          <h1 class="post-title" itemprop="name headline">try catch finally return 的执行顺序</h1>
         
 
         <div class="post-meta">
@@ -347,8 +347,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-05T18:50:10+08:00">
-                2017-11-05
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-03T19:03:30+08:00">
+                2017-12-03
               </time>
             
 
@@ -370,7 +370,18 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java/" itemprop="url" rel="index">
+                  <a href="/categories/面试题分析/" itemprop="url" rel="index">
+                    <span itemprop="name">面试题分析</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/面试题分析/java/" itemprop="url" rel="index">
                     <span itemprop="name">java</span>
                   </a>
                 </span>
@@ -403,7 +414,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  483
+                  1,038
                 </span>
               
 
@@ -419,7 +430,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  2
+                  5
                 </span>
               
             </div>
@@ -440,16 +451,40 @@
       
 
       
-        <p><strong>JDK8之前</strong>我们在接口中定义<code>成员变量</code>只能是<code>public static final</code>的，定义的<code>成员方法</code>只能是<code>public abstract</code>的，默认省略。JDK8前后这一概念等价。定义接口<code>BeforeJDK8Interface</code>如下：<br><code>name</code>和<code>name1</code>表述等价，<code>getName()</code>和<code>getName1()</code>表述等价。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">BeforeJDK8Interface</span> </span>&#123;</div><div class="line"></div><div class="line">    String name = <span class="string">"BeforeJDK8Interface"</span>;</div><div class="line">    </div><div class="line">    <span class="comment">//public、 static、 final 可以单独使用，也可以组合使用</span></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String name1 = <span class="string">"BeforeJDK8Interface"</span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">getName</span><span class="params">()</span></span>;</div><div class="line">    </div><div class="line">    <span class="comment">//public、 abstract 可以单独使用，也可以组合使用</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">getName1</span><span class="params">()</span></span>;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p><strong>JDK8新增特性</strong>，允许我们在接口中定义<strong>default默认方法</strong>和<strong>static静态方法</strong>。定义接口<code>JDK8Interface</code>如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">JDK8Interface</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">default</span> <span class="keyword">void</span> <span class="title">myDefaultMethod</span><span class="params">()</span> </span>&#123;</div><div class="line">        System.out.println(<span class="string">"JDK8新特性:接口中的默认方法"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">myStaticMethod</span><span class="params">()</span> </span>&#123;</div><div class="line">        System.out.println(<span class="string">"JDK8新特性：接口中的静态方法"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>实现接口时，这里static方法由于<code>static</code>的原因，属于接口类，只能通过 <em>接口类名直接调用</em>；<br>而default方法，需要 <em>接口实现类实例化后调用</em>。定义接口实现类<code>JDK8InterfaceImpl</code>如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JDK8InterfaceImpl</span> <span class="keyword">implements</span> <span class="title">JDK8Interface</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        JDK8Interface.myStaticMethod();</div><div class="line"></div><div class="line">        JDK8InterfaceImpl jdk8Interface = <span class="keyword">new</span> JDK8InterfaceImpl();</div><div class="line">        jdk8Interface.myDefaultMethod();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>由于<code>static</code>的原因，静态方法不能重写；但是default方法却可以，重写<code>myDefaultMethod</code>代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JDK8InterfaceImpl</span> <span class="keyword">implements</span> <span class="title">JDK8Interface</span> </span>&#123;</div><div class="line"></div><div class="line">   ...</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">myDefaultMethod</span><span class="params">()</span> </span>&#123;</div><div class="line">        System.out.println(<span class="string">"接口中的default方法不满足需求，需要重写"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>这里稍注意下，<code>JDK8Interface</code>接口中<code>default</code>方法用了修饰符<code>&quot;default&quot;</code>，这里重写后修饰符是<code>&quot;public&quot;</code></p>
-<p>由于java实行的是<strong>单继承</strong><code>extends</code><strong>多实现</strong><code>implements</code>，那<code>JDK8</code>新增特性中的两个方法有啥要求不？</p>
-<ul>
-<li>首先看看<code>static</code>方法，由于调用static方法时，用的是接口类名，不能的接口类名肯定不同，所以<strong>没影响</strong>；</li>
-<li>对于<code>default</code>方法， 有于是实现类实例化后调用，若该类有<code>多个接口</code>且接口中有<code>相同名称</code>的default方法，这时候编译器就没办法区分了，<strong>会报错，必须重写default方法</strong>。</li>
-</ul>
+        <p>结论：</p>
+<ol>
+<li><strong>不管有没有异常，finally中的代码一定会执行；</strong></li>
+<li><strong>try 和 catch 中有 return 时，finally也会执行；</strong></li>
+<li><strong>finally是在return后面的表达式运算后执行的，因此函数返回值是在finally执行前确定；</strong></li>
+<li><strong>finally中最好不要包含return，否则程序会提前退出，返回值不是try或catch中保存的返回值，是finally中return返回的值。</strong></li>
+</ol>
+<p>说明：对于第3点，<strong>return后面的表达式运算后</strong>先把要返回的值保存起来，然后执行finally中的代码（这里不包含return，否则就是第4点了），再将之前保存的值取出，并返回。</p>
+<p>下面会列出几种情况并通过具体代码验证上面的结论。</p>
+<hr>
+<p>情况1：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">try&#123;&#125; catch()&#123;&#125;finally&#123;&#125; return;</div></pre></td></tr></table></figure></p>
+<p>举例代码如下，这里不会发生异常：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">	System.out.println(<span class="string">"main:"</span> + test1());</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">test1</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">try</span> &#123;</div><div class="line">		System.out.println(<span class="string">"try..."</span>);</div><div class="line">	&#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">		System.out.println(<span class="string">"catch..."</span>);</div><div class="line">	&#125; <span class="keyword">finally</span> &#123;</div><div class="line">		System.out.println(<span class="string">"finally..."</span>);</div><div class="line">	&#125;</div><div class="line">	System.out.println(<span class="string">"return..."</span>);</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>执行结果：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">try</span>...</div><div class="line"><span class="keyword">finally</span>...</div><div class="line"><span class="keyword">return</span>...</div><div class="line">main:<span class="number">0</span></div></pre></td></tr></table></figure></p>
+<p>显然按顺序执行。</p>
+<p>情况2:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">try&#123; return; &#125;catch()&#123;&#125; finally&#123;&#125; return;</div></pre></td></tr></table></figure></p>
+<p>try中有return，举例代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">	System.out.println(<span class="string">"main:"</span> + test2());</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">test2</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">try</span> &#123;</div><div class="line">		System.out.println(<span class="string">"try...return1+1"</span>);</div><div class="line">		<span class="keyword">return</span> <span class="number">1</span> + <span class="number">1</span>;</div><div class="line">	&#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">		System.out.println(<span class="string">"catch..."</span>);</div><div class="line">	&#125; <span class="keyword">finally</span> &#123;</div><div class="line">		System.out.println(<span class="string">"finally..."</span>);</div><div class="line">	&#125;</div><div class="line">	System.out.println(<span class="string">"return0..."</span>);</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>执行结果：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">try</span>...return1+<span class="number">1</span></div><div class="line"><span class="keyword">finally</span>...</div><div class="line">main:<span class="number">2</span></div></pre></td></tr></table></figure></p>
+<p>这里程序先执行try块中return之前已经return语句中表达式运算代码，再执行finally块，最后执行try中的return；而finally块后的return语句，因为在try块中已经return了，所以后面的就不执行了。</p>
+<p>情况3：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">try&#123; &#125; catch()&#123;return;&#125; finally&#123;&#125; return;</div></pre></td></tr></table></figure></p>
+<p>catch中有return，在try中造一个异常，举例代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">	System.out.println(<span class="string">"main:"</span> + test3());</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">test3</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">try</span> &#123;</div><div class="line">		System.out.println(<span class="string">"try..."</span>);</div><div class="line">		<span class="keyword">int</span> i = <span class="number">1</span> / <span class="number">0</span>;</div><div class="line">	&#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">		System.out.println(<span class="string">"catch...return2"</span>);</div><div class="line">		<span class="keyword">return</span> <span class="number">2</span>;</div><div class="line">	&#125; <span class="keyword">finally</span> &#123;</div><div class="line">		System.out.println(<span class="string">"finally..."</span>);</div><div class="line">	&#125;</div><div class="line">	System.out.println(<span class="string">"return0..."</span>);</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>执行结果：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">try</span>...</div><div class="line"><span class="keyword">catch</span>...return2</div><div class="line"><span class="keyword">finally</span>...</div><div class="line">main:<span class="number">2</span></div></pre></td></tr></table></figure></p>
+<p>程序先执行try块中的代码，因为try块中有异常，然后执行catch中return之前及return语句中表达式运算代码，最后执行finally块中的代码。</p>
+<p>情况4：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">try&#123; return; &#125;catch()&#123;&#125; finally&#123;return;&#125;</div></pre></td></tr></table></figure></p>
+<p>try块和finally块中均有return，举例如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		System.out.println(<span class="string">"main:"</span> + test3());</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">test3</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">try</span> &#123;</div><div class="line">		System.out.println(<span class="string">"try...return1"</span>);</div><div class="line">		<span class="keyword">return</span> <span class="number">1</span>;</div><div class="line">	&#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">		System.out.println(<span class="string">"catch..."</span>);</div><div class="line">	&#125; <span class="keyword">finally</span> &#123;</div><div class="line">		System.out.println(<span class="string">"finally...return3"</span>);</div><div class="line">		<span class="keyword">return</span> <span class="number">3</span>;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>执行结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">try...return1</div><div class="line">finally...return3</div><div class="line">main:3</div></pre></td></tr></table></figure></p>
+<p>程序还是先执行try块中包括return之前已经return本身表达式运算代码，此时会将返回值存起来；这里没有异常，再接着执行finally块中的语句，由于finally块中有return，所以提前结果程序。finally中有return时，此时编译器也会给出警告：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">finally block does not complete normally</div></pre></td></tr></table></figure></p>
+<p>情况5：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">try&#123;&#125; catch()&#123;return;&#125;finally&#123;return;&#125;</div></pre></td></tr></table></figure></p>
+<p>catch块和finally块中有return，举例如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">	System.out.println(<span class="string">"main:"</span> + test5());</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">test5</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">try</span> &#123;</div><div class="line">		System.out.println(<span class="string">"try..."</span>);</div><div class="line">		<span class="keyword">int</span> i = <span class="number">1</span> / <span class="number">0</span>;</div><div class="line">	&#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">		System.out.println(<span class="string">"catch...return2"</span>);</div><div class="line">		<span class="keyword">return</span> <span class="number">2</span>;</div><div class="line">	&#125; <span class="keyword">finally</span> &#123;</div><div class="line">		System.out.println(<span class="string">"finally...return3"</span>);</div><div class="line">		<span class="keyword">return</span> <span class="number">3</span>;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>执行结果：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">try</span>...</div><div class="line"><span class="keyword">catch</span>...return2</div><div class="line"><span class="keyword">finally</span>...return3</div><div class="line">main:<span class="number">3</span></div></pre></td></tr></table></figure></p>
+<p>程序首先执行try块，遇到了异常执行catch块，此时执行catch中return之前以及return中包含的表达式运算代码，将结果作为返回值保存起来；接着执行finally中的代码，由于finally块中有return，前面保存的返回值将丢弃，返回finally中的return值，程序退出。</p>
+<p>情况6：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">try&#123; return;&#125;catch()&#123;return;&#125; finally&#123;return;&#125;</div></pre></td></tr></table></figure></p>
+<p>try、catch、finally块中均有return，并且try中会发生异常，举例如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">	System.out.println(<span class="string">"main:"</span> + test6());</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">test6</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">try</span> &#123;</div><div class="line">		System.out.println(<span class="string">"try...return1"</span>);</div><div class="line">		<span class="keyword">int</span> i = <span class="number">1</span> / <span class="number">0</span>;</div><div class="line">		<span class="keyword">return</span> <span class="number">1</span>;</div><div class="line">	&#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">		System.out.println(<span class="string">"catch...return2"</span>);</div><div class="line">		<span class="keyword">return</span> <span class="number">2</span>;</div><div class="line">	&#125; <span class="keyword">finally</span> &#123;</div><div class="line">		System.out.println(<span class="string">"finally...return3"</span>);</div><div class="line">		<span class="keyword">return</span> <span class="number">3</span>;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>执行结果：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">try</span>...return1</div><div class="line"><span class="keyword">catch</span>...return2</div><div class="line"><span class="keyword">finally</span>...return3</div><div class="line">main:<span class="number">3</span></div></pre></td></tr></table></figure></p>
+<p>程序先执行try中代码，若没有异常将执行return之前以及return中表达式运算并将结果存起，执行finally中的代码；这里try块中有异常，接着执行catch中的代码，并执行return之前以及return中表达式运算并将结果存起，然后执行finally中的代码，由于finally中有return，将丢弃前面保存的，程序提前结束。</p>
 
       
     </div>
@@ -508,11 +543,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/jdk8新特性/" rel="tag"><i class="fa fa-tag"></i> jdk8新特性</a>
-          
-            <a href="/tags/静态方法/" rel="tag"><i class="fa fa-tag"></i> 静态方法</a>
-          
-            <a href="/tags/默认方法/" rel="tag"><i class="fa fa-tag"></i> 默认方法</a>
+            <a href="/tags/try-catch-finally-return/" rel="tag"><i class="fa fa-tag"></i> try-catch-finally-return</a>
           
         </div>
       
@@ -540,8 +571,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/11/02/overload-and-override/" rel="next" title="重载（Overload）和重写（Override）解析">
-                <i class="fa fa-chevron-left"></i> 重载（Overload）和重写（Override）解析
+              <a href="/2017/11/24/reverse-string/" rel="next" title="实现字符串反转的三种方法">
+                <i class="fa fa-chevron-left"></i> 实现字符串反转的三种方法
               </a>
             
           </div>
@@ -549,10 +580,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/11/05/abstract-and-interface/" rel="prev" title="抽象类（abstract class）和接口（interface）解析">
-                抽象类（abstract class）和接口（interface）解析 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
