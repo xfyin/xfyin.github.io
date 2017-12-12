@@ -87,7 +87,7 @@
 
 
 
-  <meta name="keywords" content="jdk8新特性,抽象类,接口,反射," />
+  <meta name="keywords" content="SpringMVC,依赖注入," />
 
 
 
@@ -100,18 +100,18 @@
 
 
 
-<meta name="description" content="概念抽象类：包含抽象方法的类就称为 抽象类；接口： 抽象方法的集合，方法没有具体实现即不包含方法体。  两者异同相同点 都不能被实例化； 接口的实现类或抽象类的子类都必须实现接口或抽象类中的方法后才能被实例化  不同点 接口中的方法是高度抽象的，只有定义，没有具体的实现；抽象类中可以有定义也可以有实现； 接口中的方法默认为public abstract， 可以直接写public， 可以都省略不写；">
-<meta name="keywords" content="jdk8新特性,抽象类,接口,反射">
+<meta name="description" content="对SpringMVC的了解来自实际项目以及在项目过程遇到问题是，查找相关资料，并没有系统地学习这些。很多会用，但是不太清楚具体原理，最新重新学习SpringMVC，开头一章系统的介绍，让我有所顿悟。对于这些知识的学习，让我对SpringMVC基本配置认识更加深刻，特此将重要的知识点摘录下来。 依赖注入 有两个组件A和B，A依赖于B。现在假定A是一个类，且A有方法methodA()，该方法中获取B，">
+<meta name="keywords" content="SpringMVC,依赖注入">
 <meta property="og:type" content="article">
-<meta property="og:title" content="抽象类（abstract class）和接口（interface）解析">
-<meta property="og:url" content="http://yoursite.com/2017/11/05/abstract-and-interface/index.html">
+<meta property="og:title" content="SpringMVC基本介绍">
+<meta property="og:url" content="http://yoursite.com/2017/12/12/SpringMVC-introduce/index.html">
 <meta property="og:site_name" content="码农的春天还没来">
-<meta property="og:description" content="概念抽象类：包含抽象方法的类就称为 抽象类；接口： 抽象方法的集合，方法没有具体实现即不包含方法体。  两者异同相同点 都不能被实例化； 接口的实现类或抽象类的子类都必须实现接口或抽象类中的方法后才能被实例化  不同点 接口中的方法是高度抽象的，只有定义，没有具体的实现；抽象类中可以有定义也可以有实现； 接口中的方法默认为public abstract， 可以直接写public， 可以都省略不写；">
+<meta property="og:description" content="对SpringMVC的了解来自实际项目以及在项目过程遇到问题是，查找相关资料，并没有系统地学习这些。很多会用，但是不太清楚具体原理，最新重新学习SpringMVC，开头一章系统的介绍，让我有所顿悟。对于这些知识的学习，让我对SpringMVC基本配置认识更加深刻，特此将重要的知识点摘录下来。 依赖注入 有两个组件A和B，A依赖于B。现在假定A是一个类，且A有方法methodA()，该方法中获取B，">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-11-07T15:12:50.251Z">
+<meta property="og:updated_time" content="2017-12-12T15:34:50.822Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="抽象类（abstract class）和接口（interface）解析">
-<meta name="twitter:description" content="概念抽象类：包含抽象方法的类就称为 抽象类；接口： 抽象方法的集合，方法没有具体实现即不包含方法体。  两者异同相同点 都不能被实例化； 接口的实现类或抽象类的子类都必须实现接口或抽象类中的方法后才能被实例化  不同点 接口中的方法是高度抽象的，只有定义，没有具体的实现；抽象类中可以有定义也可以有实现； 接口中的方法默认为public abstract， 可以直接写public， 可以都省略不写；">
+<meta name="twitter:title" content="SpringMVC基本介绍">
+<meta name="twitter:description" content="对SpringMVC的了解来自实际项目以及在项目过程遇到问题是，查找相关资料，并没有系统地学习这些。很多会用，但是不太清楚具体原理，最新重新学习SpringMVC，开头一章系统的介绍，让我有所顿悟。对于这些知识的学习，让我对SpringMVC基本配置认识更加深刻，特此将重要的知识点摘录下来。 依赖注入 有两个组件A和B，A依赖于B。现在假定A是一个类，且A有方法methodA()，该方法中获取B，">
 
 
 
@@ -141,13 +141,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/11/05/abstract-and-interface/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/12/12/SpringMVC-introduce/"/>
 
 
 
 
 
-  <title>抽象类（abstract class）和接口（interface）解析 | 码农的春天还没来</title>
+  <title>SpringMVC基本介绍 | 码农的春天还没来</title>
   
 
 
@@ -318,7 +318,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/05/abstract-and-interface/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/12/SpringMVC-introduce/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="殷学飞">
@@ -335,7 +335,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">抽象类（abstract class）和接口（interface）解析</h1>
+          <h1 class="post-title" itemprop="name headline">SpringMVC基本介绍</h1>
         
 
         <div class="post-meta">
@@ -347,8 +347,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-05T19:03:12+08:00">
-                2017-11-05
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-12T23:32:23+08:00">
+                2017-12-12
               </time>
             
 
@@ -370,8 +370,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/面试题分析/" itemprop="url" rel="index">
-                    <span itemprop="name">面试题分析</span>
+                  <a href="/categories/spring/" itemprop="url" rel="index">
+                    <span itemprop="name">spring</span>
                   </a>
                 </span>
 
@@ -381,7 +381,7 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/面试题分析/java/" itemprop="url" rel="index">
+                  <a href="/categories/spring/java/" itemprop="url" rel="index">
                     <span itemprop="name">java</span>
                   </a>
                 </span>
@@ -414,7 +414,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,261
+                  1,774
                 </span>
               
 
@@ -430,7 +430,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  5
+                  8
                 </span>
               
             </div>
@@ -451,43 +451,35 @@
       
 
       
-        <h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p><strong>抽象类</strong>：<em>包含抽象方法的类就称为 抽象类</em>；<br><strong>接口</strong>： <em>抽象方法的集合，方法没有具体实现即不包含方法体</em>。</p>
-<hr>
-<h2 id="两者异同"><a href="#两者异同" class="headerlink" title="两者异同"></a>两者异同</h2><h3 id="相同点"><a href="#相同点" class="headerlink" title="相同点"></a>相同点</h3><ol>
-<li>都<code>不能</code>被实例化；</li>
-<li><code>接口的实现类</code>或<code>抽象类的子类</code>都<strong>必须实现</strong><code>接口</code>或<code>抽象类中</code>的方法后才能被实例化</li>
-</ol>
-<h3 id="不同点"><a href="#不同点" class="headerlink" title="不同点"></a>不同点</h3><ol>
-<li><code>接口</code>中的方法是高度抽象的，<em>只有定义，没有具体的实现</em>；<code>抽象类</code>中<em>可以有定义也可以有实现</em>；</li>
-<li><code>接口</code>中的方法默认为<code>public abstract</code>， 可以直接写<code>public</code>， 可以都省略不写；<code>接口</code>中方法修饰符不能是<code>private</code>， 接口需要实现，所以私有的方法没有意义；<code>抽象类</code>中的具体实现的方法和普通的类一样，而只有定义的方法必须用<code>abstract</code>修饰，不然<code>编译不通过</code>；而且<code>抽象方法</code>的修饰符不能是<code>private</code>，<code>static</code>，<code>synchronized</code>，<code>native</code>，能用<code>默认的</code>，<code>public</code>和<code>protected</code>。</li>
-<li><code>接口</code>中定义变量默认为<code>public static final</code>， 并且要赋予<code>初始值</code>，不然编译不通过；<code>抽象类</code>和普通的类一样，可以有自己的成员变量，可以重新赋值；</li>
-<li><code>接口</code>需要<code>实现（implements）</code>， <code>抽象类</code>需要<code>继承（extends）</code>，<em>一个类可以实现多个接口，但是只能继承一个抽象类（单继承多实现）</em>。</li>
-</ol>
-<h2 id="接口三问"><a href="#接口三问" class="headerlink" title="接口三问"></a>接口三问</h2><h3 id="接口方法能否用private修饰"><a href="#接口方法能否用private修饰" class="headerlink" title="接口方法能否用private修饰"></a>接口方法能否用<code>private</code>修饰</h3><blockquote>
-<p>不能。因为接口是对外开放的，需要具体的类来实现其中的方法，私有的方法作用范围为本类，在接口中定义私有方法没有任何意义，编译不会通过。</p>
+        <p>对SpringMVC的了解来自实际项目以及在项目过程遇到问题是，查找相关资料，并没有系统地学习这些。很多会用，但是不太清楚具体原理，最新重新学习SpringMVC，开头一章系统的介绍，让我有所顿悟。对于这些知识的学习，让我对SpringMVC基本配置认识更加深刻，特此将重要的知识点摘录下来。</p>
+<h2 id="依赖注入"><a href="#依赖注入" class="headerlink" title="依赖注入"></a>依赖注入</h2><hr>
+<p>有两个组件A和B，A依赖于B。现在假定A是一个类，且A有方法methodA()，该方法中获取B，代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">methodA</span><span class="params">()</span> </span>&#123;</div><div class="line">		B b = ...<span class="comment">// get an instance of B</span></div><div class="line">		b.methodB();</div><div class="line">		...</div><div class="line">	&#125;</div><div class="line">	...</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>要使用B，类A必须先获取组件B的实例引用。若B是一个具体的类，则可以通过new关键字直接创建B的实例。但是，如果B是接口，且有多个实现，则问题就复杂了。我们固然可以任意选择接口B的一个实现类，但这也意味着A的可重用性大大降低，因为无法采用B的其他实现。<br>依赖注入是这样处理此类情景：<strong>接管对象的创建工作，并将该对象的引用注入需要该对象的组件</strong>。对于上面的例子，依赖注入框架会<em>分别创建对象A和对象B，并将对象B注入到对象A中</em>。<br>为了能让框架进行依赖注入，我们需要编写特定的<strong>setter方法</strong>或<strong>构造方法</strong>。<br><strong>setter方法依赖注入实例</strong>：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</div><div class="line">	<span class="keyword">private</span> B b;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">methodA</span><span class="params">()</span> </span>&#123;</div><div class="line">		b.methodB();</div><div class="line">		...</div><div class="line">	&#125;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setB</span><span class="params">(B b)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.b = b;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>修改后的类A新增了一个set方法，Spring会先创建B的实例，框架会调用该方法，并注入创建好的B的实例，因此在methodA()中调用B的methodB()方法前，不需要获取B的实例，<br><strong>构造器方法依赖注入实例</strong>：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</div><div class="line">	<span class="keyword">private</span> B b;</div><div class="line">	</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="title">A</span><span class="params">(B b)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.b = b;</div><div class="line">	&#125;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">methodA</span><span class="params">()</span> </span>&#123;</div><div class="line">		b.methodB();</div><div class="line">		...</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>Sping会先创建B的实例，再创建A的实例，然后把B注入到实例A中。</p>
+<blockquote>
+<p>注：Spring管理的对象称为beans。</p>
 </blockquote>
-<h3 id="接口方法能否用synchronized修饰"><a href="#接口方法能否用synchronized修饰" class="headerlink" title="接口方法能否用synchronized修饰"></a>接口方法能否用<code>synchronized</code>修饰</h3><blockquote>
-<p>不能。<code>synchronized</code>是一种<code>同步锁</code>，在修饰方法时，需要具体逻辑，而接口只是定义，因为直接修饰接口中的方法没意义，可以用来修饰接口方法的<code>具体实现</code>。</p>
+<p>从1.0版本开始，Spring同时支持上述两种方式依赖注入：<strong>setter方式</strong>和<strong>构造器方式</strong>；从2.5版本开始，可以通过<code>AutoWired</code>注解，Spring支持基于field方式依赖注入。缺点是会引入org.springframework.beans.factory.annotation.Autowired，这对Spring产生了依赖，这样程序无法直接迁移到另一个依赖注入容器间。<br>以上是依赖注入的最后实现的两种方式。往前一点，Spring支持两种方式来支持这种依赖注入：<strong>XML配置方式</strong>和<strong>注解配置方式</strong>。此外，需要创建一个<code>ApplicationContext</code>对象，代表一个<strong>Spring控制反转容器</strong>，org.springframework.context.ApplicationContext接口有多个实现，包括<code>ClassPathXmlApplicationContext</code>和<code>FileSystemXmlApplicationContext</code>。这两个实现都需要至少包含一个beans信息的XML文件。ClassPathXmlApplicationContext尝试在<strong>类加载路径</strong>中加载配置文件，而FileSystemXmlApplicationContext从<strong>文件系统</strong>中加载。<br>下面为从类路径中加载<code>config1.xml</code>和<code>config2.xml</code>的ApplicationContext创建的一个代码示例。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ApplicationContext context = <span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="keyword">new</span> String[]&#123;<span class="string">"config1.xml"</span>, <span class="string">"config2.xml"</span>&#125;);</div></pre></td></tr></table></figure></p>
+<p>然后通过调用ApplicationContext的<code>getBean</code>方法获得对象。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Product product = context.getBean(<span class="string">"product"</span>, Product.class);</div></pre></td></tr></table></figure></p>
+<p>getBean方法会查询<code>id</code>为product且<code>类型</code>为Product的bean对象。</p>
+<blockquote>
+<p>注：理想情况下，我们仅需要在测试代码中创建一个ApplicationContext，应用程序本身无需处理。对于Spring MVC应用，可以通过一个Spring Servlet来处理ApplicationContext，而无需直接处理。</p>
 </blockquote>
-<h3 id="接口方法能否用static修饰"><a href="#接口方法能否用static修饰" class="headerlink" title="接口方法能否用static修饰"></a>接口方法能否用<code>static</code>修饰</h3><blockquote>
-<p>这和jdk版本有关。jdk8之前：不能；jdk8新特性： 能。<br>——参见<a href="http://letus179.com/2017/11/05/JDK8-static-and-default/" target="_blank" rel="external">JDK8新特性之接口的静态方法和默认方法</a></p>
+<h2 id="XML配置文件介绍"><a href="#XML配置文件介绍" class="headerlink" title="XML配置文件介绍"></a>XML配置文件介绍</h2><p>配置文件的<code>根元素</code>通常为：<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span>?&gt;</div><div class="line">&lt;beans xmlns=<span class="string">"http://www.springframework.org/schema/beans"</span></div><div class="line">    xmlns:xsi=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></div><div class="line">    xmlns:p=<span class="string">"http://www.springframework.org/schema/p"</span></div><div class="line">    xsi:schemaLocation=<span class="string">"http://www.springframework.org/schema/beans      </span></div><div class="line"><span class="string">    http://www.springframework.org/schema/beans/spring-beans.xsd"</span>&gt;</div><div class="line">    </div><div class="line">    ...</div><div class="line">&lt;/beans&gt;</div></pre></td></tr></table></figure></p>
+<p>若需要更强的Spring配置能力，可以在<code>schemaLocation</code>属性中添加相应的schema。如：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">xsi:schemaLocation=<span class="string">"  </span></div><div class="line"><span class="string">    http://www.springframework.org/schema/context  </span></div><div class="line"><span class="string">    http://www.springframework.org/schema/context/spring-context.xsd  </span></div><div class="line"><span class="string">    http://www.springframework.org/schema/beans  </span></div><div class="line"><span class="string">    http://www.springframework.org/schema/beans/spring-beans.xsd  </span></div><div class="line"><span class="string">    http://www.springframework.org/schema/tx  </span></div><div class="line"><span class="string">    http://www.springframework.org/schema/tx/spring-tx.xsd  </span></div><div class="line"><span class="string">    http://www.springframework.org/schema/jdbc  </span></div><div class="line"><span class="string">    http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd  </span></div><div class="line"><span class="string">    http://www.springframework.org/schema/cache  </span></div><div class="line"><span class="string">    http://www.springframework.org/schema/cache/spring-cache-3.1.xsd  </span></div><div class="line"><span class="string">    http://www.springframework.org/schema/aop  </span></div><div class="line"><span class="string">    http://www.springframework.org/schema/aop/spring-aop.xsd  </span></div><div class="line"><span class="string">    http://www.springframework.org/schema/util  </span></div><div class="line"><span class="string">    http://www.springframework.org/schema/util/spring-util.xsd"</span></div></pre></td></tr></table></figure></p>
+<p>配置文件可以是一份也可以是多份，支持<strong>模块化配置</strong>。ApplicationContext的实现类支持读取多份配置文件，如上面例子中的：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ApplicationContext context = <span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="keyword">new</span> String[]&#123;<span class="string">"config1.xml"</span>, <span class="string">"config2.xml"</span>&#125;);</div></pre></td></tr></table></figure></p>
+<p>另一种选择是，通过一个<strong>主配置文件</strong>，将其他配置文件导入在主配置文件中，直接读取主配置文件，如：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span>?&gt;</div><div class="line">&lt;beans xmlns=<span class="string">"http://www.springframework.org/schema/beans"</span></div><div class="line">    xmlns:xsi=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></div><div class="line">    xmlns:p=<span class="string">"http://www.springframework.org/schema/p"</span></div><div class="line">    xsi:schemaLocation=<span class="string">"http://www.springframework.org/schema/beans      </span></div><div class="line"><span class="string">    http://www.springframework.org/schema/beans/spring-beans.xsd"</span>&gt;</div><div class="line">    </div><div class="line">    &lt;<span class="keyword">import</span> resource=<span class="string">"config1.xml/&gt;</span></div><div class="line"><span class="string">    &lt;import resource="</span><span class="keyword">module</span>/config2.xml/&gt;</div><div class="line">    &lt;<span class="keyword">import</span> resource=<span class="string">"resource/config2.xml/&gt;</span></div><div class="line"><span class="string">    ...</span></div><div class="line"><span class="string">&lt;/beans&gt;</span></div></pre></td></tr></table></figure></p>
+<h2 id="Spring控制反转容器的使用"><a href="#Spring控制反转容器的使用" class="headerlink" title="Spring控制反转容器的使用"></a>Spring控制反转容器的使用</h2><h3 id="通过构造器创建一个bean实例"><a href="#通过构造器创建一个bean实例" class="headerlink" title="通过构造器创建一个bean实例"></a>通过构造器创建一个bean实例</h3><p>前面通过调用ApplicationContext的getBean方法来获取到一个bean的实例。下面的配置文件中定义了一个名为product的bean。<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span>?&gt;</div><div class="line">&lt;beans xmlns=<span class="string">"http://www.springframework.org/schema/beans"</span></div><div class="line">    xmlns:xsi=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></div><div class="line">    xmlns:p=<span class="string">"http://www.springframework.org/schema/p"</span></div><div class="line">    xsi:schemaLocation=<span class="string">"http://www.springframework.org/schema/beans      </span></div><div class="line"><span class="string">    http://www.springframework.org/schema/beans/spring-beans.xsd"</span>&gt;</div><div class="line">    </div><div class="line">    &lt;bean name=<span class="string">"product"</span> <span class="class"><span class="keyword">class</span></span>=<span class="string">"myspring.bean.Product"</span>/&gt;</div><div class="line">&lt;/beans&gt;</div></pre></td></tr></table></figure></p>
+<p>该bean的定义告诉Spring通过<strong>默认无参构造器</strong>来初始化Product类。如果不存在该构造器（若类作者重载了构造器，但是没有显示声明默认构造器），Spring将抛出异常。</p>
+<blockquote>
+<p>注意：应采用id或者name属性标示一个bean。</p>
 </blockquote>
-<hr>
-<h2 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h2><p>这里提供两种方式：<code>jad反编译</code>和<code>反射</code>来获取成员变量和方法的相关内容。</p>
-<h3 id="jad反编译"><a href="#jad反编译" class="headerlink" title="jad反编译"></a>jad反编译</h3><p>下面先给出对应源码，再用<code>jad</code>反编译<code>.class</code>文件。反编译执行命令如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">jad -a -o -s java 类名.class</div></pre></td></tr></table></figure></p>
-<p><code>jad</code>详细命令参见<a href="http://letus179.com/2017/11/06/jad-cmd-introduce/" target="_blank" rel="external">反编译小工具：jad常用命令介绍</a></p>
-<h4 id="接口-java源码"><a href="#接口-java源码" class="headerlink" title="接口.java源码"></a>接口.java源码</h4><p><code>MyInterface.java</code>接口源码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MyInterface</span> </span>&#123;</div><div class="line"></div><div class="line">  String name = <span class="string">"MyInterface"</span>;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">void</span> <span class="title">add</span><span class="params">()</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h4 id="接口-class反编译"><a href="#接口-class反编译" class="headerlink" title="接口.class反编译"></a>接口.class反编译</h4><p><code>MyInterface.class</code>反编译结果如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MyInterface</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">()</span></span>;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String name = <span class="string">"MyInterface"</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>可以看到，</p>
-<p>1.在成员变量（常量）中默认的修饰符是<code>public static final</code>;<br>2.在方法中，默认的修饰符是<code>public abstract</code></p>
-<h4 id="抽象类-java源码"><a href="#抽象类-java源码" class="headerlink" title="抽象类.java源码"></a>抽象类.java源码</h4><p><code>MyAbstract</code>抽象类源码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">MyAbstract</span> </span>&#123;</div><div class="line">  </div><div class="line">  <span class="keyword">public</span> String name;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">void</span> <span class="title">get</span><span class="params">()</span> </span>&#123;</div><div class="line">    System.out.println(<span class="string">"MyAbstract get() "</span>);</div><div class="line">  &#125;</div><div class="line">  </div><div class="line">  <span class="comment">// 抽象类中的没有实现的方法必须是“abstract”</span></div><div class="line">  <span class="function"><span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">delete</span><span class="params">()</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h4 id="抽象类-class反编译"><a href="#抽象类-class反编译" class="headerlink" title="抽象类.class反编译"></a>抽象类.class反编译</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">MyAbstract</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyAbstract</span><span class="params">()</span> </span>&#123;</div><div class="line">         </div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">get</span><span class="params">()</span> </span>&#123;</div><div class="line">        System.out.println(<span class="string">"MyAbstract get() "</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">delete</span><span class="params">()</span></span>;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> String name;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>可以看到，成员方法和成员变量和普通类一样，是什么修饰就是什么。</p>
-<h3 id="反射获取"><a href="#反射获取" class="headerlink" title="反射获取"></a>反射获取</h3><p>这里新建一个<code>MyTest</code>类，<code>继承</code>抽象类<code>MyAbstract</code>，并且<code>实现</code>接口<code>MyInterface</code></p>
-<h4 id="反射代码"><a href="#反射代码" class="headerlink" title="反射代码"></a>反射代码</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.lang.reflect.Field;</div><div class="line"><span class="keyword">import</span> java.lang.reflect.Method;</div><div class="line"><span class="keyword">import</span> java.lang.reflect.Modifier;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyTest</span> <span class="keyword">extends</span> <span class="title">MyAbstract</span> <span class="keyword">implements</span> <span class="title">MyInterface</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line"></div><div class="line">		Field[] abstractFields = MyAbstract.class.getDeclaredFields();</div><div class="line">		Method[] abstractMethods = MyAbstract.class.getDeclaredMethods();</div><div class="line"></div><div class="line">		System.out.println(<span class="string">"抽象类MyAbstract成员变量反射信息："</span>);</div><div class="line">		<span class="keyword">for</span> (Field f : abstractFields) &#123;</div><div class="line">			System.out.println(<span class="string">"变量名："</span> + f.getName());</div><div class="line">			System.out.println(<span class="string">"修饰符："</span> + Modifier.toString(f.getModifiers()));</div><div class="line">			System.out.println(<span class="string">"变量类型："</span> + f.getType());</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		System.out.println();</div><div class="line">		System.out.println(<span class="string">"抽象类MyAbstract成员方法反射信息："</span>);</div><div class="line">		<span class="keyword">for</span> (Method m : abstractMethods) &#123;</div><div class="line">			System.out.println(<span class="string">"方法名："</span> + m.getName());</div><div class="line">			System.out.println(<span class="string">"修饰符："</span> + Modifier.toString(m.getModifiers()));</div><div class="line">			System.out.println(<span class="string">"返回类型："</span> + m.getReturnType()  + <span class="string">"\n"</span>);</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		Field[] interfaceFields = MyInterface.class.getDeclaredFields();</div><div class="line">		Method[] interfaceMethods = MyInterface.class.getDeclaredMethods();</div><div class="line"></div><div class="line">		System.out.println();</div><div class="line">		System.out.println(<span class="string">"接口MyInterface成员变量反射信息："</span>);</div><div class="line">		<span class="keyword">for</span> (Field f : interfaceFields) &#123;</div><div class="line">			System.out.println(<span class="string">"变量名："</span> + f.getName());</div><div class="line">			System.out.println(<span class="string">"修饰符："</span> + Modifier.toString(f.getModifiers()));</div><div class="line">			System.out.println(<span class="string">"变量类型："</span> + f.getType());</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		System.out.println();</div><div class="line">		System.out.println(<span class="string">"接口MyInterface成员方法反射信息："</span>);</div><div class="line">		<span class="keyword">for</span> (Method m : interfaceMethods) &#123;</div><div class="line">			System.out.println(<span class="string">"方法名："</span> + m.getName());</div><div class="line">			System.out.println(<span class="string">"修饰符："</span> + Modifier.toString(m.getModifiers()));</div><div class="line">			System.out.println(<span class="string">"返回类型："</span> + m.getReturnType());</div><div class="line">		&#125;</div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">()</span> </span>&#123;</div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">void</span> <span class="title">delete</span><span class="params">()</span> </span>&#123;</div><div class="line"></div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h4 id="运行结果"><a href="#运行结果" class="headerlink" title="运行结果"></a>运行结果</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">抽象类MyAbstract成员变量反射信息：</div><div class="line">变量名：name</div><div class="line">修饰符：public</div><div class="line">变量类型：class java.lang.String</div><div class="line"></div><div class="line">抽象类MyAbstract成员方法反射信息：</div><div class="line">方法名：get</div><div class="line">修饰符：</div><div class="line">返回类型：void</div><div class="line"></div><div class="line">方法名：delete</div><div class="line">修饰符：abstract</div><div class="line">返回类型：void</div><div class="line"></div><div class="line">接口MyInterface成员变量反射信息：</div><div class="line">变量名：name</div><div class="line">修饰符：public static final</div><div class="line">变量类型：class java.lang.String</div><div class="line"></div><div class="line">接口MyInterface成员方法反射信息：</div><div class="line">方法名：add</div><div class="line">修饰符：public abstract</div><div class="line">返回类型：void</div></pre></td></tr></table></figure>
-<p>可以看到，和<code>jad</code>反编译的结果是一样的。</p>
-<p>具体的<code>反射机制</code>请参见另一篇博文<a href="http://letus179.com/2017/11/07/reflect-base/" target="_blank" rel="external">反射机制基础解析</a></p>
+<p>为了让Spring创建一个Product实例，应将bean定义的name值“product”（具体实践中也可以是id值）和Product类型作为参数传递给ApplicationContext的getBean方法。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ApplicationContext context = <span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="keyword">new</span> String[]&#123;<span class="string">"spring-contig.xml"</span>&#125;);</div><div class="line">Product product = context.getBean(<span class="string">"product"</span>, Product.class);</div></pre></td></tr></table></figure></p>
+<h3 id="通过工厂方法创建一个bean实例"><a href="#通过工厂方法创建一个bean实例" class="headerlink" title="通过工厂方法创建一个bean实例"></a>通过工厂方法创建一个bean实例</h3><p>Spring还支持通过<strong>调用</strong>一个工厂的方法来初始化类。下面的bean定义展示了通过工厂方法来实例化<code>java.util.Calendar</code>。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;bean id=<span class="string">"calendar"</span> <span class="class"><span class="keyword">class</span></span>=<span class="string">"java.util.Calendar"</span> factory-method=<span class="string">"getInstance"</span>/&gt;</div></pre></td></tr></table></figure></p>
+<p>该类中有方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Calendar <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</div><div class="line">    Calendar localCalendar = createCalendar(TimeZone.getDefaultRef(), Locale.getDefault(Locale.Category.FORMAT));</div><div class="line">    localCalendar.sharedZone = <span class="keyword">true</span>;</div><div class="line">    <span class="keyword">return</span> localCalendar;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>本例子采用了id属性，而非name属性来表示bean，采用getBean方法来获取Calendar实例。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ApplicationContext context = <span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="keyword">new</span> String[]&#123;<span class="string">"spring-contig.xml"</span>&#125;);</div><div class="line">Calendar calendar = context.getBean(<span class="string">"calendar"</span>, Calendar.class);</div></pre></td></tr></table></figure></p>
+<h3 id="Destory-Method-的使用"><a href="#Destory-Method-的使用" class="headerlink" title="Destory Method 的使用"></a>Destory Method 的使用</h3><p>有时候我们希望在类被销毁前还做点什么，这次我们可以在bean定义中配置 <code>destroy-method</code> 属性，来指定在销毁前要被执行的方法。<br>下面的例子中，我们配置Spring通过 <code>java.util.concurrent.Executors</code> 的静态方法<code>newCachedThreadPool</code> 来创建一个 <code>java.util.concurrent.ExecutorService</code> 实例，并指定了 <code>destroy-method</code> 属性值为 <code>shutdown</code> 方法。这样，Spring会在销毁 <code>ExecutorService</code> 实例前，调用其 <code>shutdown</code> 方法。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&lt;bean id=<span class="string">"executorService"</span> <span class="class"><span class="keyword">class</span></span>=<span class="string">".util.concurrent.ExecutorService"</span> </div><div class="line">    factory-method=<span class="string">"newCachedThreadPool"</span> destroy-method=<span class="string">"shutdown"</span>/&gt;</div></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -546,13 +538,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/jdk8新特性/" rel="tag"><i class="fa fa-tag"></i> jdk8新特性</a>
+            <a href="/tags/SpringMVC/" rel="tag"><i class="fa fa-tag"></i> SpringMVC</a>
           
-            <a href="/tags/抽象类/" rel="tag"><i class="fa fa-tag"></i> 抽象类</a>
-          
-            <a href="/tags/接口/" rel="tag"><i class="fa fa-tag"></i> 接口</a>
-          
-            <a href="/tags/反射/" rel="tag"><i class="fa fa-tag"></i> 反射</a>
+            <a href="/tags/依赖注入/" rel="tag"><i class="fa fa-tag"></i> 依赖注入</a>
           
         </div>
       
@@ -580,8 +568,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/11/05/JDK8-static-and-default/" rel="next" title="JDK8新特性之接口的静态方法和默认方法">
-                <i class="fa fa-chevron-left"></i> JDK8新特性之接口的静态方法和默认方法
+              <a href="/2017/12/03/the order of the try-catch-finally-return/" rel="next" title="try catch finally return 的执行顺序">
+                <i class="fa fa-chevron-left"></i> try catch finally return 的执行顺序
               </a>
             
           </div>
@@ -589,10 +577,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/11/06/jad-cmd-introduce/" rel="prev" title="反编译小工具：jad常用命令介绍">
-                反编译小工具：jad常用命令介绍 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -801,7 +785,7 @@ var jiathis_config={
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#概念"><span class="nav-number">1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#两者异同"><span class="nav-number">2.</span> <span class="nav-text">两者异同</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#相同点"><span class="nav-number">2.1.</span> <span class="nav-text">相同点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#不同点"><span class="nav-number">2.2.</span> <span class="nav-text">不同点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#接口三问"><span class="nav-number">3.</span> <span class="nav-text">接口三问</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#接口方法能否用private修饰"><span class="nav-number">3.1.</span> <span class="nav-text">接口方法能否用private修饰</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#接口方法能否用synchronized修饰"><span class="nav-number">3.2.</span> <span class="nav-text">接口方法能否用synchronized修饰</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#接口方法能否用static修饰"><span class="nav-number">3.3.</span> <span class="nav-text">接口方法能否用static修饰</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#举例"><span class="nav-number">4.</span> <span class="nav-text">举例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#jad反编译"><span class="nav-number">4.1.</span> <span class="nav-text">jad反编译</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#接口-java源码"><span class="nav-number">4.1.1.</span> <span class="nav-text">接口.java源码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#接口-class反编译"><span class="nav-number">4.1.2.</span> <span class="nav-text">接口.class反编译</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#抽象类-java源码"><span class="nav-number">4.1.3.</span> <span class="nav-text">抽象类.java源码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#抽象类-class反编译"><span class="nav-number">4.1.4.</span> <span class="nav-text">抽象类.class反编译</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#反射获取"><span class="nav-number">4.2.</span> <span class="nav-text">反射获取</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#反射代码"><span class="nav-number">4.2.1.</span> <span class="nav-text">反射代码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#运行结果"><span class="nav-number">4.2.2.</span> <span class="nav-text">运行结果</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#依赖注入"><span class="nav-number">1.</span> <span class="nav-text">依赖注入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#XML配置文件介绍"><span class="nav-number">2.</span> <span class="nav-text">XML配置文件介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring控制反转容器的使用"><span class="nav-number">3.</span> <span class="nav-text">Spring控制反转容器的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#通过构造器创建一个bean实例"><span class="nav-number">3.1.</span> <span class="nav-text">通过构造器创建一个bean实例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#通过工厂方法创建一个bean实例"><span class="nav-number">3.2.</span> <span class="nav-text">通过工厂方法创建一个bean实例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Destory-Method-的使用"><span class="nav-number">3.3.</span> <span class="nav-text">Destory Method 的使用</span></a></li></ol></li></ol></div>
             
 
           </div>
