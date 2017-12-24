@@ -104,17 +104,17 @@
 <meta name="keywords" content="maven,依赖">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Maven入门介绍">
-<meta property="og:url" content="http://yoursite.com/2017/12/16/introduction-to-maven/index.html">
+<meta property="og:url" content="http://yoursite.com/2017/12/16/Introduction-to-Maven/index.html">
 <meta property="og:site_name" content="码农的春天还没来">
 <meta property="og:description" content="项目依赖管理在项目合作开的时，我们是如何进行项目依赖管理的呢？我们通常会在新建项目的时候，同时建立一个lib目录，在其中放着项目所依赖的各方类库，这样提交到SVN之后， 每个开发人员检出项目到本地，得到项目的工作副本，这样所有开发人员就会持有统一的项目依赖了。这样有2个比较明显的问题。 管理中的问题依赖冗余随着项目的增多，模块的增多，这种方式就会有问题。很多模块都会引用相同的依赖，当每个模块都把">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://yoursite.com/2017/12/16/introduction-to-maven/repository_of_maven.jpg">
-<meta property="og:image" content="http://yoursite.com/2017/12/16/introduction-to-maven/structure_of_maven.png">
+<meta property="og:image" content="http://yoursite.com/2017/12/16/Introduction-to-Maven/repository_of_maven.jpg">
+<meta property="og:image" content="http://yoursite.com/2017/12/16/Introduction-to-Maven/structure_of_maven.png">
 <meta property="og:updated_time" content="2017-12-24T08:36:55.010Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Maven入门介绍">
 <meta name="twitter:description" content="项目依赖管理在项目合作开的时，我们是如何进行项目依赖管理的呢？我们通常会在新建项目的时候，同时建立一个lib目录，在其中放着项目所依赖的各方类库，这样提交到SVN之后， 每个开发人员检出项目到本地，得到项目的工作副本，这样所有开发人员就会持有统一的项目依赖了。这样有2个比较明显的问题。 管理中的问题依赖冗余随着项目的增多，模块的增多，这种方式就会有问题。很多模块都会引用相同的依赖，当每个模块都把">
-<meta name="twitter:image" content="http://yoursite.com/2017/12/16/introduction-to-maven/repository_of_maven.jpg">
+<meta name="twitter:image" content="http://yoursite.com/2017/12/16/Introduction-to-Maven/repository_of_maven.jpg">
 
 
 
@@ -144,7 +144,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/12/16/introduction-to-maven/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/12/16/Introduction-to-Maven/"/>
 
 
 
@@ -321,7 +321,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/16/introduction-to-maven/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/16/Introduction-to-Maven/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="殷学飞">
@@ -499,13 +499,13 @@
 <li><code>私库</code>：私库是使用者自己搭建的maven仓库，用于缓解频繁从外网下载jar包资源的压力。而且使用私库作为缓存层，也相对安全一些；</li>
 <li><code>共享仓库</code>：一般所说的中央仓库或者一些常用的镜像网站都属于这种，国内比较著名的oschina以及163都是不错的maven仓库。</li>
 </ol>
-<h3 id="Maven下载jar包的过程"><a href="#Maven下载jar包的过程" class="headerlink" title="Maven下载jar包的过程"></a>Maven下载jar包的过程</h3><p><img src="/2017/12/16/introduction-to-maven/repository_of_maven.jpg" alt="Maven下载jar包的过程"><br>当我们在pom中声明了依赖关系后，参考上面的图：</p>
+<h3 id="Maven下载jar包的过程"><a href="#Maven下载jar包的过程" class="headerlink" title="Maven下载jar包的过程"></a>Maven下载jar包的过程</h3><p><img src="/2017/12/16/Introduction-to-Maven/repository_of_maven.jpg" alt="Maven下载jar包的过程"><br>当我们在pom中声明了依赖关系后，参考上面的图：</p>
 <ol>
 <li>Maven在执行相关的任务时，会先去本地仓库查看是否有该资源，如果有的话，判断版本是否正确，如果一切都没问题则直接使用；否则，执行下一步；</li>
 <li>Maven会去配置的共享仓库中查找，如果找到就拷贝到本地仓库中；找不到则会给出相关的提示；</li>
 <li>Maven在本地如果搭建了私库，则会去私库中查找，找到就拷贝到本地仓库；找不到就会去共享仓库中查找，然后放入私库和本地库。有了私库，局域网内的开发者可以共享依赖，就不用每个人都去外网下载jar包，浪费带宽了。</li>
 </ol>
-<h3 id="Maven的目录结构介绍"><a href="#Maven的目录结构介绍" class="headerlink" title="Maven的目录结构介绍"></a>Maven的目录结构介绍</h3><p><img src="/2017/12/16/introduction-to-maven/structure_of_maven.png" alt="structure_of_maven"></p>
+<h3 id="Maven的目录结构介绍"><a href="#Maven的目录结构介绍" class="headerlink" title="Maven的目录结构介绍"></a>Maven的目录结构介绍</h3><p><img src="/2017/12/16/Introduction-to-Maven/structure_of_maven.png" alt="structure_of_maven"></p>
 <p><code>bin</code>：该目录下同JDK一样，主要是Maven的运行脚本，这些脚本用来配置Java命令，准备好classpath和相关Java系统属性，然后执行Java命令。mvn.bat是基于Windows的脚本。在CMD中每次输入一条MVN的命令都是在调用并执行这些脚本。该目录还有一个文件名为m2.conf，它是classworlds的配置文件。<br><code>boot</code>：该目录只有一个文件plexus-classworlds-2.5.1.jar。他是一个类加载器的框架，相对于JDK中的类加载器，它提供了更丰富的语法以方便配置，Maven使用该框架架在自己的类库。<br><code>conf</code>：该目录包含了一个非常重要的文件setting.xml。配置该文件就能在Project中定制Maven的行为。<br><code>lib</code>：包含了所有Maven运行时需要的Java类库以及用到的第三方以来。<br><code>LICENSE</code>：记录了Maven的软件许可证。<br><code>NOTICE.txt</code>：记录了Maven所包含的第三方软件。<br><code>README.txt</code>：包含了Maven的简介以及简要指令等.</p>
 <h4 id="代理配置"><a href="#代理配置" class="headerlink" title="代理配置"></a>代理配置</h4><p>我们没有搭建私服（私库），Maven工程需要的jar包需要联网下载，在<code>setting.xml</code>配置文件中配置代理，即可下载需要的jar包。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&lt;proxies&gt;</div><div class="line">    &lt;proxy&gt;</div><div class="line">      &lt;id&gt;optional&lt;/id&gt;</div><div class="line">      &lt;active&gt;true&lt;/active&gt;</div><div class="line">      &lt;protocol&gt;http&lt;/protocol&gt;</div><div class="line">      &lt;username&gt;xxxx&lt;/username&gt;</div><div class="line">      &lt;password&gt;xxxx&lt;/password&gt;</div><div class="line">      &lt;host&gt;xxx&lt;/host&gt;</div><div class="line">      &lt;port&gt;xxx&lt;/port&gt;</div><div class="line">      &lt;nonProxyHosts&gt;local.net|some.host.com&lt;/nonProxyHosts&gt;</div><div class="line">    &lt;/proxy&gt;</div><div class="line">&lt;/proxies&gt;</div></pre></td></tr></table></figure></p>
 <p>在<code>&lt;settings&gt;</code>标签中添加如上代码，说明如下：</p>
