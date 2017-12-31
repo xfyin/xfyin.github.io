@@ -1,0 +1,1426 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #1E92FB; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #1E92FB;    /*上边框颜色*/
+        border-left-color: #1E92FB;    /*左边框颜色*/
+    }
+</style>
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-fill-left.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=5.1.3">
+
+
+
+
+
+
+  <meta name="keywords" content="HashMap," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="码农的春天还没来" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="2017年最后一篇博客，加油！ HashMap基本用法通过HashMap与Hashtable比较：  HashMap能接受为null的键和值，Hashtable键和值都不能为null（通过put方法跟踪源码就一目了然）； HashMap是非synchronized的，所以快，Hashtable是synchronized，相对慢（源码）； HashMap 数组+链表 的存储结构，存储键值对；而一般的">
+<meta name="keywords" content="HashMap">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HashMap源码分析以及常见问题">
+<meta property="og:url" content="http://yoursite.com/2017/12/31/source-code-of-hashmap/index.html">
+<meta property="og:site_name" content="码农的春天还没来">
+<meta property="og:description" content="2017年最后一篇博客，加油！ HashMap基本用法通过HashMap与Hashtable比较：  HashMap能接受为null的键和值，Hashtable键和值都不能为null（通过put方法跟踪源码就一目了然）； HashMap是非synchronized的，所以快，Hashtable是synchronized，相对慢（源码）； HashMap 数组+链表 的存储结构，存储键值对；而一般的">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-12-31T09:01:35.800Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="HashMap源码分析以及常见问题">
+<meta name="twitter:description" content="2017年最后一篇博客，加油！ HashMap基本用法通过HashMap与Hashtable比较：  HashMap能接受为null的键和值，Hashtable键和值都不能为null（通过put方法跟踪源码就一目了然）； HashMap是非synchronized的，所以快，Hashtable是synchronized，相对慢（源码）； HashMap 数组+链表 的存储结构，存储键值对；而一般的">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/12/31/source-code-of-hashmap/"/>
+
+
+
+
+
+  <title>HashMap源码分析以及常见问题 | 码农的春天还没来</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">码农的春天还没来</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">等待 突破</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/31/source-code-of-hashmap/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="殷学飞">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/my_image.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="码农的春天还没来">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">HashMap源码分析以及常见问题</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-31T16:57:25+08:00">
+                2017-12-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/源码/" itemprop="url" rel="index">
+                    <span itemprop="name">源码</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/源码/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                  <span class="post-meta-divider">|</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  3,563
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  15
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>2017年最后一篇博客，加油！</p>
+<h2 id="HashMap基本用法"><a href="#HashMap基本用法" class="headerlink" title="HashMap基本用法"></a>HashMap基本用法</h2><p>通过HashMap与Hashtable比较：</p>
+<ul>
+<li>HashMap能接受为<strong>null</strong>的键和值，Hashtable键和值都不能为<strong>null</strong>（通过put方法跟踪源码就一目了然）；</li>
+<li>HashMap是<strong>非synchronized</strong>的，所以快，Hashtable是<strong>synchronized</strong>，相对慢（源码）；</li>
+<li>HashMap <strong>数组+链表</strong> 的存储结构，存储<strong>键值对</strong>；而一般的集合List、Set则是存储<strong>单个对象</strong>。</li>
+</ul>
+<hr>
+<h2 id="HashMap的工作原理"><a href="#HashMap的工作原理" class="headerlink" title="HashMap的工作原理"></a>HashMap的工作原理</h2><p>HashMap是基于<strong>hashing</strong>的原理，我们在使用<strong>put(key,value)</strong>存储对象到HashMap中，使用<strong>get(key)</strong>从HashMap中获取对象；当我们给put()方法传递键和值时，我们先对<strong>键</strong>调用<strong>hashCode()</strong>方法，返回的<strong>hashCode</strong>用于找到<strong>bucket</strong>的位置来存储<strong>Entry</strong>对象。我们来看看这句话涉及的源码，首先从<strong>put(key, value)</strong>方法开始。</p>
+<h3 id="put-方法源码实现"><a href="#put-方法源码实现" class="headerlink" title="put()方法源码实现"></a>put()方法源码实现</h3><p>HashMap存储结构在外层是<strong>数组</strong>，在源码中有：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> <span class="keyword">final</span> Entry&lt;?,?&gt;[] EMPTY_TABLE = &#123;&#125;;</div><div class="line"></div><div class="line"><span class="keyword">transient</span> Entry&lt;K,V&gt;[] table = (Entry&lt;K,V&gt;[]) EMPTY_TABLE;</div></pre></td></tr></table></figure></p>
+<p>在下面的put方法中，第2~4行，若是第一次操作HashMap，这里table必然是空的，需要去初始化。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> V <span class="title">put</span><span class="params">(K key, V value)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (table == EMPTY_TABLE) &#123;</div><div class="line">        inflateTable(threshold);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (key == <span class="keyword">null</span>)</div><div class="line">        <span class="keyword">return</span> putForNullKey(value);</div><div class="line">    <span class="keyword">int</span> hash = hash(key);</div><div class="line">    <span class="keyword">int</span> i = indexFor(hash, table.length);</div><div class="line">    <span class="keyword">for</span> (Entry&lt;K,V&gt; e = table[i]; e != <span class="keyword">null</span>; e = e.next) &#123;</div><div class="line">        Object k;</div><div class="line">        <span class="keyword">if</span> (e.hash == hash &amp;&amp; ((k = e.key) == key || key.equals(k))) &#123;</div><div class="line">            V oldValue = e.value;</div><div class="line">            e.value = value;</div><div class="line">            e.recordAccess(<span class="keyword">this</span>);</div><div class="line">            <span class="keyword">return</span> oldValue;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    modCount++;</div><div class="line">    addEntry(hash, key, value, i);</div><div class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在第5行，<strong>key</strong>为<strong>null</strong>时，并没有抛出异常，说明HashMap中<strong>允许键为null值</strong>的。<br>在第7行，调用了<strong>hash</strong>方法，<strong>键</strong>作为参数传入。</p>
+<p>这里看看hash()方法具体实现：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">final</span> <span class="keyword">int</span> <span class="title">hash</span><span class="params">(Object k)</span> </span>&#123;</div><div class="line">    <span class="keyword">int</span> h = hashSeed;</div><div class="line">    <span class="keyword">if</span> (<span class="number">0</span> != h &amp;&amp; k <span class="keyword">instanceof</span> String) &#123;</div><div class="line">        <span class="keyword">return</span> sun.misc.Hashing.stringHash32((String) k);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    h ^= k.hashCode();</div><div class="line"></div><div class="line">    <span class="comment">// This function ensures that hashCodes that differ only by</span></div><div class="line">    <span class="comment">// constant multiples at each bit position have a bounded</span></div><div class="line">    <span class="comment">// number of collisions (approximately 8 at default load factor).</span></div><div class="line">    h ^= (h &gt;&gt;&gt; <span class="number">20</span>) ^ (h &gt;&gt;&gt; <span class="number">12</span>);</div><div class="line">    <span class="keyword">return</span> h ^ (h &gt;&gt;&gt; <span class="number">7</span>) ^ (h &gt;&gt;&gt; <span class="number">4</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>对于hashCode()，它是一个<strong>本地方法</strong>，实质就是<strong>地址取样运算</strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">native</span> <span class="keyword">int</span> <span class="title">hashCode</span><span class="params">()</span></span>;</div></pre></td></tr></table></figure></p>
+<p>该方法第7行，调用了<strong>key的hashCode()方法</strong>，并通过一系列<strong>位运算</strong>，获取最后的<strong>hash</strong>值。<br>反观HashTable中put()方法中调用的hash()方法实现：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">hash</span><span class="params">(Object k)</span> </span>&#123;</div><div class="line">    <span class="comment">// hashSeed will be zero if alternative hashing is disabled.</span></div><div class="line">    <span class="keyword">return</span> hashSeed ^ k.hashCode();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>HashMap在HashTable的基础上做了优化，我们继续HashMap的put()方法的源码研究。<br>在第8行：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> i = indexFor(hash, table.length);</div></pre></td></tr></table></figure></p>
+<p><strong>通过返回的hash值找到（table中）bucket的位置来存储Entry对</strong>象。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * Returns index for hash code h.    </span></div><div class="line"><span class="comment"> * 返回hashCode在table中的下标，以便存储Entry对象</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">indexFor</span><span class="params">(<span class="keyword">int</span> h, <span class="keyword">int</span> length)</span> </span>&#123;</div><div class="line">    <span class="comment">// assert Integer.bitCount(length) == 1 : "length must be a non-zero power of 2";</span></div><div class="line">     <span class="keyword">return</span> h &amp; (length-<span class="number">1</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在第9~17行，在判断value值是不是在HashMap中已经存在，存在的话就返回旧值。<br>在第20行，<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">addEntry(hash, key, value, i);</div></pre></td></tr></table></figure></p>
+<p>看方法名就知道，这里就是真正将键值对添加到HashMap中的方法。传入四个参数：<strong>hash值，key-value，以及该Entry对象存储的位置</strong>。看看具体实现：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">addEntry</span><span class="params">(<span class="keyword">int</span> hash, K key, V value, <span class="keyword">int</span> bucketIndex)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> ((size &gt;= threshold) &amp;&amp; (<span class="keyword">null</span> != table[bucketIndex])) &#123;</div><div class="line">        resize(<span class="number">2</span> * table.length);</div><div class="line">        hash = (<span class="keyword">null</span> != key) ? hash(key) : <span class="number">0</span>;</div><div class="line">        bucketIndex = indexFor(hash, table.length);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    createEntry(hash, key, value, bucketIndex);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>如果HashMap的大小（size）超过了<strong>阀值（threshold）</strong>并且该Entry对象存储的位置被占用了，这时候就需要“<strong>扩容</strong>”了。也就是所谓的<strong>rehash</strong>。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">resize(<span class="number">2</span> * table.length)</div></pre></td></tr></table></figure></p>
+<p>将HashMap的大小扩充为原来大小的<strong>两倍</strong>，并且重新计算该Entry对象存储的位置。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">resize</span><span class="params">(<span class="keyword">int</span> newCapacity)</span> </span>&#123;</div><div class="line">    Entry[] oldTable = table;</div><div class="line">    <span class="keyword">int</span> oldCapacity = oldTable.length;</div><div class="line">    <span class="keyword">if</span> (oldCapacity == MAXIMUM_CAPACITY) &#123;</div><div class="line">        threshold = Integer.MAX_VALUE;</div><div class="line">        <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    Entry[] newTable = <span class="keyword">new</span> Entry[newCapacity];</div><div class="line">    transfer(newTable, initHashSeedAsNeeded(newCapacity));</div><div class="line">    table = newTable;</div><div class="line">    threshold = (<span class="keyword">int</span>)Math.min(newCapacity * loadFactor, MAXIMUM_CAPACITY + <span class="number">1</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>通过<strong>resize()方法</strong>，我们可以看到在第9，10行，重新创建了容量是原来两倍大小的新Entry数组，并且在方法<strong>transfer()</strong>中会把原来Entry对象中的数据迁移到新的Entry中。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * Transfers all entries from current table to newTable. </span></div><div class="line"><span class="comment"> * 把所有的Entry对象从当前table（旧）转义到刚创建的table（新）中</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">transfer</span><span class="params">(Entry[] newTable, <span class="keyword">boolean</span> rehash)</span> </span>&#123;</div><div class="line">    <span class="keyword">int</span> newCapacity = newTable.length;</div><div class="line">    <span class="keyword">for</span> (Entry&lt;K,V&gt; e : table) &#123;</div><div class="line">        <span class="keyword">while</span>(<span class="keyword">null</span> != e) &#123;</div><div class="line">            Entry&lt;K,V&gt; next = e.next;</div><div class="line">            <span class="keyword">if</span> (rehash) &#123;</div><div class="line">                e.hash = <span class="keyword">null</span> == e.key ? <span class="number">0</span> : hash(e.key);</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">int</span> i = indexFor(e.hash, newCapacity);</div><div class="line">            e.next = newTable[i];</div><div class="line">            newTable[i] = e;</div><div class="line">            e = next;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这一过程还是相当耗时的。<br>在addEntry方法中的第8行：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">createEntry(hash, key, value, bucketIndex);</div></pre></td></tr></table></figure></p>
+<p>创建具体的Entry对象：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">createEntry</span><span class="params">(<span class="keyword">int</span> hash, K key, V value, <span class="keyword">int</span> bucketIndex)</span> </span>&#123;</div><div class="line">    Entry&lt;K,V&gt; e = table[bucketIndex];</div><div class="line">    table[bucketIndex] = <span class="keyword">new</span> Entry&lt;&gt;(hash, key, value, e);</div><div class="line">    size++;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * Creates new entry.</span></div><div class="line"><span class="comment"> */</span></div><div class="line">Entry(<span class="keyword">int</span> h, K k, V v, Entry&lt;K,V&gt; n) &#123;</div><div class="line">    value = v;</div><div class="line">    next = n;</div><div class="line">    key = k;</div><div class="line">    hash = h;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这里很清晰了，根据之前计算的Entry对象的位置和键值对，创建了Entry对象。这里需要注意这行代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Entry&lt;K,V&gt; e = table[bucketIndex];</div></pre></td></tr></table></figure></p>
+<p>计算出来的该key在bucket中的下标bucketIndex，返回该下标在数组中存储的对象，然后通过Entry构造器，在新Entry对象中，最为next存储。这里就利用到了<strong>链表</strong>结构。后面会详细讲到，这就是整个put()方法的调用过程。</p>
+<h3 id="get-方法源码实现"><a href="#get-方法源码实现" class="headerlink" title="get()方法源码实现"></a>get()方法源码实现</h3><p>关于通过键获取值的get(key)方法，我们需要了解其中的<strong>碰撞探测以及碰撞的解决办法</strong>。首先看看get()方法的实现：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> V <span class="title">get</span><span class="params">(Object key)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (key == <span class="keyword">null</span>)</div><div class="line">        <span class="keyword">return</span> getForNullKey();</div><div class="line">    Entry&lt;K,V&gt; entry = getEntry(key);</div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="keyword">null</span> == entry ? <span class="keyword">null</span> : entry.getValue();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>key为null值这里就不看了，逻辑很简单。<br>在第4行，这里通过key获取到了Entry对象。我们看看<strong>getEntry()</strong>的具体实现：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">final</span> Entry&lt;K,V&gt; <span class="title">getEntry</span><span class="params">(Object key)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (size == <span class="number">0</span>) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">int</span> hash = (key == <span class="keyword">null</span>) ? <span class="number">0</span> : hash(key);</div><div class="line">    <span class="keyword">for</span> (Entry&lt;K,V&gt; e = table[indexFor(hash, table.length)]; e != <span class="keyword">null</span>;  e = e.next) &#123;</div><div class="line">        Object k;</div><div class="line">        <span class="keyword">if</span> (e.hash == hash &amp;&amp; ((k = e.key) == key || (key != <span class="keyword">null</span> &amp;&amp; key.equals(k))))</div><div class="line">            <span class="keyword">return</span> e;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在第6行，这里调用的<strong>key的hash方法，计算key的hashCode值</strong>。<br>在第7行，通过返回的<strong>hashCode值获取该key在bucket中的index（下标，索引）</strong>，并返回该key对应的Entry对象在数组中的存在。<br>在9行<code>if</code>语句中，<strong>首先判断计算的hash值和该Entry对象创建时存储的key的hash值是否相等</strong>，一般人会认为两个key比较时，只要hash值相等，这个key就相等，其实这是不对的，这里就涉及到了<strong>碰撞探测</strong>。换句话说，这里用到了HashMap的存储结构–<strong>数组+链表</strong>。<br>首先是<strong>数组</strong>，我们上面的代码中计算hashCode值在bucket中的位置，这个bucket就是数组（table）；<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">transient</span> Entry&lt;K,V&gt;[] table = (Entry&lt;K,V&gt;[]) EMPTY_TABLE;</div></pre></td></tr></table></figure></p>
+<p>若有两个key对象的hash值相同的话，也就是说两个值对象存储在同一个bucket中，这时候怎么获取值对象（value）？继续看第9行后面的部分：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&amp;&amp; ((k = e.key) == key || (key != <span class="keyword">null</span> &amp;&amp; key.equals(k))</div></pre></td></tr></table></figure></p>
+<p>首先用的运算符<strong>&amp;&amp;</strong>，也就是说光传入key的hash和存储在Entry中的hash值相等还不行，后面部分运算结果也得是<strong>true</strong>。后面<strong>“||”</strong>左面部分为<strong>true</strong>的条件是，该传入的key和获取的Entry对象中的key是同一个，这样肯定能精确获得想要的值对象（hash值相同，key也相同）；<strong>“||”</strong>右面部分调用的<strong>key的equals()方法</strong>，返回结果为<strong>true</strong>，当然是同一个key，也就是说左右部分的运算都是为了找到<strong>同一个key</strong>。那么具体在同一个bucket中怎么同时存两个或多个hash值相同的不同key对象的呢？明白了怎么存的也就清楚了怎么取了。我们先回到：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// put() ==&gt; addEntry() ==&gt; createEntry()</span></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">createEntry</span><span class="params">(<span class="keyword">int</span> hash, K key, V value, <span class="keyword">int</span> bucketIndex)</span> </span>&#123;</div><div class="line">    Entry&lt;K,V&gt; e = table[bucketIndex];</div><div class="line">    table[bucketIndex] = <span class="keyword">new</span> Entry&lt;&gt;(hash, key, value, e);</div><div class="line">    size++;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>若前面已经通过put(key, value)形式存储的一个Entry对象，这里又来了一个key1，通过计算key和key1拥有相同的hashCode值，也即在bucket中的位置是一致的，即bucketIndex相同。<br>在第3行中，首先就是通过下标取出数组中的Entry对象；<br>在第4行中，新建了一个Entry对象，将新的key，value，计算的hash值以及上一个相同hash值的Entry对象一起保存在该新Entry对象中，然后在相同的bucket位置返回新的Entry对象，旧的Entry对象被挂起了；后来再来一个不同的key2，若计算得出的hash值也相同，刚新建的Entry对象也将变成后来这个新Entry对象的next被挂起。这样就是<strong>链表</strong>的形式存储了具有相同hash值的不同的key对象。<br>所以说，HashMap就是通过<strong>数组+链表</strong>的形式实现的。这里说到了怎么<strong>存</strong>具有相同hash值的不同key对象，<strong>取</strong>呢？<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// get() ==&gt;　getEntry()</span></div><div class="line"><span class="keyword">for</span> (Entry&lt;K,V&gt; e = table[indexFor(hash, table.length)]; e != <span class="keyword">null</span>; e = e.next) &#123;</div><div class="line">    ....</div><div class="line"> &#125;</div></pre></td></tr></table></figure></p>
+<p>首先这里用到了for循环遍历，其实也说明了“<strong>数不止一个</strong>” 。在循环时用到了 <strong>e = e.next</strong> ，这里正是遍历<strong>挂起的Entry对象</strong>。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Entry</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; <span class="keyword">implements</span> <span class="title">Map</span>.<span class="title">Entry</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; </span>&#123;</div><div class="line">    <span class="keyword">final</span> K key;</div><div class="line">    V value;</div><div class="line">    Entry&lt;K,V&gt; next;</div><div class="line">    <span class="keyword">int</span> hash;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * Creates new entry.</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    Entry(<span class="keyword">int</span> h, K k, V v, Entry&lt;K,V&gt; n) &#123;</div><div class="line">        value = v;</div><div class="line">        next = n;</div><div class="line">        key = k;</div><div class="line">        hash = h;</div><div class="line">    &#125;</div><div class="line">    ....</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>以上就是HashMap中最重要的存取方法：<strong>put(key,value)，get(key)</strong>源码解析过程。了解了这些，下面常见的问题也很容易回答。</p>
+<hr>
+<h2 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h2><ol>
+<li><p><strong>当两个不同的键对象的hashCode相同时会发生什么？</strong><br>它们会存储在同一个bucket位置的HashMap.Entry组成的链表中。</p>
+</li>
+<li><p><strong>若两个键的hashCode值相同，你如何正确取出值对象的？</strong><br>当我们调用get(key)方法时，会先计算key的hashCode值，通过该值找到key在bucket（数组）中的位置，找到bucket位置后，循环遍历（next），并调用keys.equals()方法找到链表中正确的节点。</p>
+</li>
+<li><p><strong>什么是hash，什么是碰撞？</strong><br>hash：是一种信息摘要算法，它还叫做哈希，或者散列。我们平时使用的MD5就属于Hash算法，通过输入key进行Hash计算，就可以获取key的HashCode()，比如我们通过校验MD5来验证文件的完整性。<br>碰撞：好的Hash算法可以出计算几乎出独一无二的HashCode，如果出现了重复的hashCode，就称作碰撞;<br>就算是MD5这样优秀的算法也会发生碰撞，即两个不同的key也有可能生成相同的MD5。</p>
+</li>
+<li><p><strong>如何减少碰撞？</strong><br>使用不可变的，声明做final的对象，并且采用合适的equals()和hashCode()方法的话，将会减少碰撞的发生（若has不同对象的hashCode值都不相同，自然就不需要链表来存储了），提高效率。不可变性使得能够缓存不同键的hashCode，这将提高整个获取对象的速度（不需要遍历，速度当然就快了），使用String，Integer这样的wrapper类作为键是非常好的选择。</p>
+</li>
+<li><p><strong>为什么String, Interger这样的wrapper类适合作为键？</strong><br>因为String是不可变的，是final的，已经重写了hashCode()和equals()方法，其他的Wrapper类也有类似的特点。不可变性是必要的，因为为了要计算hashCode值，就要防止键值改变，如果键值在put和get时，返回了不同的hash值，也就不能正确的从HashMap中获取想要的对象了；如果可以仅仅通过将某个对象声明成final就能保证hashCode是不变的，就可以这么处理。因为获取对象时，需要调用hashCode()和equals()方法，对键值对象正确重写这两个方法时非常重要的。如果两个不相等的键值对象返回不同的hash值，那么碰撞的几率会小很多，这样较少了不必要的对链表的操作，就能提高HashMap的性能。</p>
+</li>
+<li><p><strong>可以使用自定义的对象作为键吗？</strong><br>当然可以，只要其遵守equals()方法和hashCode()方法规则，当键值对象插入HashMap中不会再改变就可以。</p>
+</li>
+<li><p><strong>如果HashMap的大小超过了负载因子(load factor)定义的容量，怎么办？</strong><br>默认的负载因子是0.75，也就是说，当一个HashMap中填满了75%的bucket时，将会创建原来<strong>两倍</strong>大小的新bucket数组，并将原来的对象迁移到新创建的bucket中。</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">float</span> DEFAULT_LOAD_FACTOR = <span class="number">0.75f</span>;</div></pre></td></tr></table></figure>
+</li>
+<li><p><strong>重新调整HashMap大小存在什么问题吗？</strong><br>由于HashMap是非线程安全的，在多线程环境下，会产生条件竞争。因为若两个线程都发现需要调整HashMap时，都会尝试去调整。我们看下扩容的源码：</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// put() ==&gt; addEntry() ==&gt; resize(2 * table.length) ==&gt; transfer</span></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">transfer</span><span class="params">(Entry[] newTable, <span class="keyword">boolean</span> rehash)</span> </span>&#123;</div><div class="line">    <span class="keyword">int</span> newCapacity = newTable.length;</div><div class="line">    <span class="keyword">for</span> (Entry&lt;K,V&gt; e : table) &#123;</div><div class="line">        <span class="keyword">while</span>(<span class="keyword">null</span> != e) &#123;</div><div class="line">            Entry&lt;K,V&gt; next = e.next;</div><div class="line">            <span class="keyword">if</span> (rehash) &#123;</div><div class="line">                e.hash = <span class="keyword">null</span> == e.key ? <span class="number">0</span> : hash(e.key);</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">int</span> i = indexFor(e.hash, newCapacity);</div><div class="line">            e.next = newTable[i];</div><div class="line">            newTable[i] = e;</div><div class="line">            e = next;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>假设有两个不同的key：<strong>A，B</strong>对应了同一个<strong>hash</strong>值，假设当前bucket中存储最上面的是<strong>A，A.next = B</strong>。那么从上面的源码可以看到，当前是 <strong>A = e</strong>，<strong>e.next</strong>就是<strong>B</strong>，<br>第11行，先将<strong>e.next（B）</strong>处“清空”，因为<strong>newTable[i]</strong>目前只是空位置；<br>第12行，将<strong>A</strong>放入新<strong>bucket</strong>位置；<br>第13行，将当前对象<strong>e</strong>对象设置成<strong>B</strong>，继续<strong>while</strong>循环。<br>在<strong>B</strong>的循环中，<strong>B.next</strong> 为<strong>null</strong>，<br>第11行，此处<strong>newTable[i]</strong>是前面的<strong>A</strong>，这里赋值给了当前对象<strong>e(B)</strong>的<strong>next</strong>对象；<br>第12行，将<strong>B</strong>对象存储在该<strong>bucket</strong>位置；<br>第13行，<strong>next</strong>为<strong>null</strong>赋值给当前<strong>e</strong>，<strong>while</strong>循环为<strong>false</strong>，结束循环。<br>也就是说新的bucket中存储的最上面的是<strong>B，B.next = A</strong>，整个链表反过来了。这是为了避免尾部遍历(tail traversing)。如果条件竞争发生了，那么就死循环了。<strong>所以在多线程环境下，不能使用HashMap。</strong></p>
+<ol>
+<li><p><strong>能否让HashMap同步？</strong><br>HashMap可以通过下面的手段实现同步：</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Collections.synchronizedMap(hashMap);</div></pre></td></tr></table></figure>
+</li>
+<li><p><strong>如何提升HashMap的性能？</strong><br>解决扩容损失：如果知道大致需要的容量，把初始容量设置好以解决扩容损失；<br>比如我现在有1000个数据，需要 1000/0.75 = 1333，又 1024 &lt; 1333 &lt; 2048，所以最好使用2048作为初始容量。<br><strong>2048 = roundUpToPowerOf2(1333)</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> V <span class="title">put</span><span class="params">(K key, V value)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (table == EMPTY_TABLE) &#123;</div><div class="line">        inflateTable(threshold);</div><div class="line">    &#125;</div><div class="line">    ...</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">inflateTable</span><span class="params">(<span class="keyword">int</span> toSize)</span> </span>&#123;</div><div class="line">    <span class="comment">// Find a power of 2 &gt;= toSize</span></div><div class="line">    <span class="keyword">int</span> capacity = roundUpToPowerOf2(toSize);</div><div class="line">    ...</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">roundUpToPowerOf2</span><span class="params">(<span class="keyword">int</span> number)</span> </span>&#123;</div><div class="line">    <span class="comment">// assert number &gt;= 0 : "number must be non-negative";</span></div><div class="line">    <span class="keyword">return</span> number &gt;= MAXIMUM_CAPACITY</div><div class="line">            ? MAXIMUM_CAPACITY</div><div class="line">            : (number &gt; <span class="number">1</span>) ? Integer.highestOneBit((number - <span class="number">1</span>) &lt;&lt; <span class="number">1</span>) : <span class="number">1</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>欢迎留言-------------</div>
+    
+</div>
+      
+    </div>
+
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechat.png" alt="殷学飞 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/aipay.jpg" alt="殷学飞 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+ 
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/HashMap/" rel="tag"><i class="fa fa-tag"></i> HashMap</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
+        
+
+        
+
+        
+          
+          <div id="needsharebutton-postbottom">
+            <span class="btn">
+              <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </span>
+          </div>
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/23/maven-and-springmvc/" rel="next" title="如何使用Maven搭建SpringMVC项目">
+                <i class="fa fa-chevron-left"></i> 如何使用Maven搭建SpringMVC项目
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+	<a class="jiathis_button_qzone"></a>
+	<a class="jiathis_button_tsina"></a>
+	<a class="jiathis_button_tqq"></a>
+	<a class="jiathis_button_weixin"></a>
+	<a class="jiathis_button_renren"></a>
+	<a class="jiathis_button_xiaoyou"></a>
+	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="uyan_frame"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/my_image.jpg"
+                alt="殷学飞" />
+            
+              <p class="site-author-name" itemprop="name">殷学飞</p>
+              <p class="site-description motion-element" itemprop="description">梦想总是有的，只不过时机未到，只能藏在脑子里！</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">35</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/xfyin" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:xfyin179@163.com" target="_blank" title="E-Mail">
+                    
+                      <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://my.csdn.net/" target="_blank" title="csdn">
+                    
+                      <i class="fa fa-fw fa-crosshairs"></i>csdn</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#HashMap基本用法"><span class="nav-number">1.</span> <span class="nav-text">HashMap基本用法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HashMap的工作原理"><span class="nav-number">2.</span> <span class="nav-text">HashMap的工作原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#put-方法源码实现"><span class="nav-number">2.1.</span> <span class="nav-text">put()方法源码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#get-方法源码实现"><span class="nav-number">2.2.</span> <span class="nav-text">get()方法源码实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常见问题"><span class="nav-number">3.</span> <span class="nav-text">常见问题</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">殷学飞</span>
+
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+<span id="busuanzi_container_site_pv">
+    本站总阅读量:<span id="busuanzi_value_site_pv"></span>次
+</span>
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.3</div>
+
+-->
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共27.3k字</span>
+</div>
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+    
+
+    
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid=2148100"></script>
+      <!-- UY END -->
+    
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+      pbOptions = {};
+      
+          pbOptions.iconStyle = "box";
+      
+          pbOptions.boxForm = "horizontal";
+      
+          pbOptions.position = "bottomCenter";
+      
+          pbOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+    
+    
+  </script>
+
+  
+
+  
+
+  
+
+  
+
+
+  
+	<div id="hexo-helper-live2d">
+      <canvas id="live2dcanvas" width="150" height="300" class="live2d"></canvas>
+	</div>
+    <style>
+      #live2dcanvas {
+        position: fixed;
+        right: 0px;
+        z-index: 999;
+        pointer-events: none;
+        bottom: -20px;
+      }
+    </style>
+    <script src="/live2d/device.min.js"></script>
+    <script type="text/javascript">
+    (function(){
+    if(device.mobile()){
+      
+      document.getElementById("live2dcanvas").width = 75;
+      document.getElementById("live2dcanvas").height = 150;
+      document.write('<script type="text/javascript" src="/live2d/script.js"><\/script>');
+      document.write('<script>loadlive2d("live2dcanvas", "/live2d/assets/wanko.model.json", 0.5)<\/script>');
+      
+    }else{
+      document.write('<script type="text/javascript" src="/live2d/script.js"><\/script>');
+      document.write('<script>loadlive2d("live2dcanvas", "/live2d/assets/wanko.model.json", 0.5)<\/script>');
+    }
+    })();
+    </script>
+
+</body>
+
+<!-- 页面点击小红心 -->
+<!-- <script type="text/javascript" src="/js/src/love.js"></script> -->
+</html>
