@@ -108,7 +108,7 @@
 <meta property="og:site_name" content="码农的春天还没来">
 <meta property="og:description" content="2017年最后一篇博客，加油！ HashMap基本用法通过HashMap与Hashtable比较：  HashMap能接受为null的键和值，Hashtable键和值都不能为null（通过put方法跟踪源码就一目了然）； HashMap是非synchronized的，所以快，Hashtable是synchronized，相对慢（源码）； HashMap 数组+链表 的存储结构，存储键值对；而一般的">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-12-31T09:01:35.800Z">
+<meta property="og:updated_time" content="2017-12-31T09:06:19.719Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HashMap源码分析以及常见问题">
 <meta name="twitter:description" content="2017年最后一篇博客，加油！ HashMap基本用法通过HashMap与Hashtable比较：  HashMap能接受为null的键和值，Hashtable键和值都不能为null（通过put方法跟踪源码就一目了然）； HashMap是非synchronized的，所以快，Hashtable是synchronized，相对慢（源码）； HashMap 数组+链表 的存储结构，存储键值对；而一般的">
@@ -504,10 +504,8 @@
 </li>
 <li><p><strong>重新调整HashMap大小存在什么问题吗？</strong><br>由于HashMap是非线程安全的，在多线程环境下，会产生条件竞争。因为若两个线程都发现需要调整HashMap时，都会尝试去调整。我们看下扩容的源码：</p>
  <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// put() ==&gt; addEntry() ==&gt; resize(2 * table.length) ==&gt; transfer</span></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">transfer</span><span class="params">(Entry[] newTable, <span class="keyword">boolean</span> rehash)</span> </span>&#123;</div><div class="line">    <span class="keyword">int</span> newCapacity = newTable.length;</div><div class="line">    <span class="keyword">for</span> (Entry&lt;K,V&gt; e : table) &#123;</div><div class="line">        <span class="keyword">while</span>(<span class="keyword">null</span> != e) &#123;</div><div class="line">            Entry&lt;K,V&gt; next = e.next;</div><div class="line">            <span class="keyword">if</span> (rehash) &#123;</div><div class="line">                e.hash = <span class="keyword">null</span> == e.key ? <span class="number">0</span> : hash(e.key);</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">int</span> i = indexFor(e.hash, newCapacity);</div><div class="line">            e.next = newTable[i];</div><div class="line">            newTable[i] = e;</div><div class="line">            e = next;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p> 假设有两个不同的key：<strong>A，B</strong>对应了同一个<strong>hash</strong>值，假设当前bucket中存储最上面的是<strong>A，A.next = B</strong>。那么从上面的源码可以看到，当前是 <strong>A = e</strong>，<strong>e.next</strong>就是<strong>B</strong>，<br> 第11行，先将<strong>e.next（B）</strong>处“清空”，因为<strong>newTable[i]</strong>目前只是空位置；<br> 第12行，将<strong>A</strong>放入新<strong>bucket</strong>位置；<br> 第13行，将当前对象<strong>e</strong>对象设置成<strong>B</strong>，继续<strong>while</strong>循环。<br> 在<strong>B</strong>的循环中，<strong>B.next</strong> 为<strong>null</strong>，<br> 第11行，此处<strong>newTable[i]</strong>是前面的<strong>A</strong>，这里赋值给了当前对象<strong>e(B)</strong>的<strong>next</strong>对象；<br> 第12行，将<strong>B</strong>对象存储在该<strong>bucket</strong>位置；<br> 第13行，<strong>next</strong>为<strong>null</strong>赋值给当前<strong>e</strong>，<strong>while</strong>循环为<strong>false</strong>，结束循环。<br> 也就是说新的bucket中存储的最上面的是<strong>B，B.next = A</strong>，整个链表反过来了。这是为了避免尾部遍历(tail traversing)。如果条件竞争发生了，那么就死循环了。<strong>所以在多线程环境下，不能使用HashMap。</strong></p>
 </li>
-</ol>
-<p>假设有两个不同的key：<strong>A，B</strong>对应了同一个<strong>hash</strong>值，假设当前bucket中存储最上面的是<strong>A，A.next = B</strong>。那么从上面的源码可以看到，当前是 <strong>A = e</strong>，<strong>e.next</strong>就是<strong>B</strong>，<br>第11行，先将<strong>e.next（B）</strong>处“清空”，因为<strong>newTable[i]</strong>目前只是空位置；<br>第12行，将<strong>A</strong>放入新<strong>bucket</strong>位置；<br>第13行，将当前对象<strong>e</strong>对象设置成<strong>B</strong>，继续<strong>while</strong>循环。<br>在<strong>B</strong>的循环中，<strong>B.next</strong> 为<strong>null</strong>，<br>第11行，此处<strong>newTable[i]</strong>是前面的<strong>A</strong>，这里赋值给了当前对象<strong>e(B)</strong>的<strong>next</strong>对象；<br>第12行，将<strong>B</strong>对象存储在该<strong>bucket</strong>位置；<br>第13行，<strong>next</strong>为<strong>null</strong>赋值给当前<strong>e</strong>，<strong>while</strong>循环为<strong>false</strong>，结束循环。<br>也就是说新的bucket中存储的最上面的是<strong>B，B.next = A</strong>，整个链表反过来了。这是为了避免尾部遍历(tail traversing)。如果条件竞争发生了，那么就死循环了。<strong>所以在多线程环境下，不能使用HashMap。</strong></p>
-<ol>
 <li><p><strong>能否让HashMap同步？</strong><br>HashMap可以通过下面的手段实现同步：</p>
  <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Collections.synchronizedMap(hashMap);</div></pre></td></tr></table></figure>
 </li>
@@ -610,6 +608,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/07/basic-of-concurrent/" rel="prev" title="并发编程之基础篇">
+                并发编程之基础篇 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -720,7 +722,7 @@ var jiathis_config={
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-count">16</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -731,7 +733,7 @@ var jiathis_config={
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-count">13</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -742,7 +744,7 @@ var jiathis_config={
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">35</span>
+                  <span class="site-state-item-count">38</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -825,7 +827,7 @@ var jiathis_config={
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-<div class="copyright">&copy; <span itemprop="copyrightYear">2017</span>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
@@ -862,7 +864,7 @@ var jiathis_config={
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共27.3k字</span>
+  <span class="post-count">博客全站共30.7k字</span>
 </div>
         
 
