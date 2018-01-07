@@ -87,7 +87,7 @@
 
 
 
-  <meta name="keywords" content="线程安全,锁,锁重入," />
+  <meta name="keywords" content="线程安全,锁,锁重入,volatile," />
 
 
 
@@ -101,7 +101,7 @@
 
 
 <meta name="description" content="源码地址：链接：https://pan.baidu.com/s/1c1MOlXY 密码：qfqi 线程安全概念线程安全：当多个线程访问同一个类（对象或方法）时，这个类始终表现着正确的行为，那么这个类就是线程安全的。synchronized ： 可以在任意对象及方法上加锁，而加锁的这段代码称为“互斥区”或者“临界区”。自定义线程类有两种方式：实现（implements）Runnable接口，继承（e">
-<meta name="keywords" content="线程安全,锁,锁重入">
+<meta name="keywords" content="线程安全,锁,锁重入,volatile">
 <meta property="og:type" content="article">
 <meta property="og:title" content="并发编程之基础篇">
 <meta property="og:url" content="http://yoursite.com/2018/01/07/basic-of-concurrent/index.html">
@@ -109,7 +109,7 @@
 <meta property="og:description" content="源码地址：链接：https://pan.baidu.com/s/1c1MOlXY 密码：qfqi 线程安全概念线程安全：当多个线程访问同一个类（对象或方法）时，这个类始终表现着正确的行为，那么这个类就是线程安全的。synchronized ： 可以在任意对象及方法上加锁，而加锁的这段代码称为“互斥区”或者“临界区”。自定义线程类有两种方式：实现（implements）Runnable接口，继承（e">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/2018/01/07/basic-of-concurrent/multhread_var.png">
-<meta property="og:updated_time" content="2018-01-07T13:06:54.338Z">
+<meta property="og:updated_time" content="2018-01-07T13:31:28.970Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="并发编程之基础篇">
 <meta name="twitter:description" content="源码地址：链接：https://pan.baidu.com/s/1c1MOlXY 密码：qfqi 线程安全概念线程安全：当多个线程访问同一个类（对象或方法）时，这个类始终表现着正确的行为，那么这个类就是线程安全的。synchronized ： 可以在任意对象及方法上加锁，而加锁的这段代码称为“互斥区”或者“临界区”。自定义线程类有两种方式：实现（implements）Runnable接口，继承（e">
@@ -586,6 +586,8 @@
           
             <a href="/tags/锁重入/" rel="tag"><i class="fa fa-tag"></i> 锁重入</a>
           
+            <a href="/tags/volatile/" rel="tag"><i class="fa fa-tag"></i> volatile</a>
+          
         </div>
       
 
@@ -753,7 +755,7 @@ var jiathis_config={
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">38</span>
+                  <span class="site-state-item-count">39</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

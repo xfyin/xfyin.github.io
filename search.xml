@@ -12,6 +12,7 @@
         <tag>线程安全</tag>
         <tag>锁</tag>
         <tag>锁重入</tag>
+        <tag>volatile</tag>
       </tags>
   </entry>
   <entry>
@@ -162,10 +163,10 @@
         <category>java</category>
       </categories>
       <tags>
+        <tag>jdk8新特性</tag>
         <tag>抽象类</tag>
         <tag>接口</tag>
         <tag>反射</tag>
-        <tag>jdk8新特性</tag>
       </tags>
   </entry>
   <entry>
