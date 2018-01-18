@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2018-01-18T12:39:07.142Z</updated>
+  <updated>2018-01-18T12:44:33.941Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,35 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>并发编程之容器篇</title>
+    <link href="http://yoursite.com/2018/01/18/container-of-concurrent/"/>
+    <id>http://yoursite.com/2018/01/18/container-of-concurrent/</id>
+    <published>2018-01-18T12:43:13.000Z</published>
+    <updated>2018-01-18T12:44:33.941Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="同步类容器"><a href="#同步类容器" class="headerlink" title="同步类容器"></a>同步类容器</h2><h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><p>同步类容器都是<strong>线程安全</strong>的，但是在某些场景下可能需要通过<strong>加锁</strong>来保护复合操作。那什么是复合类操作呢？诸如：<strong>迭代</strong>（反复访问元素，遍历完容器中所有的元素），<strong>跳转</strong>（根据指定的顺序找到当前元素的下一个元素），以及<strong>条件运算</strong>等。这些复合类操作在多线程并发修改容器时，可能会出现意想不到的情况，如经典的异常类<strong>ConcurrentModificationException</strong>，究其原因，当在容器迭代过程中，被并发地修改了内容，这是由于早期迭代器设计时并没有考虑到并发修改的问题。</p><h3 id="种类"><a href="#种类" class="headerlink" title="种类"></a>种类</h3><p>诸如<code>Vector</code>，<code>HashTable</code>。这些容器的同步功能中有由JDK的<strong>Collections.synchronizedXX</strong>等工厂方法去创建实现的。其底层的实现机制无非就是利用传统的<strong>synchronized</strong>关键字对每个公用的方法都进行了同步操作，使得每次只能有一个线程访问容器的状态。对于当今互联网高并发的需求显然不能满足，在保证线程安全的同时，也必须要有足够好的性能。</p><h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><p><code>Vector</code>线程安全操作示例：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> thread;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.util.Vector;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Tickets</span> </span>&#123;</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line"><span class="keyword">final</span> Vector&lt;String&gt; tickets = <span class="keyword">new</span> Vector&lt;&gt;();</div><div class="line"></div><div class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= <span class="number">1000</span>; i++) &#123;</div><div class="line">tickets.add(<span class="string">"火车票"</span> + i);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</div><div class="line"><span class="keyword">new</span> Thread(<span class="keyword">new</span>  Runnable() &#123;</div><div class="line"></div><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line"><span class="keyword">while</span>(<span class="keyword">true</span>) &#123;</div><div class="line"><span class="keyword">if</span> (tickets.isEmpty()) &#123;</div><div class="line"><span class="keyword">break</span>;</div><div class="line">&#125;</div><div class="line">System.out.println(Thread.currentThread().getName() + <span class="string">"---"</span> + tickets.remove(<span class="number">0</span>));</div><div class="line">&#125;</div><div class="line">&#125;</div><div class="line">&#125;, <span class="string">"线程"</span> + i).start();</div><div class="line">&#125;</div><div class="line">&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p><p>为什么是线程安全的？我们看看<code>Vector</code>的<strong>remove</strong>操作具体实现。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> E <span class="title">remove</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</div><div class="line">    modCount++;</div><div class="line">    <span class="keyword">if</span> (index &gt;= elementCount)</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ArrayIndexOutOfBoundsException(index);</div><div class="line">    E oldValue = elementData(index);</div><div class="line"></div><div class="line">    <span class="keyword">int</span> numMoved = elementCount - index - <span class="number">1</span>;</div><div class="line">    <span class="keyword">if</span> (numMoved &gt; <span class="number">0</span>)</div><div class="line">        System.arraycopy(elementData, index+<span class="number">1</span>, elementData, index,</div><div class="line">                         numMoved);</div><div class="line">    elementData[--elementCount] = <span class="keyword">null</span>; <span class="comment">// Let gc do its work</span></div><div class="line"></div><div class="line">    <span class="keyword">return</span> oldValue;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p><p>很显然，这里加了锁<strong>synchronized</strong>，所以是线程安全的。若是将<strong>Vector</strong>换成<strong>ArrayList</strong>，就有有重复数据出现，也说明<strong>ArrayList是线程不安全的</strong>。但是也正是这把锁，每次就1个线程能持有，另外的9个线程必须在外面排队等候，直到前面的线程释放锁。该容器并不能支持并发操作。</p><hr><h2 id="并发类容器"><a href="#并发类容器" class="headerlink" title="并发类容器"></a>并发类容器</h2><h3 id="概念-1"><a href="#概念-1" class="headerlink" title="概念"></a>概念</h3><p>JDK5.0以后提供了多种并发类容器来替代同步类容器，从而改善性能问题。对于同步类容器，虽然实现了线程安全，但是严重降低了<strong>并发性</strong>，在多线程环境下，严重降低了应用程序的吞吐量。而并发类容器，专门针对并发设计。</p><h3 id="种类-1"><a href="#种类-1" class="headerlink" title="种类"></a>种类</h3><p>我们使用<strong>ConcurrentHashMap</strong>来代替基于散列实现的传统的<strong>HashTable</strong>，而且在<strong>ConcurrentHashMap</strong>中，添加了一些常见复合操作的支持；使用<strong>CopyOnWriteArrayList</strong>代替<strong>Vector</strong>，并发的<strong>CopyOnWriteArraySet</strong>，以及并发的<strong>Queue</strong>，如高性能的队列<strong>ConcurrentLinkedQueue</strong>和以阻塞形式的队列<strong>LinkedBlockingQueue</strong>，还有如<strong>ArrayBlockingQueue</strong>，<strong>PriorityBlockingQueue</strong>，<strong>SynchronousQueue</strong>等等。</p><h4 id="ConcurrentMap容器"><a href="#ConcurrentMap容器" class="headerlink" title="ConcurrentMap容器"></a>ConcurrentMap容器</h4><p>ConcurrentMap接口下有两个重要的实现</p><ul><li>ConcurrentHashMap—类似于 HashMap</li><li>ConcurrentSkipListMap(支持并发排序功能，弥补ConcurrentHashMap)—类似于TreeMap</li></ul><p>ConcurrentHashMap内部使用<strong>段（Segment）</strong>来表示这些不同的部分，每个段其实就是一个小的<strong>HashTable</strong>，它们有自己的锁。只要多个修改操作发生在不同的段上，它们就可以并发进行。把一个整体分为<strong>16</strong>个段，也就是最高支持<strong>16</strong>个线程的并发修改操作。这也是在多线程场景时，减小锁的粒度而降低锁竞争的一种方案。并且在代码中大多共享变量使用<strong>volatile</strong>关键字声明，目的是第一时间获取修改的内容，性能非常好。</p><h4 id="Copy-On-Write容器"><a href="#Copy-On-Write容器" class="headerlink" title="Copy-On-Write容器"></a>Copy-On-Write容器</h4><p>简称<strong>COW</strong>，是一种用于程序设计中的优化策略。<br>JDK中COW容器有2种，<strong>CopyOnWriteArrayList</strong>和<strong>CopyOnWriteArraySet</strong>。具体什么是COW容器呢？指<strong>写时复制</strong>的容器，也就是写（Write，添加、删除、修改）的时候进行复制（Copy）。通俗的讲，例如当我们往容器中添加元素的时候，不直接往当前容器中添加，而是将当前容器Copy一份，复制出一份新的容器，然后向新的容器中添加元素，添加完元素后，将原来容器的引用指向新的容器。这样做的好处是，<strong>我们可以向CopyOnWrite容器进行并发的读，而不需要加锁</strong>，因为当前容器中不会添加任何新的元素。所有CopyOnWrite容器是一种读写分离的思想，读和写的对象是不同的容器。这类容器适合于<strong>读多写少</strong>的场景，若写操作很多，还不如直接用普通容器加锁。对于该容器，当多个写发生时，为什么不会引起线程安全问题，直接看一个写操作：<strong>add</strong>方法。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span> </span>&#123;</div><div class="line">    <span class="keyword">final</span> ReentrantLock lock = <span class="keyword">this</span>.lock;</div><div class="line">    lock.lock();</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        Object[] elements = getArray();</div><div class="line">        <span class="keyword">int</span> len = elements.length;</div><div class="line">        Object[] newElements = Arrays.copyOf(elements, len + <span class="number">1</span>);</div><div class="line">        newElements[len] = e;</div><div class="line">        setArray(newElements);</div><div class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">    &#125; <span class="keyword">finally</span> &#123;</div><div class="line">        lock.unlock();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p><p>可以看到，该操作中用到重入锁<strong>ReentrantLock</strong>，所以说也不会产生线程安全。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h2 id=&quot;同步类容器&quot;&gt;&lt;a href=&quot;#同步类容器&quot; class=&quot;headerlink&quot; title=&quot;同步类容器&quot;&gt;&lt;/a&gt;同步类容器&lt;/h2&gt;&lt;h3 id=&quot;概念&quot;&gt;&lt;a href=&quot;#概念&quot; class=&quot;headerlink&quot; title=&quot;概念&quot;&gt;&lt;/a&gt;概
+      
+    
+    </summary>
+    
+      <category term="多线程" scheme="http://yoursite.com/categories/%E5%A4%9A%E7%BA%BF%E7%A8%8B/"/>
+    
+      <category term="java" scheme="http://yoursite.com/categories/%E5%A4%9A%E7%BA%BF%E7%A8%8B/java/"/>
+    
+    
+      <category term="同步" scheme="http://yoursite.com/tags/%E5%90%8C%E6%AD%A5/"/>
+    
+      <category term="并发" scheme="http://yoursite.com/tags/%E5%B9%B6%E5%8F%91/"/>
+    
+  </entry>
   
   <entry>
     <title>并发编程之通信篇</title>
@@ -431,13 +460,13 @@
       <category term="java" scheme="http://yoursite.com/categories/%E9%9D%A2%E8%AF%95%E9%A2%98%E5%88%86%E6%9E%90/java/"/>
     
     
+      <category term="jdk8新特性" scheme="http://yoursite.com/tags/jdk8%E6%96%B0%E7%89%B9%E6%80%A7/"/>
+    
       <category term="抽象类" scheme="http://yoursite.com/tags/%E6%8A%BD%E8%B1%A1%E7%B1%BB/"/>
     
       <category term="接口" scheme="http://yoursite.com/tags/%E6%8E%A5%E5%8F%A3/"/>
     
       <category term="反射" scheme="http://yoursite.com/tags/%E5%8F%8D%E5%B0%84/"/>
-    
-      <category term="jdk8新特性" scheme="http://yoursite.com/tags/jdk8%E6%96%B0%E7%89%B9%E6%80%A7/"/>
     
   </entry>
   
