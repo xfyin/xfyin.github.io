@@ -1,8 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[并发编程之设计模式篇]]></title>
+    <url>%2F2018%2F02%2F04%2Ffuture-Master-Worker%2F</url>
+    <content type="text"><![CDATA[并行设计模式属于设计优化的一部分，它是对一些常用的多线程结构的总结和抽象。与串行程序相比，并行程序的结构通常更为复杂。因此合理地使用并行模式在多线程开发中更有意义。 Future模式该模式有点类似于商品订单。比如在网购时，当看中某商品时，就可以提交订单，当订单处理完成后，只需要在家等待商品送货上门即可。又如当我们发送Ajax请求时，页面时异步地进行后台处理，用户无需一直等待请求结果，可以继续浏览或操作其他内容。 示意图Future示意图 示例代码链接：https://pan.baidu.com/s/1mhPW684 密码：kha7 Master-Worker模式是常用的并行计算模式。核心思想是系统由两类进行协作工作：Master进程和Worker进程。Master负责接收和分配任务，Worker负责处理子任务。当各个Worker子进程处理完成后，会将结果返回给Master，由Master做归纳和总结。其好处是能将一个大任务分解成若干个小任务，并行执行，从而提高系统的吞吐量。 示意图Master-Worker示意图 示例代码链接：https://pan.baidu.com/s/1dFnlAtN 密码：vvx7 生产者-消费者模式生产者-消费者模式是非常典型的多线程模式，通常由两类线程：若干个生产者的线程和若干个消费者的线程。生产者线程负责提交用户请求，消费者线程负责具体处理生产者提交的任务，在生产者和消费者之间通过共享内存缓存区进行通信。 示意图Provider-Customer示意图 示例代码链接：https://pan.baidu.com/s/1eTurxrs 密码：ipyh]]></content>
+      <categories>
+        <category>多线程</category>
+        <category>java</category>
+      </categories>
+      <tags>
+        <tag>Future</tag>
+        <tag>Master-Worker</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[并发编程之队列篇]]></title>
+    <url>%2F2018%2F01%2F28%2Fqueue-of-concurrent%2F</url>
+    <content type="text"><![CDATA[在并发队列上，JDK提供了继承于Queue的两套实现： 以ConcurrentLinkedQueue为代表的高性能队列； 以BlockingQueue接口为代表的阻塞队列。 其中BlockingQueue接口下的常用实现有： ArrayBlockingQueue LinkedBlockingQueue PriorityBlockingQueue DelayQueue SynchronousQueue ConcurrentLinkedQueue是一个适用于高并发场景下的队列，通过无锁的方式实现。实现了高并发状态下的高性能，通常ConcurrentLinkedQueue性能好于BlockingQueue。它是一个基于链节点的无界线程安全队列。该队列的元素遵循先进先出的原则。头部是最先加入的，尾部是最后加入的。不允许有null元素。 重要方法： add() 和 offer() 都是加入元素的方法，（在ConcurrentLinkedQueue中，这两个方法没有区别）； poll() 和 peek() 都是取头元素节点，区别在于前者会删除元素，后者不会。 BlockingQueue接口ArrayBlockingQueue基于数组的阻塞队列实现，在ArrayBlockingQueue内部，维护了一个定长数组，以便缓存队列中的数据对象，其内部没有实现读写分离，也就意味着生产和消费不能完全并行。长度是需要自定义的，可以指定先进先出或先进后出；也叫有界队列。 LinkedBlockingQueue基于链表的阻塞队列实现，其内部也维持着一个由链表构成的缓冲队列；该队列之所以能高效地处理并发数据，是因为其内部实现采用的是读写分离锁，从而实现生产和消费可以完全并行运行；是无界队列。 PriorityBlockingQueue基于优先级的阻塞队列（优先级的判断通过构造函数传入的Compator对象来决定，也就是说传入的队列对象必须实现Comparable接口），在实现该队列时，内部控制线程同步的锁采用的是公平锁；是一个无界队列； DelayQueue带有延迟时间的队列，其中的元素只有当其指定的延迟时间到了，才能够从队列中获取该元素。该队列中的元素必须实现Delayed接口，该队列是一个没有大小限制的队列，应用场景多，譬如：对缓存超时的数据进行移除，任务超时处理，空闲连接的关闭等。现实中例子：如在网吧上网，交多少钱对应上网多少时间，时间到了自动下机。 SynchronousQueue是一种没有缓冲的队列，生产者产生的数据会直接被消费者获取并消费。其内部没有空间，若只是put()操作，会抛异常“queue full”；需要先take()阻塞，再put()可取，也就是没有经过队列内部。]]></content>
+      <categories>
+        <category>多线程</category>
+        <category>java</category>
+      </categories>
+      <tags>
+        <tag>队列</tag>
+        <tag>阻塞</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[并发编程之容器篇]]></title>
-    <url>%2F2018%2F01%2F18%2Fcontainer-of-concurrent%2F</url>
+    <url>%2F2018%2F01%2F20%2Fcontainer-of-concurrent%2F</url>
     <content type="text"><![CDATA[同步类容器概念同步类容器都是线程安全的，但是在某些场景下可能需要通过加锁来保护复合操作。那什么是复合类操作呢？诸如：迭代（反复访问元素，遍历完容器中所有的元素），跳转（根据指定的顺序找到当前元素的下一个元素），以及条件运算等。这些复合类操作在多线程并发修改容器时，可能会出现意想不到的情况，如经典的异常类ConcurrentModificationException，究其原因，当在容器迭代过程中，被并发地修改了内容，这是由于早期迭代器设计时并没有考虑到并发修改的问题。 种类诸如Vector，HashTable。这些容器的同步功能中有由JDK的Collections.synchronizedXX等工厂方法去创建实现的。其底层的实现机制无非就是利用传统的synchronized关键字对每个公用的方法都进行了同步操作，使得每次只能有一个线程访问容器的状态。对于当今互联网高并发的需求显然不能满足，在保证线程安全的同时，也必须要有足够好的性能。 示例Vector线程安全操作示例：12345678910111213141516171819202122232425262728package thread;import java.util.Vector;public class Tickets &#123; public static void main(String[] args) &#123; final Vector&lt;String&gt; tickets = new Vector&lt;&gt;(); for (int i = 1; i &lt;= 1000; i++) &#123; tickets.add("火车票" + i); &#125; for (int i = 0; i &lt; 10; i++) &#123; new Thread(new Runnable() &#123; @Override public void run() &#123; while(true) &#123; if (tickets.isEmpty()) &#123; break; &#125; System.out.println(Thread.currentThread().getName() + "---" + tickets.remove(0)); &#125; &#125; &#125;, "线程" + i).start(); &#125; &#125;&#125; 为什么是线程安全的？我们看看Vector的remove操作具体实现。1234567891011121314public synchronized E remove(int index) &#123; modCount++; if (index &gt;= elementCount) throw new ArrayIndexOutOfBoundsException(index); E oldValue = elementData(index); int numMoved = elementCount - index - 1; if (numMoved &gt; 0) System.arraycopy(elementData, index+1, elementData, index, numMoved); elementData[--elementCount] = null; // Let gc do its work return oldValue;&#125; 很显然，这里加了锁synchronized，所以是线程安全的。若是将Vector换成ArrayList，就有有重复数据出现，也说明ArrayList是线程不安全的。但是也正是这把锁，每次就1个线程能持有，另外的9个线程必须在外面排队等候，直到前面的线程释放锁。该容器并不能支持并发操作。 并发类容器概念JDK5.0以后提供了多种并发类容器来替代同步类容器，从而改善性能问题。对于同步类容器，虽然实现了线程安全，但是严重降低了并发性，在多线程环境下，严重降低了应用程序的吞吐量。而并发类容器，专门针对并发设计。 种类我们使用ConcurrentHashMap来代替基于散列实现的传统的HashTable，而且在ConcurrentHashMap中，添加了一些常见复合操作的支持；使用CopyOnWriteArrayList代替Vector，并发的CopyOnWriteArraySet，以及并发的Queue，如高性能的队列ConcurrentLinkedQueue和以阻塞形式的队列LinkedBlockingQueue，还有如ArrayBlockingQueue，PriorityBlockingQueue，SynchronousQueue等等。 ConcurrentMap容器ConcurrentMap接口下有两个重要的实现 ConcurrentHashMap—类似于 HashMap ConcurrentSkipListMap(支持并发排序功能，弥补ConcurrentHashMap)—类似于TreeMap ConcurrentHashMap内部使用段（Segment）来表示这些不同的部分，每个段其实就是一个小的HashTable，它们有自己的锁。只要多个修改操作发生在不同的段上，它们就可以并发进行。把一个整体分为16个段，也就是最高支持16个线程的并发修改操作。这也是在多线程场景时，减小锁的粒度而降低锁竞争的一种方案。并且在代码中大多共享变量使用volatile关键字声明，目的是第一时间获取修改的内容，性能非常好。 Copy-On-Write容器简称COW，是一种用于程序设计中的优化策略。JDK中COW容器有2种，CopyOnWriteArrayList和CopyOnWriteArraySet。具体什么是COW容器呢？指写时复制的容器，也就是写（Write，添加、删除、修改）的时候进行复制（Copy）。通俗的讲，例如当我们往容器中添加元素的时候，不直接往当前容器中添加，而是将当前容器Copy一份，复制出一份新的容器，然后向新的容器中添加元素，添加完元素后，将原来容器的引用指向新的容器。这样做的好处是，我们可以向CopyOnWrite容器进行并发的读，而不需要加锁，因为当前容器中不会添加任何新的元素。所有CopyOnWrite容器是一种读写分离的思想，读和写的对象是不同的容器。这类容器适合于读多写少的场景，若写操作很多，还不如直接用普通容器加锁。对于该容器，当多个写发生时，为什么不会引起线程安全问题，直接看一个写操作：add方法。1234567891011121314public boolean add(E e) &#123; final ReentrantLock lock = this.lock; lock.lock(); try &#123; Object[] elements = getArray(); int len = elements.length; Object[] newElements = Arrays.copyOf(elements, len + 1); newElements[len] = e; setArray(newElements); return true; &#125; finally &#123; lock.unlock(); &#125;&#125; 可以看到，该操作中用到重入锁ReentrantLock，所以说也不会产生线程安全。]]></content>
       <categories>
         <category>多线程</category>
@@ -191,10 +217,10 @@
         <category>java</category>
       </categories>
       <tags>
-        <tag>jdk8新特性</tag>
         <tag>抽象类</tag>
         <tag>接口</tag>
         <tag>反射</tag>
+        <tag>jdk8新特性</tag>
       </tags>
   </entry>
   <entry>
