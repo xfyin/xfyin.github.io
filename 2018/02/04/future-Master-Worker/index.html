@@ -108,10 +108,14 @@
 <meta property="og:site_name" content="码农的春天还没来">
 <meta property="og:description" content="并行设计模式属于设计优化的一部分，它是对一些常用的多线程结构的总结和抽象。与串行程序相比，并行程序的结构通常更为复杂。因此合理地使用并行模式在多线程开发中更有意义。 Future模式该模式有点类似于商品订单。比如在网购时，当看中某商品时，就可以提交订单，当订单处理完成后，只需要在家等待商品送货上门即可。又如当我们发送Ajax请求时，页面时异步地进行后台处理，用户无需一直等待请求结果，可以继续浏览或">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-03-06T13:15:38.736Z">
+<meta property="og:image" content="http://yoursite.com/2018/02/04/future-Master-Worker/Future.png">
+<meta property="og:image" content="http://yoursite.com/2018/02/04/future-Master-Worker/Master-Worker.png">
+<meta property="og:image" content="http://yoursite.com/2018/02/04/future-Master-Worker/Provider-Customer.png">
+<meta property="og:updated_time" content="2018-03-10T13:48:38.451Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="并发编程之设计模式篇">
 <meta name="twitter:description" content="并行设计模式属于设计优化的一部分，它是对一些常用的多线程结构的总结和抽象。与串行程序相比，并行程序的结构通常更为复杂。因此合理地使用并行模式在多线程开发中更有意义。 Future模式该模式有点类似于商品订单。比如在网购时，当看中某商品时，就可以提交订单，当订单处理完成后，只需要在家等待商品送货上门即可。又如当我们发送Ajax请求时，页面时异步地进行后台处理，用户无需一直等待请求结果，可以继续浏览或">
+<meta name="twitter:image" content="http://yoursite.com/2018/02/04/future-Master-Worker/Future.png">
 
 
 
@@ -414,7 +418,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  475
+                  461
                 </span>
               
 
@@ -453,13 +457,13 @@
       
         <p>并行设计模式属于设计优化的一部分，它是对一些常用的多线程结构的总结和抽象。与串行程序相比，并行程序的结构通常更为复杂。因此合理地使用并行模式在多线程开发中更有意义。</p>
 <h2 id="Future模式"><a href="#Future模式" class="headerlink" title="Future模式"></a>Future模式</h2><p>该模式有点类似于商品订单。比如在网购时，当看中某商品时，就可以提交订单，当订单处理完成后，只需要在家等待商品送货上门即可。又如当我们发送Ajax请求时，页面时异步地进行后台处理，用户无需一直等待请求结果，可以继续浏览或操作其他内容。</p>
-<h3 id="示意图"><a href="#示意图" class="headerlink" title="示意图"></a>示意图</h3><p><a href="https://pan.baidu.com/s/1mhPW684" target="_blank" rel="external">Future示意图</a></p>
+<h3 id="示意图"><a href="#示意图" class="headerlink" title="示意图"></a>示意图</h3><p><img src="/2018/02/04/future-Master-Worker/Future.png" alt="Future示意图"></p>
 <h3 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h3><p>链接：<a href="https://pan.baidu.com/s/1mhPW684" target="_blank" rel="external">https://pan.baidu.com/s/1mhPW684</a> 密码：kha7</p>
 <h2 id="Master-Worker模式"><a href="#Master-Worker模式" class="headerlink" title="Master-Worker模式"></a>Master-Worker模式</h2><p>是常用的<strong>并行计算模式</strong>。核心思想是系统由两类进行协作工作：<strong>Master进程和Worker进程</strong>。Master负责<strong>接收和分配</strong>任务，Worker负责<strong>处理子任务</strong>。当各个Worker子进程处理完成后，会将结果返回给Master，由Master做<strong>归纳和总结</strong>。其好处是能将一个大任务分解成若干个小任务，并行执行，从而提高系统的吞吐量。</p>
-<h3 id="示意图-1"><a href="#示意图-1" class="headerlink" title="示意图"></a>示意图</h3><p><a href="https://pan.baidu.com/s/1mhPW684" target="_blank" rel="external">Master-Worker示意图</a></p>
+<h3 id="示意图-1"><a href="#示意图-1" class="headerlink" title="示意图"></a>示意图</h3><p><img src="/2018/02/04/future-Master-Worker/Master-Worker.png" alt="Master-Worker示意图"></p>
 <h3 id="示例代码-1"><a href="#示例代码-1" class="headerlink" title="示例代码"></a>示例代码</h3><p>链接：<a href="https://pan.baidu.com/s/1dFnlAtN" target="_blank" rel="external">https://pan.baidu.com/s/1dFnlAtN</a> 密码：vvx7</p>
 <h2 id="生产者-消费者模式"><a href="#生产者-消费者模式" class="headerlink" title="生产者-消费者模式"></a>生产者-消费者模式</h2><p>生产者-消费者模式是非常典型的多线程模式，通常由两类线程：若干个生产者的线程和若干个消费者的线程。<strong>生产者线程负责提交用户请求，消费者线程负责具体处理生产者提交的任务，在生产者和消费者之间通过共享内存缓存区进行通信</strong>。</p>
-<h3 id="示意图-2"><a href="#示意图-2" class="headerlink" title="示意图"></a>示意图</h3><p><a href="https://pan.baidu.com/s/1eTurxrs" target="_blank" rel="external">Provider-Customer示意图</a></p>
+<h3 id="示意图-2"><a href="#示意图-2" class="headerlink" title="示意图"></a>示意图</h3><p><img src="/2018/02/04/future-Master-Worker/Provider-Customer.png" alt="Provider-Customer示意图"></p>
 <h3 id="示例代码-2"><a href="#示例代码-2" class="headerlink" title="示例代码"></a>示例代码</h3><p>链接：<a href="https://pan.baidu.com/s/1eTurxrs" target="_blank" rel="external">https://pan.baidu.com/s/1eTurxrs</a> 密码：ipyh</p>
 
       
@@ -558,6 +562,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/02/10/executor-of-concurrent/" rel="prev" title="并发编程之Executor框架篇">
+                并发编程之Executor框架篇 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -668,7 +676,7 @@ var jiathis_config={
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-count">21</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -690,7 +698,7 @@ var jiathis_config={
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">48</span>
+                  <span class="site-state-item-count">51</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -810,7 +818,7 @@ var jiathis_config={
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共36.4k字</span>
+  <span class="post-count">博客全站共37.7k字</span>
 </div>
         
 
