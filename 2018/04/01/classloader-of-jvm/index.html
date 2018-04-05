@@ -1,0 +1,1525 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #1E92FB; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #1E92FB;    /*上边框颜色*/
+        border-left-color: #1E92FB;    /*左边框颜色*/
+    }
+</style>
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-fill-left.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=5.1.3">
+
+
+
+
+
+
+  <meta name="keywords" content="类加载,双亲委派模式," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="码农的春天还没来" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="引言工作中，绝大多数我们多只关心业务逻辑实现，对于实现业务的类的生命周期并没有怎么关注。在我们实现业务逻辑时，不知不觉用到最多的就是类的生命周期中的“使用”阶段。 曾经我也试着去看关于类加载的一些博客或者虚拟机相关的书籍，初看时一知半解，文字上能懂得七七八八，但是真正的含义却知甚微。经过对基础知识的积累，再次回头看，一阵顿悟。虽然有些还是不能完全理解，但确实感觉到了很大的进步，特此记录。若有理解错">
+<meta name="keywords" content="类加载,双亲委派模式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="我所理解的虚拟机类加载机制">
+<meta property="og:url" content="http://yoursite.com/2018/04/01/classloader-of-jvm/index.html">
+<meta property="og:site_name" content="码农的春天还没来">
+<meta property="og:description" content="引言工作中，绝大多数我们多只关心业务逻辑实现，对于实现业务的类的生命周期并没有怎么关注。在我们实现业务逻辑时，不知不觉用到最多的就是类的生命周期中的“使用”阶段。 曾经我也试着去看关于类加载的一些博客或者虚拟机相关的书籍，初看时一知半解，文字上能懂得七七八八，但是真正的含义却知甚微。经过对基础知识的积累，再次回头看，一阵顿悟。虽然有些还是不能完全理解，但确实感觉到了很大的进步，特此记录。若有理解错">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2018/04/01/classloader-of-jvm/2018-04-05_141720.png">
+<meta property="og:image" content="http://yoursite.com/2018/04/01/classloader-of-jvm/2018-04-05_161641.png">
+<meta property="og:image" content="http://yoursite.com/2018/04/01/classloader-of-jvm/2018-04-05_162417.png">
+<meta property="og:image" content="http://yoursite.com/2018/04/01/classloader-of-jvm/2018-04-05_181340.png">
+<meta property="og:updated_time" content="2018-04-05T12:01:48.274Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="我所理解的虚拟机类加载机制">
+<meta name="twitter:description" content="引言工作中，绝大多数我们多只关心业务逻辑实现，对于实现业务的类的生命周期并没有怎么关注。在我们实现业务逻辑时，不知不觉用到最多的就是类的生命周期中的“使用”阶段。 曾经我也试着去看关于类加载的一些博客或者虚拟机相关的书籍，初看时一知半解，文字上能懂得七七八八，但是真正的含义却知甚微。经过对基础知识的积累，再次回头看，一阵顿悟。虽然有些还是不能完全理解，但确实感觉到了很大的进步，特此记录。若有理解错">
+<meta name="twitter:image" content="http://yoursite.com/2018/04/01/classloader-of-jvm/2018-04-05_141720.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/04/01/classloader-of-jvm/"/>
+
+
+
+
+
+  <title>我所理解的虚拟机类加载机制 | 码农的春天还没来</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">码农的春天还没来</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">等待 突破</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/01/classloader-of-jvm/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="殷学飞">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/my_image.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="码农的春天还没来">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">我所理解的虚拟机类加载机制</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-01T18:56:42+08:00">
+                2018-04-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/jvm/" itemprop="url" rel="index">
+                    <span itemprop="name">jvm</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                  <span class="post-meta-divider">|</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  3,768
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  14
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>工作中，绝大多数我们多只关心业务逻辑实现，对于实现业务的<strong>类的生命周期</strong>并没有怎么关注。在我们实现业务逻辑时，不知不觉用到最多的就是类的生命周期中的“<strong>使用</strong>”阶段。</p>
+<p>曾经我也试着去看关于<strong>类加载</strong>的一些博客或者虚拟机相关的书籍，初看时一知半解，文字上能懂得七七八八，但是真正的含义却知甚微。经过对基础知识的积累，再次回头看，一阵顿悟。虽然有些还是不能完全理解，但确实感觉到了很大的进步，特此记录。若有理解错误之处，请指出。</p>
+<h2 id="类加载机制的含义"><a href="#类加载机制的含义" class="headerlink" title="类加载机制的含义"></a>类加载机制的含义</h2><p>首先，关于<strong>虚拟机的类加载机制</strong>的含义。</p>
+<blockquote>
+<p><strong>虚拟机把描述类的数据从Class文件加载到内存，并对数据进行校验、准备、解析和初始化，最终形成可以被虚拟机直接使用的Java类型，这就是虚拟机的类加载机制。</strong></p>
+</blockquote>
+<p>这句话不长，以前看这句话时，眼前只有文字，脑子里没有画面。现在看时，仿佛看到了一幅动态图。我们知道，编写的是以<strong>.java结尾的源文件</strong>。但虚拟机并不能直接读这个源文件，这就需要编译器将其编译成<strong>字节码文件.class</strong>。</p>
+<p>我们知道java有个著名的宣传口号：<strong>一次编译，到处运行</strong>。这是因为<strong>各种不同的虚拟机和平台都统一使用程序存储格式——字节码（ByteCode）</strong>，而虚拟机执行的正是这种<strong>字节码</strong>。</p>
+<p>下面的讲解，其实都是围绕虚拟机的类加载机制展开的。</p>
+<h2 id="类加载过程"><a href="#类加载过程" class="headerlink" title="类加载过程"></a>类加载过程</h2><p>从类被加载到内存，直到被卸载出内存，类的生命周期包括这<strong>7个阶段</strong>：<strong>加载、验证、准备、解析、初始化、使用、卸载</strong>。其中验证、准备、解析又被统称为<strong>连接</strong>。</p>
+<p><img src="/2018/04/01/classloader-of-jvm/2018-04-05_141720.png" alt="类生命周期图"></p>
+<p>首先要明确一点，“加载”只是“类加载”其中一个阶段，<strong>类加载包括了加载、验证、准备、解析以及初始化这5几个阶段</strong>，下面以这5个阶段展开。</p>
+<h3 id="加载"><a href="#加载" class="headerlink" title="加载"></a>加载</h3><p>通过虚拟机类加载机制的含义可以知道，这个阶段就是“<strong>虚拟机把描述类的数据从Class文件加载到内存</strong>”。那么加载阶段具体做了些什么呢？</p>
+<blockquote>
+<ol>
+<li>通过一个类的全限定名来获取定义此类的二进制字节流；</li>
+<li>将这个字节流所代表的的静态存储结构转化为方法区的运行时数据结构；</li>
+<li>在内存中生成一个代表这个类的java.lang.Class对象，作为方法区这个类的各种数据的入口。</li>
+</ol>
+</blockquote>
+<p>在我们进行<a href="https://letus179.com/2018/03/03/jdbc-programming/" target="_blank" rel="external">传统的JDBC编程</a>时，我们注册驱动时，会通过下面的代码实现：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Class.forName(<span class="string">"com.mysql.jdbc.Driver"</span>);</div></pre></td></tr></table></figure></p>
+<p>相必大家都知道这个是用来注册<strong>mysql的驱动</strong>，这是<strong>JDBC编程</strong>的第一步，至于这里面做了啥，貌似都不怎么清楚。</p>
+<p>具体分析下：</p>
+<ol>
+<li><p>我们看上面<strong>第1点</strong>说到的“<strong>类的全限定名</strong>”，这里“<strong>com.mysql.jdbc.Driver</strong>”就是mysql驱动的全限定名；而“<strong>二进制字节流</strong>”可以认为是Class文件存在的一种形式；</p>
+</li>
+<li><p><strong>java</strong>源文件中存在的<strong>类变量</strong>，也就是<strong>static修饰的变量</strong>，经过编译后的Class文件，现在存在于字节流中，此时转化为<strong>方法区的运行时数据结构</strong>了。我们经常听说，<strong>静态变量存储于方法区</strong>中，就是这时候处理的，是不是有点顿悟的感觉？（可能JVM又有了新的规定，但不在考虑范围内）</p>
+</li>
+<li><p>关于<strong>第3点</strong>，我们在利用<strong>反射获取对象信息</strong>时，（可参见：<a href="https://letus179.com/2017/11/07/reflect-base/" target="_blank" rel="external">反射机制基础解析</a>）一般这么处理过：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">    <span class="comment">// 获取Class对象</span></div><div class="line">    Class&lt;?&gt; clz = Class.forName(<span class="string">"test.MyReflectTest"</span>);</div><div class="line">    <span class="comment">// 获取实例</span></div><div class="line">    Object o = clz.newInstance();</div><div class="line">    <span class="comment">// 获取构造器</span></div><div class="line">    Constructor[] cons = clz.getConstructors();</div><div class="line">    <span class="comment">// 获取方法</span></div><div class="line">    Method[] methods = clz.getMethods();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>生成了一个<strong>Class对象</strong>，并且这个对象是个<strong>入口</strong>，能获取实例，构造器、方法等等。<br>这就是类加载的第一个阶段，我算是明白很多了。</p>
+<h3 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h3><p>验证阶段是连接的第一步，验证也就是<strong>校验</strong>，看看是否合法。也就是为了确保加载进来的Class文件的字节流中包含的信息是否符合当前虚拟机的要求，这和我们平时写程序时，对传入的参数进行校验道理是一样的。</p>
+<p>校验的内容有很多：<strong>文件格式、元数据、字节码、符号引用</strong>等。要想了解详情，看书吧。</p>
+<h3 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h3><p>先看个例子，别看答案，这两种情况下将输出什么结果，猜猜吧！<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.example;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StaticTest</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Test t = <span class="keyword">new</span> Test(); <span class="comment">// #0</span></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> numOne = <span class="number">0</span>; <span class="comment">// #1</span></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> numTwo; <span class="comment">// #2</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] arg)</span> </span>&#123;</div><div class="line">        System.out.println(StaticTest.numOne);</div><div class="line">        System.out.println(StaticTest.numTwo);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Test</span><span class="params">()</span> </span>&#123;</div><div class="line">        StaticTest.numOne++;</div><div class="line">        StaticTest.numTwo++;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>稍稍改动下：<strong>#2</strong>处变动为：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> numTwo = <span class="number">2</span>; <span class="comment">// #2</span></div></pre></td></tr></table></figure></p>
+<p>&nbsp;想<br>&nbsp;好<br>&nbsp;答<br>&nbsp;案<br>&nbsp;了<br>&nbsp;么<br>&nbsp;？<br>&nbsp;答<br>&nbsp;案<br>&nbsp;即<br>&nbsp;将<br>&nbsp;揭<br>&nbsp;晓<br>&nbsp;.<br>&nbsp;.<br>&nbsp;.<br>修改前输出的结果：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="number">0</span>  <span class="number">1</span></div></pre></td></tr></table></figure></p>
+<p>修改后输出的结果：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="number">0</span>  <span class="number">2</span></div></pre></td></tr></table></figure></p>
+<p>准备阶段之前，只进行<strong>2个</strong>动作：</p>
+<ol>
+<li><strong>将Class文件加载到内存；</strong></li>
+<li><strong>对Class文件进行校验。</strong></li>
+</ol>
+<p>而这一阶段主要是：<strong>为类变量（static）分配内存并设置类变量初始值</strong>。</p>
+<ol>
+<li><p><strong>分配内存</strong>没什么好说的，在加载阶段的第2步中，</p>
+<blockquote>
+<p>将这个字节流所代表的的静态存储结构转化为方法区的运行时数据结构。</p>
+</blockquote>
+<p>既然已经放到方法区，自然要给它们存储的空间吧，所以为类变量分配所需要的内存。</p>
+</li>
+<li><p><strong>设置类变量初始值</strong>。这里要注意，这里设置的是虚拟机内<strong>数据类型的零值</strong>。</p>
+</li>
+</ol>
+<p>下表中的是<strong>基本数据类型的零值</strong>。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">数据类型</th>
+<th style="text-align:center">零值</th>
+<th style="text-align:center">数据类型</th>
+<th style="text-align:center">零值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">int</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">boolean</td>
+<td style="text-align:center">false</td>
+</tr>
+<tr>
+<td style="text-align:center">long</td>
+<td style="text-align:center">0L</td>
+<td style="text-align:center">float</td>
+<td style="text-align:center">0.0f</td>
+</tr>
+<tr>
+<td style="text-align:center">short</td>
+<td style="text-align:center">(short)0</td>
+<td style="text-align:center">double</td>
+<td style="text-align:center">0.0d</td>
+</tr>
+<tr>
+<td style="text-align:center">char</td>
+<td style="text-align:center">‘\u0000’</td>
+<td style="text-align:center">reference</td>
+<td style="text-align:center">null</td>
+</tr>
+<tr>
+<td style="text-align:center">byte</td>
+<td style="text-align:center">(byte)0</td>
+</tr>
+</tbody>
+</table>
+<p>上面的例子中：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> numTwo = <span class="number">2</span>; <span class="comment">// #2</span></div></pre></td></tr></table></figure>
+<p>在这个“<strong>准备阶段</strong>”，<strong>numTwo</strong>设置的初始值就是<strong>0</strong>了，而<strong>numTwo = 2</strong>这个赋值动作，在这个阶段并没有进行，而是在程序编译后，存放在一个叫<strong>&lt; clinit&gt;()方法的类构造器</strong>中，在后面的<strong>初始化阶段</strong>才会执行。既然要涉及到初始化阶段，等讲到了初始化时，再分析下这个例子，先挂起。</p>
+<h3 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h3><p>这一阶段的任务是<strong>把常量池中的符号引用转换为直接引用，也就是具体的内存地址</strong>。在这一阶段，<strong>jvm会将所有的类、接口名、字段名、方法名等转换为具体的内存地址</strong>。</p>
+<p>譬如：我们要在内存中找到一个类里面的一个叫call的方法，显然做不到，但是该阶段，由于jvm已经将call这个名字转换为指向方法区中的一块内存地址了，也就是说我们通过call这个方法名会得到具体的内存地址，也就找到了call在内存中的位置了。</p>
+<p>主要包括解析内容有：<strong>类或接口的解析，字段的解析，类方法的解析以及接口方法的解析</strong>。</p>
+<h3 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h3><p>初始化，是类加载的最后一步了。虚拟机规范中有严格的规定：<strong>有且仅有5种</strong> 情况必须立即对类进行“<strong>初始化</strong>”：</p>
+<ol>
+<li><strong>使用new关键字实例化对象、读取或设置一个类的静态字段（被final修饰、已经在编译器把结果放入常量池的静态字段除外），以及调用一个类的静态方法的时候；</strong></li>
+<li>使用java.lang.reflect包的方法进行<strong>反射调用</strong>时，若类没有进行初始化，需要先触发其初始化；</li>
+<li>当初始化一个类时，若其父类还没有进行初始化，则需要先触发其<strong>父类的初始化</strong>；</li>
+<li><strong>执行main方法</strong>，虚拟机会先初始化其包含的那个主类；</li>
+<li>当使用JDK1.7的动态语言支持时，如果一个java.lang.invoke.MethodHandle实例最后的解析结果REF_getStatic、REF_putStatic、REF_invokeStatic的方法句柄，并且这个方法句柄所对应的类没有进行初始化，则需要先触发其初始化。</li>
+</ol>
+<p>我们见到最常见的一种情形就是<strong>第1点</strong>了。</p>
+<p>我们在“准备”阶段提到过类构造器<strong>&lt; clinit&gt;()</strong>方法，这一阶段的主要操作就是：<strong>执行类构造器&lt; clinit&gt;()方法的过程</strong>。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> numTwo = <span class="number">2</span>; <span class="comment">// #2</span></div></pre></td></tr></table></figure></p>
+<p><strong>准备阶段</strong> 赋予 <strong>numTwo</strong> 初始值为<strong>“0”</strong>，此阶段会将赋值（初始化）为<strong>“2”</strong>。</p>
+<p>我们对前面的例子<strong>debug</strong>一下，看看<strong>debug</strong>的运行路线：<br><img src="/2018/04/01/classloader-of-jvm/2018-04-05_161641.png" alt="debug下的路线"><br><img src="/2018/04/01/classloader-of-jvm/2018-04-05_162417.png" alt="debug下的路线"><br>我们观察下，左边红框区域。有两个方法<strong>&lt; init&gt;、&lt; clinit&gt;</strong>，分别 <strong>是实例初始化方法</strong> 和 <strong>类与接口初始化方法</strong>。</p>
+<p>你可以亲自debug下，会发现很有意思的情况。其实和上面讲的，对于<strong>int数据类型：numOne、numTwo</strong>，在准备阶段的值是 <strong>0</strong>；<strong>reference数据类型：t</strong>，在准备阶段的值是 <strong>null</strong>，和前面提到的吻合。</p>
+<p>在 <strong>3个debug</strong> 处，先出现的 <strong>第三处</strong>，也就是 <strong>Test类的构造器</strong> 处（准备阶段已经执行完毕了）。我们知道main()方法是程序的入口，这个debug模式也是：<strong>右键 =&gt; ‘StaticTest.main’</strong>，但是main()方法中的代码却没有立即执行。换句话说， 这时候还是类加载的过程，也可以说是执行前的准备阶段。</p>
+<p>为啥先出现的是第三处debug，前面提到<strong>“有且仅有5种”必须立即“初始化”的情况之一：当发生了new动作，读取或设置静态字段。</strong></p>
+<p>所以在Test类的构造器中通过 “<strong>++</strong>”， 将 <strong>numOne、numTwo</strong> 的值设置为“<strong>1， 1</strong>”，然后经过第3处，<strong>numOne</strong>的值初始化为 <strong>0</strong>， 而 <strong>numTwo</strong>因为没有显示设置初始值，所以这里还是 <strong>1</strong>，结果就是“<strong>0 1</strong>”了。</p>
+<p>而修改后由于 <strong>numTwo</strong> 显示地设置了初始值为“<strong>2</strong>”，所以结果就成了“<strong>0 2</strong>”。</p>
+<p>我们再稍微调整下代码的顺序，其他不变;<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> numOne = <span class="number">0</span>; <span class="comment">// #1</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> numTwo = <span class="number">2</span>; <span class="comment">// #2</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> Test t = <span class="keyword">new</span> Test(); <span class="comment">// #0</span></div></pre></td></tr></table></figure></p>
+<p>结果是啥？应该不难判断<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">1 3</div></pre></td></tr></table></figure></p>
+<p>这里想说的是，<strong>&lt; clinit&gt;方法</strong>是由编译器自动收集类中的所有类变量的赋值动作（numTwo = 2）和静态语句块（static{}块）中的语句合并产生的，<strong>编译器收集的顺序是由语句在源文件中出现的顺序决定的</strong>。<br>所以这里执行的顺序是： <strong>#1 =&gt; #2 =&gt; #0</strong>。</p>
+<h2 id="类加载器"><a href="#类加载器" class="headerlink" title="类加载器"></a>类加载器</h2><p>在上面的类生命周期的第一阶段：<strong>加载</strong>，提到：</p>
+<blockquote>
+<p>通过一个类的全限定名来获取定义此类的二进制字节流</p>
+</blockquote>
+<p> 实现这个动作的代码模块称之为“<strong>类加载器</strong>”。</p>
+<p> 我们在比较两个类是否相等时，前提是这两个类是用同一个类加载器加载进来的，这个在逻辑上还是很好理解的。</p>
+<h3 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h3><p>从<strong>Java虚拟机的角度</strong>来讲，分为<strong>两类</strong>类加载器：</p>
+<ol>
+<li><strong>启动类加载器（Bootstrap ClassLoader）</strong>，由C++语言实现，是虚拟机自身的一部分；</li>
+<li><strong>其他类加载器</strong>，由Java语言实现，独立于虚拟机外部，并且都 <strong>继承自抽象类java.lang.ClassLoader</strong>。</li>
+</ol>
+<p>从我们<strong>开发人员角度</strong>来看，一般把类加载器分为<strong>4种：启动类加载器、扩展类加载器、应用程序类加载器和自定义类加载器</strong>。</p>
+<ol>
+<li><p>启动类加载器（Bootstrap ClassLoader），负责将<strong>&lt; JAVA_HOME&gt;\lib</strong>目录下的，或者被 -Xbootclasspath参数指定的路径，并且是虚拟机识别的类库加载到虚拟机内存中；</p>
+</li>
+<li><p>扩展类加载器（Extension ClassLoader），负责将<strong>&lt; JAVA_HOME&gt;\lib\ext</strong>目录下的，或者被java.ext.dirs系统变量指定的类库；</p>
+</li>
+<li><p>应用程序类加载器（Application ClassLoader），由于这个类加载器是ClassLoader中的getSystemClassLoader()方法的返回值，因此也称之为 <strong>系统类加载器</strong>；负责加载用户<strong>类路径（ClassPath）</strong>上指定的类库；一般这个就是程序中默认的类加载器。</p>
+</li>
+<li><p>自定义类加载器，若需要自定义一个类加载器，只需要模仿前面的类加载器，<strong>继承自抽象类java.lang.ClassLoader，并覆盖findClass方法</strong>即可。</p>
+</li>
+</ol>
+<h3 id="双亲委派模式"><a href="#双亲委派模式" class="headerlink" title="双亲委派模式"></a>双亲委派模式</h3><h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4><p><img src="/2018/04/01/classloader-of-jvm/2018-04-05_181340.png" alt="双亲委派模式"></p>
+<p>双亲委派模式要求，除了顶层的启动类加载器外，其他的类加载器都应该有自己的父类加载器。</p>
+<p><strong>工作过程</strong>：</p>
+<blockquote>
+<p>如果一个类加载器收到了类加载的请求，它首先不会自己去尝试加载这个类，而是把这个请求委派给父类加载器去完成，依次向上。按照模型图，最后都会委派到启动类加载器那。若父类加载器在它的搜索范围内，没有找到这个类时，会向下反馈无法完成这个委派请求，此时子类加载器才会尝试自己去加载。</p>
+</blockquote>
+<p>之所以这么做，有一个很明显的好处。我们都知道 <strong>java.lang.Object</strong>是所有类的父类，也即 <strong>超类</strong>，它放在<strong>lib\rt.jar</strong>中。无论编写的是哪一个类，都需要去加载这个超类，这时候都委派给顶层的启动类加载器去加载，因此这个Object类在各种类加载器环境中都是同一个类。若不采用双亲委派模型，那么我们自己编写这样一个<strong>Object</strong>类，放在<strong>ClassPath</strong>中，这样就会出现多个<strong>Object</strong>类，就乱了。</p>
+<h4 id="模型实现"><a href="#模型实现" class="headerlink" title="模型实现"></a>模型实现</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">protected</span> Class&lt;?&gt; loadClass(String name, <span class="keyword">boolean</span> resolve)</div><div class="line">    <span class="keyword">throws</span> ClassNotFoundException</div><div class="line">&#123;</div><div class="line">    <span class="keyword">synchronized</span> (getClassLoadingLock(name)) &#123;</div><div class="line">        <span class="comment">// First, check if the class has already been loaded</span></div><div class="line">        Class&lt;?&gt; c = findLoadedClass(name);  <span class="comment">// #1</span></div><div class="line">        <span class="keyword">if</span> (c == <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="keyword">long</span> t0 = System.nanoTime();</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                <span class="keyword">if</span> (parent != <span class="keyword">null</span>) &#123;</div><div class="line">                    c = parent.loadClass(name, <span class="keyword">false</span>);  <span class="comment">// #2</span></div><div class="line">                &#125; <span class="keyword">else</span> &#123;</div><div class="line">                    c = findBootstrapClassOrNull(name); <span class="comment">// #3</span></div><div class="line">                &#125;</div><div class="line">            &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123; <span class="comment">// #4</span></div><div class="line">                <span class="comment">// ClassNotFoundException thrown if class not found</span></div><div class="line">                <span class="comment">// from the non-null parent class loader</span></div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="keyword">if</span> (c == <span class="keyword">null</span>) &#123;</div><div class="line">                <span class="comment">// If still not found, then invoke findClass in order</span></div><div class="line">                <span class="comment">// to find the class.</span></div><div class="line">                <span class="keyword">long</span> t1 = System.nanoTime();</div><div class="line">                c = findClass(name); <span class="comment">// #5</span></div><div class="line"></div><div class="line">                <span class="comment">// this is the defining class loader; record the stats</span></div><div class="line">                sun.misc.PerfCounter.getParentDelegationTime().addTime(t1 - t0);</div><div class="line">                sun.misc.PerfCounter.getFindClassTime().addElapsedTimeFrom(t1);</div><div class="line">                sun.misc.PerfCounter.getFindClasses().increment();</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span> (resolve) &#123;</div><div class="line">            resolveClass(c);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> c;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这段代码主要讲：</p>
+<p><strong>#1</strong> 先检查是够已经被加载过；<br><strong>#2</strong> 若没有加载则调用父加载器的<strong>loadClass()</strong>方法；<br><strong>#3</strong> 若父加载器为空，则默认使用<strong>启动类加载器</strong>作为父类加载器加载；<br><strong>#4</strong> 若父类加载失败了，抛出异常<strong>ClassNotFoundException</strong>；<br><strong>#5</strong> 再调用自身的<strong>findClass()</strong>方法来加载。</p>
+<p>这些就是我所理解的虚拟机类加载机制，还有很多细节需要再研究研究，未完待续…</p>
+<p>参考：《深入理解java虚拟机》</p>
+
+      
+    </div>
+    
+    
+    
+
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>欢迎留言-------------</div>
+    
+</div>
+      
+    </div>
+
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechat.png" alt="殷学飞 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/aipay.jpg" alt="殷学飞 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+ 
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/类加载/" rel="tag"><i class="fa fa-tag"></i> 类加载</a>
+          
+            <a href="/tags/双亲委派模式/" rel="tag"><i class="fa fa-tag"></i> 双亲委派模式</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
+        
+
+        
+
+        
+          
+          <div id="needsharebutton-postbottom">
+            <span class="btn">
+              <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </span>
+          </div>
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/24/singleteon-inner-class/" rel="next" title="单例模式：静态内部类">
+                <i class="fa fa-chevron-left"></i> 单例模式：静态内部类
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+	<a class="jiathis_button_qzone"></a>
+	<a class="jiathis_button_tsina"></a>
+	<a class="jiathis_button_tqq"></a>
+	<a class="jiathis_button_weixin"></a>
+	<a class="jiathis_button_renren"></a>
+	<a class="jiathis_button_xiaoyou"></a>
+	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="uyan_frame"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/my_image.jpg"
+                alt="殷学飞" />
+            
+              <p class="site-author-name" itemprop="name">殷学飞</p>
+              <p class="site-description motion-element" itemprop="description">梦想总是有的，只不过时机未到，只能藏在脑子里！</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">26</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">60</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/xfyin" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:xfyin179@163.com" target="_blank" title="E-Mail">
+                    
+                      <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://my.csdn.net/" target="_blank" title="csdn">
+                    
+                      <i class="fa fa-fw fa-crosshairs"></i>csdn</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#类加载机制的含义"><span class="nav-number">2.</span> <span class="nav-text">类加载机制的含义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#类加载过程"><span class="nav-number">3.</span> <span class="nav-text">类加载过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#加载"><span class="nav-number">3.1.</span> <span class="nav-text">加载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#验证"><span class="nav-number">3.2.</span> <span class="nav-text">验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#准备"><span class="nav-number">3.3.</span> <span class="nav-text">准备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解析"><span class="nav-number">3.4.</span> <span class="nav-text">解析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#初始化"><span class="nav-number">3.5.</span> <span class="nav-text">初始化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#类加载器"><span class="nav-number">4.</span> <span class="nav-text">类加载器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#分类"><span class="nav-number">4.1.</span> <span class="nav-text">分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#双亲委派模式"><span class="nav-number">4.2.</span> <span class="nav-text">双亲委派模式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#原理"><span class="nav-number">4.2.1.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#模型实现"><span class="nav-number">4.2.2.</span> <span class="nav-text">模型实现</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">殷学飞</span>
+
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+<span id="busuanzi_container_site_pv">
+    本站总阅读量:<span id="busuanzi_value_site_pv"></span>次
+</span>
+
+<!--
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.3</div>
+
+-->
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共46.8k字</span>
+</div>
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+    
+
+    
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid=2148100"></script>
+      <!-- UY END -->
+    
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+      pbOptions = {};
+      
+          pbOptions.iconStyle = "box";
+      
+          pbOptions.boxForm = "horizontal";
+      
+          pbOptions.position = "bottomCenter";
+      
+          pbOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+    
+    
+  </script>
+
+  
+
+  
+
+  
+
+  
+
+
+  
+	<div id="hexo-helper-live2d">
+      <canvas id="live2dcanvas" width="150" height="300" class="live2d"></canvas>
+	</div>
+    <style>
+      #live2dcanvas {
+        position: fixed;
+        right: 0px;
+        z-index: 999;
+        pointer-events: none;
+        bottom: -20px;
+      }
+    </style>
+    <script src="/live2d/device.min.js"></script>
+    <script type="text/javascript">
+    (function(){
+    if(device.mobile()){
+      
+      document.getElementById("live2dcanvas").width = 75;
+      document.getElementById("live2dcanvas").height = 150;
+      document.write('<script type="text/javascript" src="/live2d/script.js"><\/script>');
+      document.write('<script>loadlive2d("live2dcanvas", "/live2d/assets/wanko.model.json", 0.5)<\/script>');
+      
+    }else{
+      document.write('<script type="text/javascript" src="/live2d/script.js"><\/script>');
+      document.write('<script>loadlive2d("live2dcanvas", "/live2d/assets/wanko.model.json", 0.5)<\/script>');
+    }
+    })();
+    </script>
+
+</body>
+
+<!-- 页面点击小红心 -->
+<!-- <script type="text/javascript" src="/js/src/love.js"></script> -->
+</html>
