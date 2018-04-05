@@ -16,7 +16,7 @@
   <entry>
     <title><![CDATA[单例模式：静态内部类]]></title>
     <url>%2F2018%2F03%2F24%2Fsingleteon-inner-class%2F</url>
-    <content type="text"><![CDATA[下面的代码时用静态内部类实现的单例模式。1234567891011121314151617public class Singleton &#123; // 私有构造器，不允许外界通过new来获取实例 private Singleton() &#123; &#125; // 静态内部类 private static class InnerClassSingleton &#123; // 当类被加载的时候，static成员变量就会被初始化 private static Singleton singleton = new Singleton(); &#125; // 提供对外获取类的实例 public static Singleton getSingleton() &#123; return InnerClassSingleton.singleton; &#125;&#125; 简单分析下，为什么这种方式好。首先，当外界需要获取这个类的实例时候时，只需要调用下面的一行代码就可以获取，不能通过new的方式，这个和一般的单例写法是一致的。1Singleton singleton = Singleton.getSingleton(); 再者，当多线程访问时，也能保证只有一个实例。怎么保证的？我们知道，静态内部类在外部类实例化时，是不会被加载(初始化)的，具体请看下一篇文章： 我们看个例子：1234567891011121314151617181920212223public class OutClass &#123; static &#123; System.out.println("loading OutClass..."); &#125; static class InnerClass&#123; static &#123; System.out.println("loading InnerClass..."); &#125; static void innerMethod() &#123; System.out.println("invoke innerMethod"); &#125; &#125; public static void main(String[] args) &#123; OutClass out = new OutClass(); System.err.println("================"); OutClass.InnerClass.innerMethod(); &#125;&#125; 执行结果：1234loading OutClass...================loading InnerClass...invoke innerMethod 通过debug模式，看下程序运行过程： 由于是静态，只会实例化一次：1private static Singleton singleton = new Singleton(); 所以，静态内部类的单例模式，实现了懒加载，又由JVM保证了多线程并发访问的正确性。]]></content>
+    <content type="text"><![CDATA[下面的代码时用静态内部类实现的单例模式。1234567891011121314151617public class Singleton &#123; // 私有构造器，不允许外界通过new来获取实例 private Singleton() &#123; &#125; // 静态内部类 private static class InnerClassSingleton &#123; // 当类被加载的时候，static成员变量就会被初始化 private static Singleton singleton = new Singleton(); &#125; // 提供对外获取类的实例 public static Singleton getSingleton() &#123; return InnerClassSingleton.singleton; &#125;&#125; 简单分析下，为什么这种方式好。首先，当外界需要获取这个类的实例时候时，只需要调用下面的一行代码就可以获取，不能通过new的方式，这个和一般的单例写法是一致的。1Singleton singleton = Singleton.getSingleton(); 再者，当多线程访问时，也能保证只有一个实例。怎么保证的？我们知道，静态内部类在外部类实例化时，是不会被加载(初始化)的，具体请看下一篇文章：我所理解的虚拟机类加载机制 我们看个例子：1234567891011121314151617181920212223public class OutClass &#123; static &#123; System.out.println("loading OutClass..."); &#125; static class InnerClass&#123; static &#123; System.out.println("loading InnerClass..."); &#125; static void innerMethod() &#123; System.out.println("invoke innerMethod"); &#125; &#125; public static void main(String[] args) &#123; OutClass out = new OutClass(); System.err.println("================"); OutClass.InnerClass.innerMethod(); &#125;&#125; 执行结果：1234loading OutClass...================loading InnerClass...invoke innerMethod 通过debug模式，看下程序运行过程： 由于是静态，只会实例化一次：1private static Singleton singleton = new Singleton(); 所以，静态内部类的单例模式，实现了懒加载，又由JVM保证了多线程并发访问的正确性。]]></content>
       <categories>
         <category>java</category>
         <category>设计模式</category>
@@ -299,10 +299,10 @@
         <category>java</category>
       </categories>
       <tags>
-        <tag>jdk8新特性</tag>
         <tag>抽象类</tag>
         <tag>接口</tag>
         <tag>反射</tag>
+        <tag>jdk8新特性</tag>
       </tags>
   </entry>
   <entry>
